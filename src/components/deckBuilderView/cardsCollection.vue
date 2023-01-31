@@ -45,6 +45,7 @@ export default defineComponent({
     margin-top: 2%;
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px rgba($color: #4d392c, $alpha: 0.5) solid;
   }
 }
 
@@ -59,13 +60,22 @@ export default defineComponent({
 }
 
 .cards {
-  border-top: 1px rgba($color: #4d392c, $alpha: 0.5) solid;
   margin-top: 2%;
   height: 86%;
   display: flex;
   flex-wrap: wrap;
   gap: 2% 3%;
   padding: 3%;
+  padding-top: 1%;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 0.4vw;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba($color: #4d392c, $alpha: 0.2);
+    border: 1px rgba($color: #4d392c, $alpha: 0.6) solid;
+    border-radius: 20px;
+  }
 }
 </style>
