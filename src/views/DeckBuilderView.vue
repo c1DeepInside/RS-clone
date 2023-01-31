@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import fractionChoose from '@/components/deckBuilderView/fractionChoose.vue';
-import cardCollection from '@/components/deckBuilderView/cardCollection.vue';
+import cardCollection from '@/components/deckBuilderView/cardsCollection.vue';
 
 export default defineComponent({
   data() {
@@ -83,7 +83,7 @@ html {
 
 .builder {
   display: flex;
-  height: 100%;
+  height: 90%;
 
   .info {
     width: 20%;

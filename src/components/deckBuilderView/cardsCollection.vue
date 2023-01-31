@@ -1,9 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import cardFromCollection from '@/components/deckBuilderView/cardFromCollection.vue';
 
 export default defineComponent({
   data() {
     return {};
+  },
+  components: {
+    cardFromCollection,
   },
 });
 </script>
@@ -11,7 +15,7 @@ export default defineComponent({
 <template>
   <div class="collection">
     <div class="collection__sort">
-      <img class="sort__img" src="src/assets/images/sort/board_cards.png" alt="сортировка" />
+      <img class="sort__img" src="src/assets/images/sort/board_cards_white.png" alt="сортировка" />
       <img class="sort__img" src="src/assets/images/sort/melee_tan.png" alt="сортировка" />
       <img class="sort__img" src="src/assets/images/sort/ranged_tan.png" alt="сортировка" />
       <img class="sort__img" src="src/assets/images/sort/siege_tan.png" alt="сортировка" />
@@ -19,7 +23,16 @@ export default defineComponent({
       <img class="sort__img" src="src/assets/images/sort/sky_tan.png" alt="сортировка" />
       <img class="sort__img" src="src/assets/images/sort/dummy_tan.png" alt="сортировка" />
     </div>
-    <div class="cards"></div>
+    <div class="cards">
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+    </div>
   </div>
 </template>
 
@@ -46,8 +59,13 @@ export default defineComponent({
 }
 
 .cards {
+  border-top: 1px rgba($color: #4d392c, $alpha: 0.5) solid;
   margin-top: 2%;
-  height: 88%;
-  border: 1px white solid;
+  height: 86%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2% 3%;
+  padding: 3%;
+  overflow: auto;
 }
 </style>
