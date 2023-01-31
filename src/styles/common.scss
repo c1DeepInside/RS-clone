@@ -9,4 +9,13 @@
 body {
   font-family: $MAIN_FONT;
   font-size: 1rem;
+  background-color: $BLACK_COLOR_MAIN;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.noclick {
+  pointer-events: none;
 }
