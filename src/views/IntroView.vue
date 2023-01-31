@@ -4,11 +4,13 @@ import { defineComponent } from 'vue';
 import RegistrationComponent from '@/components/intro-view/RegistrationComponent.vue';
 import FooterComponent from '@/components/intro-view/FooterComponent.vue';
 import RulesComponent from '@/components/intro-view/RulesComponent.vue';
+import ValidationComponent from '@/components/intro-view/ValidationComponent.vue';
 
 export default defineComponent({
   data() {
     return {
-      showForm: false,
+      showFormValidation: false,
+      showFormRegistration: false,
       showRules: false,
     }
   },
@@ -18,7 +20,8 @@ export default defineComponent({
   components: {
     RegistrationComponent,
     FooterComponent,
-    RulesComponent
+    RulesComponent,
+    ValidationComponent
   }
 });
 </script>
@@ -29,9 +32,12 @@ export default defineComponent({
   </video>
 
   <div class="displayed">
-    <button v-if="!showForm" @click="showForm = true" class="border-button">PLAY</button>
-
-    <RegistrationComponent v-if="showForm && !showRules" @registration-finished="showRules = true" />
+    <button v-if="!showFormValidation && !showFormRegistration" @click="showFormValidation = true" class="border-button">PLAY</button>
+    <ValidationComponent v-if="showFormValidation && !showRules" 
+    @validation-finished="showRules = true" 
+    @start-registration="showFormRegistration = true, showFormValidation = false"/>
+    <RegistrationComponent v-if="showFormRegistration && !showRules" 
+    @registration-finished="showRules = true"/>
     <FooterComponent />
 
     <RulesComponent v-if="showRules" />
