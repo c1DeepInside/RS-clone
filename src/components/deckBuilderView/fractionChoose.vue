@@ -109,7 +109,7 @@ export default defineComponent({
 .fraction__description {
   height: 30%;
   width: 100%;
-  font-size: 1.35vw;
+  font-size: 1.2vw;
   color: #867762;
   text-align: center;
 }

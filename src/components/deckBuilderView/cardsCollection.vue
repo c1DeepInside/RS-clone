@@ -32,6 +32,9 @@ export default defineComponent({
       <cardFromCollection></cardFromCollection>
       <cardFromCollection></cardFromCollection>
       <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
+      <cardFromCollection></cardFromCollection>
     </div>
   </div>
 </template>
@@ -60,13 +63,13 @@ export default defineComponent({
 }
 
 .cards {
-  margin-top: 2%;
-  height: 86%;
+  margin-top: 1%;
+  height: 89%;
   display: flex;
   flex-wrap: wrap;
   gap: 2% 3%;
   padding: 3%;
-  padding-top: 1%;
+  padding-top: 2%;
   overflow: auto;
 
   &::-webkit-scrollbar {

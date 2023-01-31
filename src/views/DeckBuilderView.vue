@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import fractionChoose from '@/components/deckBuilderView/fractionChoose.vue';
 import cardCollection from '@/components/deckBuilderView/cardsCollection.vue';
+import infoCollection from '@/components/deckBuilderView/infoCollection.vue';
 
 export default defineComponent({
   data() {
@@ -10,6 +11,7 @@ export default defineComponent({
   components: {
     fractionChoose,
     cardCollection,
+    infoCollection,
   },
 });
 </script>
@@ -25,7 +27,7 @@ export default defineComponent({
       </div>
       <div class="builder">
         <cardCollection></cardCollection>
-        <div class="info"></div>
+        <infoCollection></infoCollection>
         <cardCollection></cardCollection>
       </div>
     </div>
@@ -84,10 +86,5 @@ html {
 .builder {
   display: flex;
   height: 90%;
-
-  .info {
-    width: 20%;
-    height: 100%;
-  }
 }
 </style>

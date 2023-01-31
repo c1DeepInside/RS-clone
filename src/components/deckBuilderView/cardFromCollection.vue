@@ -8,7 +8,7 @@ export default defineComponent({
 });
 </script>
 
-<template lang="">
+<template>
   <div class="card">
     <img class="card__img" src="src/assets/images/cirilla.png" alt="ciri" />
   </div>
@@ -18,37 +18,32 @@ export default defineComponent({
 .card {
   box-sizing: border-box;
   width: 31.3%;
-  position: relative;
-  z-index: 2;
+  height: 18.9vw;
+  border-radius: 2vw;
   &__img {
-    position: relative;
-    z-index: 1;
     width: 100%;
-    height: 100%;
-    border-radius: 17px;
-
+    border-radius: 1vw;
     &:hover {
-      box-shadow: 0px 0px 0px 3px rgba($color: #fe9902, $alpha: 0.6);
+      box-shadow: 0px 0px 0px 3px rgba($color: #fe9902, $alpha: 1);
     }
   }
 
   &:hover {
-    border-radius: 17px;
     animation: pulse 2s infinite;
   }
 
   @keyframes pulse {
     0% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -23px 0 20px -23px rgba($color: #fe9902, $alpha: 0.5),
-        23px 0 20px -23px rgba($color: #fe9902, $alpha: 0.5), 0 0 40px rgba($color: #fe9902, $alpha: 0.5) inset;
+      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -17px 0 15px -17px rgba($color: #fe9902, $alpha: 0.5),
+        17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5), 0 0 15px rgba($color: #fe9902, $alpha: 0.5);
     }
     50% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 1), -23px 0 20px -23px rgba($color: #fe9902, $alpha: 1),
-        23px 0 20px -23px rgba($color: #fe9902, $alpha: 1), 0 0 40px rgba($color: #fe9902, $alpha: 1) inset;
+      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 1), -17px 0 17px -17px rgba($color: #fe9902, $alpha: 1),
+        17px 0 17px -17px rgba($color: #fe9902, $alpha: 1), 0 0 15px rgba($color: #fe9902, $alpha: 1);
     }
     100% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -23px 0 20px -23px rgba($color: #fe9902, $alpha: 0.5),
-        23px 0 20px -23px rgba($color: #fe9902, $alpha: 0.5), 0 0 40px rgba($color: #fe9902, $alpha: 0.5) inset;
+      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5),
+        17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5), 0 0 15px rgba($color: #fe9902, $alpha: 0.5);
     }
   }
 }
