@@ -4,49 +4,37 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   data() {
     return {
-      login: '',
-      password: '',
-      isActiveName: false,
-      hasErrorName: false,
-      isActivePassword: false,
-      hasErrorPassword: false,
-      hasNumber: false,
+      inputs: {
+        login: '',
+        password: ''
+      },
+      errors: {
+        hasErrorName: false,
+        hasErrorPassword: false,
+      }
     }
   },
   methods: {
-    validationName() {
-      if (this.login.length >= 4) {
-        this.hasErrorName = false;
-        this.isActiveName = true;
-      } else if (this.login.length === 0) {
-        this.isActiveName = false;
-        this.hasErrorName = false;
+    validateName() {
+      if (this.inputs.login.length >= 4) {
+        this.errors.hasErrorName = false;
       } else {
-        this.isActiveName = false;
-        this.hasErrorName = true;
+        this.errors.hasErrorName = true;
       }
     },
-    validationPasswors() {
-      this.hasNumber = false;
+    validatePassword() {
+      this.errors.hasErrorPassword = true;
 
-      for (let i = 0; i < this.password.length; i++) {
-        let elem = this.password[i];
-
-        if (!isNaN(+elem)) {
-          this.hasNumber = true;
+      for (let i = 0; i < this.inputs.password.length; i++) {
+        if (!isNaN(+this.inputs.password[i])) {
+          this.errors.hasErrorPassword = false;
+          break;
         }
       }
 
-      if (this.password.length >= 6 && this.hasNumber) {
-        this.isActivePassword = true;
-        this.hasErrorPassword = false;
-      } else if (this.password.length === 0) {
-        this.isActivePassword = false;
-        this.hasErrorPassword = false;
-      } else {
-        this.isActivePassword = false;
-        this.hasErrorPassword = true;
-      }
+      this.errors.hasErrorPassword = this.inputs.password.length >= 6
+        ? this.errors.hasErrorPassword
+        : true;
     }
   },
   emits: {
@@ -59,13 +47,17 @@ export default defineComponent({
 
 <template>
   <form class="registration" v-on:submit.prevent>
-    <input v-model="login" @input="validationName" v-bind:class="{ active: isActiveName, error: hasErrorName }"
-      class="registration__input" type="text" placeholder="Введите свое имя/никнейм" required>
-    <input v-model="password" @input="validationPasswors"
-      v-bind:class="{ active: isActivePassword, error: hasErrorPassword }" 
-      class="registration__input" type="password"
-      placeholder="Введите пароль" autocomplete="current-password" required>
-    <p v-if="hasErrorPassword" class="registration__input-password">
+    <input v-model="inputs.login" @input="validateName"
+            v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }" 
+            class="registration__input"
+            type="text" placeholder="Введите свое имя/никнейм" required>
+
+    <input v-model="inputs.password" @input="validatePassword"
+            v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }" 
+            class="registration__input" type="password" 
+            placeholder="Введите пароль" autocomplete="current-password" required>
+
+    <p v-if="errors.hasErrorPassword" class="registration__input-password">
       Пароль должен содержать не менее 6 символов и 1 цифры
     </p>
     <button @click="$emit('registrationFinished', true)" class="registration__button">Зарегестрироваться</button>
