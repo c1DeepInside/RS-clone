@@ -1,0 +1,181 @@
+<script lang="ts">
+export default {
+  props: {
+    name: {
+      type: String,
+      default: "Player",
+    },
+    deckName: {
+      type: String,
+      default: "Nifgaardian Empire",
+    },
+    count: {
+      type: String,
+      default: "10",
+    },
+    img: {
+      type: String,
+      default: "/src/assets/images/deck_shield_realms.png",
+    },
+  },
+};
+</script>
+
+<template>
+  <div class="player__img">
+    <div>
+      <div
+        :style="{
+          backgroundImage: `url(${img})`,
+        }"
+      ></div>
+    </div>
+  </div>
+  <div class="player__name">{{ name }}</div>
+  <div class="player__deck-name">{{ deckName }}</div>
+  <div class="player__hand-count">{{ count }}</div>
+  <div class="player__gem player__gem-1 player__gem-true"></div>
+  <div class="player__gem player__gem-2"></div>
+  <div class="player__score">
+    <div>0</div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.player {
+  &__img {
+    position: relative;
+    left: 28.4%;
+    top: 9.6%;
+    width: 21.9%;
+    height: 80%;
+    margin-bottom: -24%;
+    background-image: url("@/assets/images/profile.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 100%;
+
+    div {
+      position: relative;
+      left: -10%;
+      top: -6%;
+      height: 118%;
+      width: 118%;
+      background-image: url("@/assets/images/icon_player_border.png");
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      overflow: visible;
+
+      div {
+        position: relative;
+        width: 43%;
+        height: 43%;
+        left: -10.5%;
+        top: 0.5%;
+        background-image: url("@/assets/images/deck_shield_realms.png");
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
+  &__name {
+    position: relative;
+    left: 53%;
+    top: 6%;
+    width: 41.5%;
+    height: 20%;
+    margin-bottom: -6%;
+    font-weight: 700;
+    font-size: 1.04vw;
+    color: $GOLDEN_COLOR;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__deck-name {
+    position: relative;
+    left: 53%;
+    top: 25%;
+    width: 41.5%;
+    height: 20%;
+    margin-bottom: -6%;
+    font-size: 0.94vw;
+    color: $TAN_COLOR;
+    overflow: hidden;
+  }
+
+  &__hand-count {
+    position: relative;
+    top: 58.5%;
+    left: 53.25%;
+    height: 29.5%;
+    width: 17%;
+    margin-bottom: -9%;
+    padding-left: 7%;
+    background-image: url("@/assets/images/icon_card_count.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+    font-weight: 700;
+    font-size: 1.67vw;
+    color: $GOLDEN_COLOR;
+  }
+
+  &__gem {
+    width: 9%;
+    height: 31%;
+    margin-bottom: -9.25%;
+    background-image: url("@/assets/images/icon_gem_off.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &-1 {
+      position: relative;
+      top: 56.25%;
+      left: 70.75%;
+    }
+
+    &-2 {
+      position: relative;
+      top: 56%;
+      left: 80%;
+    }
+
+    &-true {
+      background-image: url("@/assets/images/icon_gem_on.png");
+    }
+  }
+
+  &__score {
+    position: relative;
+    left: 94.5%;
+    height: 40%;
+    width: 12%;
+    top: 31%;
+    margin-bottom: -12%;
+    font-weight: 700;
+    font-size: 2.29vw;
+    color: $BLACK_COLOR_MAIN;
+    text-shadow: 0 0 5px $WHITE_COLOR;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+.game__player-1 .player__score {
+  background-image: url("@/assets/images/score_total_op.png");
+}
+.game__player-2 .player__score {
+  background-image: url("@/assets/images/score_total_me.png");
+}
+</style>
