@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineComponent } from "vue";
-import PlayerComponent from "@/components/GameView/PlayerComponent.vue";
-import CardComponent from "@/components/GameView/CardComponent.vue";
+import { defineComponent } from 'vue';
+import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
+import CardComponent from '@/components/GameView/CardComponent.vue';
 
 export default defineComponent({
   data() {
@@ -21,7 +21,12 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <CardComponent />
+          <div class="game__leader-card">
+            <CardComponent />
+          </div>
+          <div class="game__leader-icon">
+            <div></div>
+          </div>
         </div>
         <div class="game__player game__player-1 player">
           <PlayerComponent
@@ -31,8 +36,12 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather"></div>
-        <div class="game__player game__player-2 player">
+        <div class="game__weather">
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+        </div>
+        <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
             deckName="Nifgaardian Empire"
@@ -41,26 +50,32 @@ export default defineComponent({
           />
         </div>
         <div class="game__leader game__leader-2">
-          <div class="card"></div>
+          <div class="game__leader-card">
+            <CardComponent />
+          </div>
+          <div class="game__leader-icon game__leader-active">
+            <div></div>
+          </div>
         </div>
+        <div class="game__pass">Fold</div>
       </div>
       <div class="game__board board"></div>
       <div class="game__decks deck">
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-one">
-            <CardComponent v-for="(item, index) in 10" :key="index" />
+            <CardComponent />
           </div>
           <div class="deck__player deck__player-one">
-            <CardComponent v-for="(item, index) in 10" :key="index" />
+            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-two">
-            <CardComponent v-for="(item, index) in 10" :key="index" />
+            <CardComponent />
           </div>
           <div class="deck__player deck__player-two">
-            <CardComponent v-for="(item, index) in 10" :key="index" />
+            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
@@ -73,7 +88,7 @@ export default defineComponent({
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
-  background-image: url("@/assets/images/game_board.jpg");
+  background-image: url('@/assets/images/game_board.jpg');
   background-size: 100% auto;
   background-repeat: no-repeat;
 }
@@ -102,34 +117,70 @@ export default defineComponent({
   }
 
   &__leader {
-    position: relative;
-    left: 27.5%;
     width: 31.4%;
     height: 12.5%;
-    margin-bottom: -26.25%;
+    margin-left: 27.5%;
 
     &-1 {
-      top: 7.55%;
+      margin-top: 15.55%;
     }
 
     &-2 {
-      top: 77.5%;
+      margin-top: 6.5%;
+    }
+
+    &-card {
+      position: relative;
+      height: 100%;
+      width: 63%;
+      margin-bottom: -80%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .card {
+        pointer-events: none;
+        position: absolute;
+        height: 98%;
+        width: 95%;
+      }
+    }
+
+    &-icon {
+      position: relative;
+      top: 33%;
+      left: 75%;
+      height: 28%;
+      width: 24%;
+    }
+
+    &-active {
+      div {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background-image: url('@/assets/images/icon_leader_active.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
     }
   }
 
   &__player {
-    position: relative;
-    margin-bottom: -27%;
     height: 12.5%;
     width: 88.5%;
     background-color: rgba(20, 20, 20, 0.6);
 
     &-1 {
-      top: 24.25%;
+      margin-top: 10%;
     }
 
     &-2 {
-      top: 61.75%;
+      margin-top: 15.5%;
+    }
+
+    &-active {
+      box-shadow: -3vw 0px 1vw 0.1vw $GOLDEN_COLOR;
     }
   }
 
@@ -137,25 +188,36 @@ export default defineComponent({
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    margin-bottom: -27%;
-    top: 41.75%;
-    left: 27.9%;
+    align-items: center;
+    margin-top: 9.75%;
+    margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
     z-index: 1;
   }
-}
 
-.card {
-  margin: 0 2px;
-  flex-shrink: 0;
-  height: 105px;
-  width: 75px;
-  background-image: url("@/assets/images/neutral_emiel.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  transition: all 0.2s ease;
+  &__pass {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -8%;
+    left: 63%;
+    width: 20%;
+    height: 4%;
+    border: 0.15vw solid $WHITE_COLOR;
+    background-color: transparent;
+    border-radius: 0.7vw;
+    font-weight: 500;
+    font-size: 2vw;
+    color: $WHITE_COLOR;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $GOLDEN_COLOR;
+      border-color: $GOLDEN_COLOR;
+    }
+  }
 }
 
 .deck {
@@ -204,6 +266,11 @@ export default defineComponent({
     z-index: 1;
     font-size: 1.3vw;
     color: $TAN_COLOR;
+  }
+
+  .card {
+    position: relative;
+    pointer-events: none;
   }
 }
 </style>
