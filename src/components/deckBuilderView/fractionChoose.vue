@@ -1,8 +1,11 @@
 <template>
+  <div class="collection collection__cart">
+    <p class="collection__text">Коллекция карт</p>
+    <p class="collection__sort">Все карты</p>
+  </div>
   <div class="fraction__moves">
     <div class="fraction__choose">
       <div class="prev">{{ prevFraction }}</div>
-
       <div class="arrow_btn">ᐊ</div>
       <div class="fraction__current">
         <img class="fraction__emblem" :src="fractionEmblem" alt="Герб фракции" />
@@ -23,6 +26,10 @@
       {{ fractionDescription }}
     </div>
   </div>
+  <div class="collection collection__deck">
+    <p class="collection__text">Карты колоды</p>
+    <p class="collection__sort">Все карты</p>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -40,7 +47,29 @@ export default defineComponent({
   },
 });
 </script>
+
 <style lang="scss" scoped>
+.collection {
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+
+  &__deck {
+    align-items: flex-end;
+  }
+
+  &__sort {
+    text-transform: uppercase;
+    color: #fefefe;
+    font-size: 1.5vw;
+  }
+
+  &__text {
+    color: #b8b8b8;
+    font-size: 1.5vw;
+  }
+}
 .fraction__moves {
   width: 70%;
   justify-content: center;

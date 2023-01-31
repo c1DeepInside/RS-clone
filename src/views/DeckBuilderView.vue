@@ -4,13 +4,11 @@ import fractionChoose from '@/components/deckBuilderView/fractionChoose.vue';
 
 export default defineComponent({
   data() {
-    return {
-      
-    }
+    return {};
   },
   components: {
     fractionChoose,
-  }
+  },
 });
 </script>
 
@@ -21,15 +19,8 @@ export default defineComponent({
     </video>
     <div class="UI">
       <div class="fraction">
-        <div class="collection__cart">
-          <p class="collection__text">Коллекция карт</p>
-        </div>
         <fractionChoose></fractionChoose>
-        <div class="collection__deck">
-          <p class="collection__text">Карты колоды</p>
-        </div>
       </div>
-
       <div class="builder">
         <div class="collection"></div>
         <div class="info"></div>
@@ -72,7 +63,6 @@ html {
 .UI {
   width: 85%;
   height: 90%;
-  border: white 1px solid;
   position: relative;
   z-index: 2;
   display: flex;
