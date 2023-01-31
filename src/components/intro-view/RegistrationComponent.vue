@@ -66,7 +66,7 @@ export default defineComponent({
       class="registration__input" type="password"
       placeholder="Введите пароль" autocomplete="current-password" required>
     <p v-if="hasErrorPassword" class="registration__input-password">
-      Пароль должен содержать 6 символов и минимум 1 цифру
+      Пароль должен содержать не менее 6 символов и 1 цифры
     </p>
     <button @click="$emit('registrationFinished', true)" class="registration__button">Зарегестрироваться</button>
   </form>
@@ -111,9 +111,10 @@ export default defineComponent({
       display: fixed;
       top: 300px;
       position: fixed;
-      margin-top: 10px;
       color: $WHITE_COLOR;
-      width: 300px;
+      line-height: 1.2;
+      width: 350px;
+      text-align: center;
     }
   }
 
@@ -126,7 +127,8 @@ export default defineComponent({
     text-transform: uppercase;
     color: $BLACK_COLOR;
     border: 1px solid $WHITE_COLOR;
-    background-color: $WHITE_COLOR;
+    background-color: rgba(255, 255, 255, 0.781);
+    border-radius: 80px;
     transition: background-color .2s linear;
 
     &:hover {

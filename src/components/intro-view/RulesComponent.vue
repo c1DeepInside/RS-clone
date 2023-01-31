@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   emits: {
-    registrationFinished(isReadRules: boolean): boolean {
+    readRules(isReadRules: boolean): boolean {
       return isReadRules;
     }
   }
@@ -31,7 +31,7 @@ export default defineComponent({
         Раунд продолжается до тех пор, пока не будут использованы все карты или до момента, когда один из игроков не
         будет однозначно доминировать над другим
       </p>
-      <button class="rules__button">СОЗДАТЬ КОЛОДУ</button>
+      <button @click="$emit('readRules', true)" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
   </div>
 </template>
 
@@ -46,7 +46,7 @@ export default defineComponent({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 36rem;
+  width: 40rem;
   height: 36rem;
   color: $GOLDEN_COLOR;
   font-size: 21px;
@@ -65,9 +65,11 @@ export default defineComponent({
     font-size: 1rem;
     letter-spacing: 1px;
     text-transform: uppercase;
+    margin-top: 10px;
     color: $BLACK_COLOR;
     border: 1px solid $WHITE_COLOR;
-    background-color: $WHITE_COLOR;
+    background-color: rgba(255, 255, 255, 0.767);
+    border-radius: 80px;
     transition: background-color .2s linear;
 
     &:hover {
