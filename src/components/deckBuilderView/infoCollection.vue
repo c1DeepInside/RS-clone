@@ -1,9 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import leaderOfFraction from '@/components/deckBuilderView/leaderOfFraction.vue';
 
 export default defineComponent({
   data() {
     return {};
+  },
+  components: {
+    leaderOfFraction,
   },
 });
 </script>
@@ -12,7 +16,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <img class="leader__img" src="src/assets/images/leader.png" alt="лидер" />
+      <leaderOfFraction></leaderOfFraction>
     </div>
     <div class="deck__info">
       <div class="deck__carts">

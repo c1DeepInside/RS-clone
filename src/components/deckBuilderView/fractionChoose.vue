@@ -65,7 +65,7 @@ export default defineComponent({
       this.nextFraction = this.fractions[(currId + 1) % FRACTIONS_LENGTH].name;
       currId = currId === 0 ? FRACTIONS_LENGTH : currId;
       this.prevFraction = this.fractions[(currId - 1) % FRACTIONS_LENGTH].name;
-    }
+    },
   },
 });
 </script>
@@ -180,7 +180,7 @@ export default defineComponent({
 }
 
 .curr__dot {
-  color: #a17f40
+  color: #a17f40;
 }
 
 .current {
