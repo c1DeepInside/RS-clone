@@ -59,7 +59,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <div class="btn-game game__pass">Fold</div>
+        <button class="btn-game game__pass">Fold</button>
       </div>
       <div class="game__board board"></div>
       <div class="game__decks deck">
