@@ -56,7 +56,7 @@ export default defineComponent({
       this.changePrevNext(currId);
     },
     incrementId() {
-      let currId = (this.currFraction.id + 1) % 4;
+      let currId = (this.currFraction.id + 1) % FRACTIONS_LENGTH;
       this.currFraction = this.fractions[currId];
 
       this.changePrevNext(currId);
