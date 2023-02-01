@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
 import CardComponent from '@/components/GameView/CardComponent.vue';
+import BoardComponent from '@/components/GameView/BoardComponent.vue';
 import EndComponent from '@/components/GameView/EndComponent.vue';
 
 export default defineComponent({
@@ -12,6 +13,7 @@ export default defineComponent({
   components: {
     PlayerComponent,
     CardComponent,
+    BoardComponent,
     EndComponent,
   },
 });
@@ -61,7 +63,9 @@ export default defineComponent({
         </div>
         <button class="btn-game game__pass">Fold</button>
       </div>
-      <div class="game__board board"></div>
+      <div class="game__board board">
+        <BoardComponent />
+      </div>
       <div class="game__decks deck">
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-one">
