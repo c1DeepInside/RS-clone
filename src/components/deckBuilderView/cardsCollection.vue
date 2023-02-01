@@ -1,10 +1,62 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import cardFromCollection from '@/components/deckBuilderView/cardFromCollection.vue';
+interface Filter {
+  id: number;
+  name: string;
+  img: string;
+  imgWhite: string;
+}
 
 export default defineComponent({
   data() {
-    return {};
+    return {
+      filters: [
+        {
+          id: 1,
+          name: 'all',
+          img: 'src/assets/images/filter/board_cards.png',
+          imgWhite: 'src/assets/images/filter/board_cards_white.png',
+        },
+        {
+          id: 2,
+          name: 'melee',
+          img: 'src/assets/images/filter/melee_tan.png',
+          imgWhite: 'src/assets/images/filter/melee_white.png',
+        },
+        {
+          id: 3,
+          name: 'ranged',
+          img: 'src/assets/images/filter/ranged_tan.png',
+          imgWhite: 'src/assets/images/filter/ranged_white.png',
+        },
+        {
+          id: 4,
+          name: 'siege',
+          img: 'src/assets/images/filter/siege_tan.png',
+          imgWhite: 'src/assets/images/filter/siege_white.png',
+        },
+        {
+          id: 5,
+          name: 'hero',
+          img: 'src/assets/images/filter/hero_tan.png',
+          imgWhite: 'src/assets/images/filter/hero_white.png',
+        },
+        {
+          id: 6,
+          name: 'weather',
+          img: 'src/assets/images/filter/sky_tan.png',
+          imgWhite: 'src/assets/images/filter/sky_white.png',
+        },
+        {
+          id: 7,
+          name: 'special',
+          img: 'src/assets/images/filter/dummy_tan.png',
+          imgWhite: 'src/assets/images/filter/dummy_white.png',
+        },
+      ] as Filter[],
+      currFilter: 'all',
+    };
   },
   components: {
     cardFromCollection,
@@ -14,14 +66,14 @@ export default defineComponent({
 
 <template>
   <div class="collection">
-    <div class="collection__sort">
-      <img class="sort__img" src="src/assets/images/sort/board_cards_white.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/melee_tan.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/ranged_tan.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/siege_tan.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/hero_tan.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/sky_tan.png" alt="сортировка" />
-      <img class="sort__img" src="src/assets/images/sort/dummy_tan.png" alt="сортировка" />
+    <div class="collection__filter">
+      <img
+        class="filter__img"
+        v-for:="filter in filters"
+        :src="currFilter === filter.name ? filter.imgWhite : filter.img"
+        @click="currFilter = filter.name"
+        alt="сортировка"
+      />
     </div>
     <div class="cards">
       <cardFromCollection></cardFromCollection>
@@ -43,7 +95,7 @@ export default defineComponent({
 .collection {
   width: 40%;
   height: 100%;
-  &__sort {
+  &__filter {
     height: 8%;
     margin-top: 2%;
     display: flex;
@@ -52,7 +104,7 @@ export default defineComponent({
   }
 }
 
-.sort__img {
+.filter__img {
   width: 10%;
   transition: 0.1s;
   object-fit: contain;

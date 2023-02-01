@@ -1,3 +1,20 @@
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  data() {
+    return {
+      prevFraction: 'Чудовища',
+      nextFraction: 'Королевства Севера',
+      currFraction: 'Королевства Севера',
+      fractionEmblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
+      fractionDescription: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда',
+      fractions: ['Королевства Севера', 'Нильфгаард', "Скоя'таэлиэ", 'Чудовища'] as string[],
+    };
+  },
+});
+</script>
+
 <template>
   <div class="collection collection__cart">
     <p class="collection__text">Коллекция карт</p>
@@ -31,22 +48,6 @@
     <p class="collection__sort">Все карты</p>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  data() {
-    return {
-      prevFraction: 'Чудовища',
-      nextFraction: 'Королевства Севера',
-      currFraction: 'Королевства Севера',
-      fractionEmblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
-      fractionDescription: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда',
-      fractions: ['Королевства Севера', 'Нильфгаард', "Скоя'таэлиэ", 'Чудовища'] as string[],
-    };
-  },
-});
-</script>
 
 <style lang="scss" scoped>
 .collection {
