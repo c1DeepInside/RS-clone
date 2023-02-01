@@ -9,6 +9,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    isSpecial: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -28,20 +32,28 @@ export default {
     >
       <div>4</div>
     </div>
-    <div
-      class="card__type"
-      :style="{
-        backgroundImage: `url('/src/assets/images/card_row_close.png')`,
-      }"
-    ></div>
-    <template v-if="!isHero">
+    <template v-if="!isHero && !isSpecial">
       <div
         class="card__ability"
         :style="{
           backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
         }"
       ></div>
+      <div
+        class="card__type"
+        :style="{
+          backgroundImage: `url('/src/assets/images/card_row_close.png')`,
+        }"
+      ></div>
     </template>
+    <template v-else-if="isHero">
+      <div
+        class="card__type"
+        :style="{
+          backgroundImage: `url('/src/assets/images/card_row_close.png')`,
+        }"
+      ></div
+    ></template>
   </div>
 </template>
 
