@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
 import CardComponent from '@/components/GameView/CardComponent.vue';
+import EndComponent from '@/components/GameView/EndComponent.vue';
 
 export default defineComponent({
   data() {
@@ -11,6 +12,7 @@ export default defineComponent({
   components: {
     PlayerComponent,
     CardComponent,
+    EndComponent,
   },
 });
 </script>
@@ -57,7 +59,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <div class="game__pass">Fold</div>
+        <div class="btn-game game__pass">Fold</div>
       </div>
       <div class="game__board board"></div>
       <div class="game__decks deck">
@@ -81,6 +83,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <EndComponent />
   </main>
 </template>
 
@@ -197,26 +200,11 @@ export default defineComponent({
   }
 
   &__pass {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
-    top: -8%;
+    top: -9%;
     left: 63%;
-    width: 20%;
-    height: 4%;
-    border: 0.15vw solid $WHITE_COLOR;
-    background-color: transparent;
-    border-radius: 0.7vw;
-    font-weight: 500;
-    font-size: 2vw;
-    color: $WHITE_COLOR;
-    transition: all 0.2s ease;
-
-    &:hover {
-      color: $GOLDEN_COLOR;
-      border-color: $GOLDEN_COLOR;
-    }
+    width: 23%;
+    height: 5%;
   }
 }
 
