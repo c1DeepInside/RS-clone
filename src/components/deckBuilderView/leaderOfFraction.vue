@@ -31,7 +31,6 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  
 }
 .leader__img__wrap {
   box-sizing: border-box;

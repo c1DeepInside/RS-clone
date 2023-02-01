@@ -105,5 +105,9 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
   }
+
+  &__text {
+    color: #b8b8b8;
+  }
 }
 </style>

@@ -41,6 +41,7 @@ html {
   &::-webkit-scrollbar {
     display: none;
   }
+  font-weight: 300;
 
   background-color: #171617;
 }
