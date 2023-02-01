@@ -17,6 +17,10 @@ export default {
       type: String,
       default: '/src/assets/images/deck_shield_realms.png',
     },
+    isPass: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -48,7 +52,7 @@ export default {
   <div class="player__score player__score-more">
     <div>0</div>
   </div>
-  <div class="player__passed player__passed-true">Passed</div>
+  <div :class="['player__passed', { 'player__passed-true': isPass }]">Passed</div>
 </template>
 
 <style scoped lang="scss">
