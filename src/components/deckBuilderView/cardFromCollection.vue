@@ -11,12 +11,17 @@ export default defineComponent({
 <template>
   <div class="card">
     <img class="card__img" src="src/assets/images/cirilla.png" alt="ciri" />
+    <div class="card__number">
+      <img class="card__number__img" src="src/assets/images/filter/board_cards_white.png" alt="cards" />
+      <p>x2</p>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .card {
   box-sizing: border-box;
+  position: relative;
   width: 31.3%;
   height: 18.9vw;
   border-radius: 2vw;
@@ -30,6 +35,20 @@ export default defineComponent({
 
   &:hover {
     animation: pulse 2s infinite;
+  }
+
+  &__number {
+    position: absolute;
+    top: 0;
+    right: 0.3vw;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 0.9vw;
+
+    &__img {
+      width: 1.5vw;
+    }
   }
 
   @keyframes pulse {
