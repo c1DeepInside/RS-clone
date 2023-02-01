@@ -68,19 +68,19 @@ export default defineComponent({
       </div>
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-one">
+          <div class="deck__cemetery deck__cemetery-1">
             <CardComponent />
           </div>
-          <div class="deck__player deck__player-one">
+          <div class="deck__player deck__player-1">
             <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-two">
+          <div class="deck__cemetery deck__cemetery-2">
             <CardComponent />
           </div>
-          <div class="deck__player deck__player-two">
+          <div class="deck__player deck__player-2">
             <CardComponent />
             <div class="deck__counter">28</div>
           </div>
