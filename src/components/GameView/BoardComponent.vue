@@ -71,7 +71,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .board {
   &__player {
     width: 100%;
