@@ -19,3 +19,21 @@ body::-webkit-scrollbar {
 .noclick {
   pointer-events: none;
 }
+
+.btn-game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.2vw solid $WHITE_COLOR;
+  background-color: transparent;
+  border-radius: 0.7vw;
+  font-weight: 500;
+  font-size: 1.5vw;
+  color: $WHITE_COLOR;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $GOLDEN_COLOR;
+    border-color: $GOLDEN_COLOR;
+  }
+}
