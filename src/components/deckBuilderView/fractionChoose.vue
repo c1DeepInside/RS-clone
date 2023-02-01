@@ -1,16 +1,71 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+interface Fraction {
+  id: number;
+  name: string;
+  description: string;
+  emblem: string;
+}
+const FRACTIONS_LENGTH = 4;
 
+import { defineComponent } from 'vue';
 export default defineComponent({
   data() {
     return {
       prevFraction: 'Чудовища',
-      nextFraction: 'Королевства Севера',
-      currFraction: 'Королевства Севера',
-      fractionEmblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
-      fractionDescription: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда',
-      fractions: ['Королевства Севера', 'Нильфгаард', "Скоя'таэлиэ", 'Чудовища'] as string[],
+      nextFraction: 'Нильфгаард',
+      currFraction: {
+        id: 0,
+        name: 'Королевства Севера',
+        description: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда.',
+        emblem: 'src/assets/images/faction-emblems/northern_emblem.png',
+      },
+      fractions: [
+        {
+          id: 0,
+          name: 'Королевства Севера',
+          description: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда.',
+          emblem: 'src/assets/images/faction-emblems/northern_emblem.png',
+        },
+        {
+          id: 1,
+          name: 'Нильфгаард',
+          description: 'Нильфгаард побеждает в случае ничьей.',
+          emblem: 'src/assets/images/faction-emblems/nilfgaard_emblem.png',
+        },
+        {
+          id: 2,
+          name: "Скоя'таэли",
+          description: "Скоя'таэли в начале битвы решают, кто ходит первым.",
+          emblem: 'src/assets/images/faction-emblems/scoiatael_emblem.png',
+        },
+        {
+          id: 3,
+          name: 'Чудовища',
+          description: 'Чудовища после каждого раунда сохраняют на столе одну случайную карту.',
+          emblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
+        },
+      ] as Fraction[],
     };
+  },
+  methods: {
+    decrementId() {
+      let currId = this.currFraction.id === 0 ? FRACTIONS_LENGTH : this.currFraction.id;
+      currId = (currId - 1) % FRACTIONS_LENGTH;
+      this.currFraction = this.fractions[currId];
+
+      this.changePrevNext(currId);
+    },
+    incrementId() {
+      let currId = (this.currFraction.id + 1) % 4;
+      this.currFraction = this.fractions[currId];
+
+      this.changePrevNext(currId);
+    },
+    changePrevNext(currId: number) {
+      this.nextFraction = this.fractions[(currId + 1) % FRACTIONS_LENGTH].name;
+      currId = currId === 0 ? FRACTIONS_LENGTH : currId;
+      this.prevFraction = this.fractions[(currId - 1) % FRACTIONS_LENGTH].name;
+    }
   },
 });
 </script>
@@ -23,24 +78,24 @@ export default defineComponent({
   <div class="fraction__moves">
     <div class="fraction__choose">
       <div class="prev">{{ prevFraction }}</div>
-      <div class="arrow_btn">ᐊ</div>
+      <div class="arrow_btn" @click="decrementId()">ᐊ</div>
       <div class="fraction__current">
-        <img class="fraction__emblem" :src="fractionEmblem" alt="Герб фракции" />
+        <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" />
         <div class="fraction__current__name">
-          <div class="current">{{ currFraction }}</div>
+          <div class="current">{{ currFraction.name }}</div>
           <div class="fraction__indicator">
-            <span style="color: #a17f40">◆</span>
-            <span>◆</span>
-            <span>◆</span>
-            <span>◆</span>
+            <span :class="currFraction.id === 0 ? 'curr__dot' : ''">◆</span>
+            <span :class="currFraction.id === 1 ? 'curr__dot' : ''">◆</span>
+            <span :class="currFraction.id === 2 ? 'curr__dot' : ''">◆</span>
+            <span :class="currFraction.id === 3 ? 'curr__dot' : ''">◆</span>
           </div>
         </div>
       </div>
-      <div class="arrow_btn">ᐅ</div>
+      <div class="arrow_btn" @click="incrementId()">ᐅ</div>
       <div class="next">{{ nextFraction }}</div>
     </div>
     <div class="fraction__description">
-      {{ fractionDescription }}
+      {{ currFraction.description }}
     </div>
   </div>
   <div class="collection collection__deck">
@@ -122,6 +177,10 @@ export default defineComponent({
   &:hover {
     color: #937c59;
   }
+}
+
+.curr__dot {
+  color: #a17f40
 }
 
 .current {
