@@ -3,18 +3,24 @@ import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
 import CardComponent from '@/components/GameView/CardComponent.vue';
 import BoardComponent from '@/components/GameView/BoardComponent.vue';
+import InformationBar from '@/components/GameView/InformationBar.vue';
 import EndComponent from '@/components/GameView/EndComponent.vue';
 
 export default defineComponent({
   data() {
-    return {};
+    return {
+      isPass: false,
+    };
   },
-  methods: {},
+  methods: {
+    pass() {},
+  },
   components: {
     PlayerComponent,
     CardComponent,
     BoardComponent,
     EndComponent,
+    InformationBar,
   },
 });
 </script>
@@ -51,6 +57,7 @@ export default defineComponent({
             deckName="Nifgaardian Empire"
             count="10"
             img="/src/assets/images/deck_shield_realms.png"
+            :isPass="isPass"
           />
         </div>
         <div class="game__leader game__leader-2">
@@ -61,7 +68,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button class="btn-game game__pass">Fold</button>
+        <button @click="isPass = !isPass" class="btn-game game__pass">Fold</button>
       </div>
       <div class="game__board board">
         <BoardComponent />
@@ -87,6 +94,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <InformationBar />
     <EndComponent />
   </main>
 </template>
