@@ -120,7 +120,7 @@ export default defineComponent({
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
-  background-image: url('@/assets/images/game_board.jpg');
+  background-image: url('@/assets/images/board.png');
   background-size: 100% auto;
   background-repeat: no-repeat;
 }
