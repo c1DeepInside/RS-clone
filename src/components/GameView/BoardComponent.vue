@@ -1,11 +1,13 @@
 <script lang="ts">
 import CardComponent from './CardComponent.vue';
+import LineComponent from '@/components/GameView/LineComponent.vue';
 
 export default {
   data() {
     return {
       isShowCard: false,
       selectedItem: -1,
+      isEnemy: false,
     };
   },
   methods: {
@@ -16,6 +18,7 @@ export default {
   },
   components: {
     CardComponent,
+    LineComponent,
   },
 };
 </script>
@@ -23,8 +26,16 @@ export default {
 <template>
   <div class="board">
     <div class="field">
-      <div class="field__enemy"></div>
-      <div class="field__allies"></div>
+      <div class="field__enemy">
+        <LineComponent :type="isEnemy" class="field__enemy__siege"></LineComponent>
+        <LineComponent :type="isEnemy" class="field__enemy__range"></LineComponent>
+        <LineComponent :type="isEnemy" class="field__enemy__melee"></LineComponent>
+      </div>
+      <div class="field__allies">
+        <LineComponent :type="!isEnemy" class="field__allies__siege"></LineComponent>
+        <LineComponent :type="!isEnemy" class="field__allies__range"></LineComponent>
+        <LineComponent :type="!isEnemy" class="field__allies__melee"></LineComponent>
+      </div>
     </div>
     <div class="board__hand">
       <div class="board__hand-row">
@@ -37,11 +48,46 @@ export default {
 <style scoped lang="scss">
 .board {
   .field {
-    height: 42.9vw;
+    height: 43.5vw;
+
+    &__enemy {
+      height: 50%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      &__siege {
+        margin-top: 0.65vw;
+      }
+
+      &__range {
+        margin-top: 0.4vw;
+      }
+
+      &__melee {
+        margin-top: 0.75vw;
+      }
+    }
+
+    &__allies {
+      height: 50%;
+      position: relative;
+      &__siege {
+        margin-top: 0.6vw;
+      }
+
+      &__range {
+        margin-top: 0.5vw;
+      }
+
+      &__melee {
+        margin-top: 0.75vw;
+      }
+    }
   }
 
   &__hand {
-    margin-top: 2.13%;
+    margin-top: 1%;
     width: 100%;
     height: 13%;
 
@@ -63,7 +109,8 @@ export default {
       z-index: 1;
 
       &:hover {
-        box-shadow: 0px 0px 0px 3px rgba($color: #fe9902, $alpha: 0.6);
+        background-color: rgba($color: #fe9902, $alpha: 0.1);
+        box-shadow: 0px 0px 0px 0.2vw rgba($color: #fe9902, $alpha: 0.6);
       }
     }
   }
