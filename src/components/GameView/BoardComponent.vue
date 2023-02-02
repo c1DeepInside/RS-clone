@@ -7,7 +7,7 @@ export default {
     return {
       isShowCard: false,
       selectedItem: -1,
-      isEnemy: false,
+      isEnemy: true,
     };
   },
   methods: {
