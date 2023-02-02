@@ -1,17 +1,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import fractionChoose from '@/components/deckBuilderView/fractionChoose.vue';
-import cardCollection from '@/components/deckBuilderView/cardsCollection.vue';
-import infoCollection from '@/components/deckBuilderView/infoCollection.vue';
+import FractionChoose from '@/components/deck-builder-view/FractionChoose.vue';
+import CardCollection from '@/components/deck-builder-view/CardsCollection.vue';
+import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 
 export default defineComponent({
   data() {
     return {};
   },
   components: {
-    fractionChoose,
-    cardCollection,
-    infoCollection,
+    FractionChoose,
+    CardCollection,
+    InfoCollection,
   },
 });
 </script>
@@ -23,12 +23,12 @@ export default defineComponent({
     </video>
     <div class="UI">
       <div class="fraction">
-        <fractionChoose></fractionChoose>
+        <FractionChoose></FractionChoose>
       </div>
       <div class="builder">
-        <cardCollection></cardCollection>
-        <infoCollection></infoCollection>
-        <cardCollection></cardCollection>
+        <CardCollection></CardCollection>
+        <InfoCollection></InfoCollection>
+        <CardCollection></CardCollection>
       </div>
     </div>
   </main>

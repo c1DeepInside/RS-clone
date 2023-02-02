@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import cardFromCollection from '@/components/deckBuilderView/cardFromCollection.vue';
+import CardFromCollection from '@/components/deck-builder-view/CardFromCollection.vue';
 interface Filter {
   id: number;
   name: string;
@@ -59,7 +59,7 @@ export default defineComponent({
     };
   },
   components: {
-    cardFromCollection,
+    CardFromCollection,
   },
 });
 </script>
@@ -76,17 +76,17 @@ export default defineComponent({
       />
     </div>
     <div class="cards">
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
-      <cardFromCollection></cardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
+      <CardFromCollection></CardFromCollection>
     </div>
   </div>
 </template>

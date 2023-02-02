@@ -1,13 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import leaderOfFraction from '@/components/deckBuilderView/leaderOfFraction.vue';
+import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 
 export default defineComponent({
   data() {
     return {};
   },
   components: {
-    leaderOfFraction,
+    LeaderOfFraction,
   },
 });
 </script>
@@ -16,7 +16,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <leaderOfFraction></leaderOfFraction>
+      <LeaderOfFraction></LeaderOfFraction>
     </div>
     <div class="deck__info">
       <div class="deck__carts">
