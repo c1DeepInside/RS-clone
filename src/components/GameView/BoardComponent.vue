@@ -2,6 +2,18 @@
 import CardComponent from './CardComponent.vue';
 
 export default {
+  data() {
+    return {
+      isShowCard: false,
+      selectedItem: -1,
+    };
+  },
+  methods: {
+    showCard(index: number) {
+      this.selectedItem = index;
+      this.$emit('update:selectedItem', this.selectedItem);
+    },
+  },
   components: {
     CardComponent,
   },
@@ -61,12 +73,7 @@ export default {
   </div>
   <div class="board__hand">
     <div class="board__hand-row">
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
+      <CardComponent v-for="item in 6" :key="item" @click="showCard(item)" />
     </div>
   </div>
 </template>

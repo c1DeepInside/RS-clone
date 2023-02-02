@@ -3,6 +3,7 @@ import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
 import CardComponent from '@/components/GameView/CardComponent.vue';
 import BoardComponent from '@/components/GameView/BoardComponent.vue';
+import CardViewComponent from '@/components/GameView/CardViewComponent.vue';
 import InformationBar from '@/components/GameView/InformationBar.vue';
 import EndComponent from '@/components/GameView/EndComponent.vue';
 
@@ -10,15 +11,22 @@ export default defineComponent({
   data() {
     return {
       isPass: false,
+      selectedItem: -1,
     };
   },
   methods: {
-    pass() {},
+    showPass() {
+      this.isPass = !this.isPass;
+    },
+    updateSelectedItem(value: number) {
+      this.selectedItem = value;
+    },
   },
   components: {
     PlayerComponent,
     CardComponent,
     BoardComponent,
+    CardViewComponent,
     EndComponent,
     InformationBar,
   },
@@ -27,7 +35,7 @@ export default defineComponent({
 
 <template>
   <main class="page-game">
-    <div class="click noclick"></div>
+    <div :class="['click', { noclick: selectedItem === -1 }]" @click="selectedItem = -1"></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -68,10 +76,10 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button @click="isPass = !isPass" class="btn-game game__pass">Fold</button>
+        <button @click="showPass" class="btn-game game__pass">Fold</button>
       </div>
       <div class="game__board board">
-        <BoardComponent />
+        <BoardComponent @update:selectedItem="updateSelectedItem" />
       </div>
       <div class="game__decks deck">
         <div class="deck__content">
@@ -94,6 +102,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <CardViewComponent :selectedItem="selectedItem" />
     <InformationBar />
     <EndComponent />
   </main>
