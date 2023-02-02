@@ -201,18 +201,22 @@ export default {
   }
 
   &__passed {
-    display: none;
+    width: 0;
+    height: 0;
+    position: relative;
+    left: 90%;
+    top: 87%;
+    font-weight: 700;
+    font-size: 1.5vw;
+    text-shadow: 1px 1px 2px $BLACK_COLOR_MAIN;
+    color: $TAN_COLOR;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+
     &-true {
-      display: block;
-      width: 0;
-      height: 0;
-      position: relative;
-      left: 90%;
-      top: 87%;
-      font-weight: 700;
-      font-size: 1.5vw;
-      text-shadow: 1px 1px 2px $BLACK_COLOR_MAIN;
-      color: $TAN_COLOR;
+      opacity: 1;
+      visibility: visible;
     }
   }
 }
