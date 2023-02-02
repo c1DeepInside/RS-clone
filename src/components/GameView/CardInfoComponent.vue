@@ -8,27 +8,24 @@ export enum CardSize {
 }
 
 export default defineComponent({
-  data() {
-
-  },
+  data() {},
   props: {
     cardSize: Object as PropType<CardSize>,
-  }
+  },
 });
-
 </script>
 
 <template>
   <div class="card-info" :class="cardSize">
-    <img class="card-info__back" src="/src/assets/images/realms_blue_stripes.jpg" alt="">
-    <img class="card-info__banner" src="/src/assets/images/build/card_faction_banner_northern_realms.png" alt="">
+    <img class="card-info__back" src="/src/assets/images/realms_blue_stripes.jpg" alt="" />
+    <img class="card-info__banner" src="/src/assets/images/build/card_faction_banner_northern_realms.png" alt="" />
 
     <div class="card-info__count">
-      <img class="card-info__count-img" src="/src/assets/images/power_normal.png" alt="">
+      <img class="card-info__count-img" src="/src/assets/images/power_normal.png" alt="" />
       <p class="card-info__count-power">5</p>
     </div>
 
-    <img class="card-info__type" src="/src/assets/images/card_row_close.png" alt="">
+    <img class="card-info__type" src="/src/assets/images/card_row_close.png" alt="" />
 
     <div class="card-info__description">
       <h1 class="description-title">Рубайлы из Кринфрида</h1>
@@ -81,14 +78,14 @@ export default defineComponent({
   &__type {
     position: absolute;
     top: 6vw;
-    left: .5vw;
+    left: 0.5vw;
     width: 4.5vw;
   }
 
   &__banner {
     position: absolute;
     top: 4.5vw;
-    left: .5vw;
+    left: 0.5vw;
     width: 4.7vw;
     height: 28vw;
   }
@@ -109,7 +106,7 @@ export default defineComponent({
 }
 
 .description-text {
-  padding: .5vw;
+  padding: 0.5vw;
   font-size: 1vw;
   text-align: center;
 }
