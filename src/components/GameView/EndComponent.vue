@@ -2,14 +2,14 @@
 export default {
   data() {
     return {
-      isEnd: false,
+      isEnd: true,
     };
   },
 };
 </script>
 
 <template>
-  <div class="end" :style="{ opacity: isEnd ? 1 : 0, display: isEnd ? 'block' : 'none' }">
+  <div :class="['end', { 'end-true': isEnd }]">
     <div class="end__img end-lose"></div>
     <table class="end__table table">
       <thead>
@@ -49,6 +49,14 @@ export default {
   top: 0;
   z-index: 1000;
   background-color: rgba(10, 10, 10, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+
+  &-true {
+    opacity: 1;
+    visibility: visible;
+  }
 
   &__img {
     position: relative;
