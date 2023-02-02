@@ -67,7 +67,7 @@ export default {
   left: 67.95vw;
   height: 7.87vw;
   width: 29.12vw;
-  background-color: rgba(10, 10, 10, 0.8);
+  background-color: rgba(10, 10, 10, 0.9);
   border: 0.1vw solid $GOLDEN_COLOR;
   border-width: 0.1vw 0;
   color: $TAN_COLOR;

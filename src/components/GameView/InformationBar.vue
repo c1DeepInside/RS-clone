@@ -12,18 +12,19 @@ export default {};
 <style scoped lang="scss">
 .information {
   display: none;
-  opacity: 0;
   width: 100%;
   height: 14%;
   position: absolute;
   top: 43%;
-  background-color: rgba(10, 10, 10, 0.8);
+  background-color: rgba(10, 10, 10, 0.9);
   z-index: 100;
+  opacity: 0;
+  visibility: hidden;
   transition: 0.2s ease;
 
   &-true {
-    display: block;
     opacity: 1;
+    visibility: visible;
   }
 
   &__content {

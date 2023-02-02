@@ -48,7 +48,7 @@ export default {
   position: absolute;
   top: 0;
   z-index: 1000;
-  background-color: rgba(10, 10, 10, 0.8);
+  background-color: rgba(10, 10, 10, 0.9);
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;
