@@ -10,6 +10,7 @@ body {
   font-family: $MAIN_FONT;
   font-size: 1rem;
   background-color: $BLACK_COLOR_MAIN;
+  user-select: none;
 }
 
 body::-webkit-scrollbar {

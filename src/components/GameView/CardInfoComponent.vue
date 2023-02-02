@@ -1,14 +1,25 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
+
+export enum CardSize {
+  large = 'large',
+  middle = 'middle',
+  small = 'small',
+}
 
 export default defineComponent({
+  data() {
 
+  },
+  props: {
+    cardSize: Object as PropType<CardSize>,
+  }
 });
 
 </script>
 
 <template>
-  <div class="card-info">
+  <div class="card-info" :class="cardSize">
     <img class="card-info__back" src="/src/assets/images/realms_blue_stripes.jpg" alt="">
     <img class="card-info__banner" src="/src/assets/images/build/card_faction_banner_northern_realms.png" alt="">
 
@@ -26,12 +37,24 @@ export default defineComponent({
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.large {
+  border: 2px solid $GOLDEN_COLOR;
+}
+
+.middle {
+  width: 17vw;
+}
+
+.small {
+  width: 16vw;
+}
+
 .card-info {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 19vw;
+  max-width: 19vw;
 
   &__back {
     object-fit: contain;
@@ -67,7 +90,7 @@ export default defineComponent({
     top: 4.5vw;
     left: .5vw;
     width: 4.7vw;
-    height: 29vw;
+    height: 28vw;
   }
 
   &__description {

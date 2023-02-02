@@ -4,6 +4,7 @@ import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
 import CardComponent from '@/components/GameView/CardComponent.vue';
 import BoardComponent from '@/components/GameView/BoardComponent.vue';
 import EndComponent from '@/components/GameView/EndComponent.vue';
+import ExchangePanelComponent from '@/components/GameView/ExchangePanelComponent.vue';
 
 export default defineComponent({
   data() {
@@ -11,6 +12,7 @@ export default defineComponent({
   },
   methods: {},
   components: {
+    ExchangePanelComponent,
     PlayerComponent,
     CardComponent,
     BoardComponent,
@@ -20,6 +22,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <ExchangePanelComponent />
   <main class="page-game">
     <div class="click noclick"></div>
     <div class="game">
