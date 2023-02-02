@@ -55,6 +55,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <button class="start__game">Начать игру</button>
   </div>
 </template>
 
@@ -63,6 +64,8 @@ export default defineComponent({
   width: 20%;
   height: 100%;
   color: #9b763a;
+  display: flex;
+  flex-direction: column;
 }
 
 .leader {
@@ -72,10 +75,6 @@ export default defineComponent({
   align-items: center;
   margin-top: 25%;
   gap: 1vw;
-
-  &__img {
-    width: 50%;
-  }
 
   &__text {
     font-size: 1.2vw;
@@ -90,7 +89,7 @@ export default defineComponent({
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.5vw;
+    gap: 0.1vw;
   }
 
   &__img {
@@ -109,5 +108,15 @@ export default defineComponent({
   &__text {
     color: #b8b8b8;
   }
+}
+
+.start__game {
+  color: #fefefe;
+  background-color: rgba($color: #000000, $alpha: 0.2);
+  font-size: 1.2vw;
+  border: 0.1vw black solid;
+  border-radius: 0.2vw;
+  margin-top: 1.5vw;
+  align-self: center;
 }
 </style>

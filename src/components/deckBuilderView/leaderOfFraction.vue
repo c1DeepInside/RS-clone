@@ -34,7 +34,7 @@ export default defineComponent({
 }
 .leader__img__wrap {
   box-sizing: border-box;
-  width: 50%;
+  width: 45%;
   border-radius: 2vw;
   .leader__img {
     width: 100%;
