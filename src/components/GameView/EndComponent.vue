@@ -1,9 +1,21 @@
 <script lang="ts">
 export default {
+  props: {
+    isEnd: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      isEnd: false,
+      showEnd: true,
     };
+  },
+  methods: {
+    showEndGame() {
+      this.showEnd = false;
+      this.$emit('update:showEnd', this.showEnd);
+    },
   },
 };
 </script>
@@ -37,7 +49,7 @@ export default {
     </table>
     <div class="end__btns">
       <button class="btn-game end__btn">Edit</button>
-      <button class="btn-game end__btn">Replay</button>
+      <button class="btn-game end__btn" @click="showEndGame">Replay</button>
     </div>
   </div>
 </template>

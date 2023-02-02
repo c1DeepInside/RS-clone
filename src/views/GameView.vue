@@ -11,6 +11,7 @@ export default defineComponent({
   data() {
     return {
       isPass: false,
+      isEnd: false,
       selectedItem: -1,
     };
   },
@@ -18,8 +19,14 @@ export default defineComponent({
     showPass() {
       this.isPass = !this.isPass;
     },
+    showEndGame() {
+      this.isEnd = !this.isEnd;
+    },
     updateSelectedItem(value: number) {
       this.selectedItem = value;
+    },
+    updateShowEnd(value: boolean) {
+      this.isEnd = value;
     },
   },
   components: {
@@ -59,6 +66,7 @@ export default defineComponent({
           <CardComponent />
           <CardComponent />
         </div>
+        <button @click="showPass" class="btn-game game__pass">Fold</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
@@ -76,7 +84,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button @click="showPass" class="btn-game game__pass">Fold</button>
+        <button @click="showEndGame" class="btn-game game__give-up">Give Up</button>
       </div>
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
@@ -104,7 +112,7 @@ export default defineComponent({
     </div>
     <CardViewComponent :selectedItem="selectedItem" />
     <InformationBar />
-    <EndComponent />
+    <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
   </main>
 </template>
 
@@ -200,7 +208,7 @@ export default defineComponent({
     }
 
     &-2 {
-      margin-top: 15.5%;
+      margin-top: 7%;
     }
 
     &-active {
@@ -222,10 +230,18 @@ export default defineComponent({
 
   &__pass {
     position: relative;
-    top: -9%;
+    top: 2%;
+    left: 44%;
+    width: 23%;
+    height: 4%;
+  }
+
+  &__give-up {
+    position: relative;
+    top: -8%;
     left: 63%;
     width: 23%;
-    height: 5%;
+    height: 4%;
   }
 }
 
