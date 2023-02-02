@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      isEnd: true,
+      isEnd: false,
     };
   },
 };
