@@ -221,6 +221,13 @@ export default {
 }
 .game__player-2 {
   .player {
+    &__img {
+      div {
+        div {
+          top: 59%;
+        }
+      }
+    }
     &__hand-count {
       top: 18.5%;
     }
