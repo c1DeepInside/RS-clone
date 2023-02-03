@@ -47,20 +47,5 @@ export default defineComponent({
   &:hover {
     animation: pulse 2s infinite;
   }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -17px 0 15px -17px rgba($color: #fe9902, $alpha: 0.5),
-        17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5), 0 0 15px rgba($color: #fe9902, $alpha: 0.5);
-    }
-    50% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 1), -17px 0 17px -17px rgba($color: #fe9902, $alpha: 1),
-        17px 0 17px -17px rgba($color: #fe9902, $alpha: 1), 0 0 15px rgba($color: #fe9902, $alpha: 1);
-    }
-    100% {
-      box-shadow: 0 1px 4px rgba($color: #fe9902, $alpha: 0.5), -17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5),
-        17px 0 17px -17px rgba($color: #fe9902, $alpha: 0.5), 0 0 15px rgba($color: #fe9902, $alpha: 0.5);
-    }
-  }
 }
 </style>

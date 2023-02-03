@@ -118,5 +118,10 @@ export default defineComponent({
   border-radius: 0.2vw;
   margin-top: 1.5vw;
   align-self: center;
+
+  &:hover {
+    color: #fe9902;
+    animation: pulse 2s infinite;
+  }
 }
 </style>
