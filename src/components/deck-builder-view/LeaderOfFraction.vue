@@ -17,7 +17,7 @@ export default defineComponent({
 
 <template>
   <div class="leader__img__wrap" @click="showModal">
-    <img class="leader__img" src="src/assets/images/leader.png" alt="лидер" />
+    <img class="leader__img" src="src/assets/images/leader.png" alt="лидер" draggable="false" />
   </div>
   <div v-if="ifModal" class="modal" @click="showModal"></div>
 </template>

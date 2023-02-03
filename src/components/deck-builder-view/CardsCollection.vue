@@ -73,6 +73,7 @@ export default defineComponent({
         :src="currFilter === filter.name ? filter.imgWhite : filter.img"
         @click="currFilter = filter.name"
         alt="сортировка"
+        draggable="false"
       />
     </div>
     <div class="cards">

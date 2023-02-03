@@ -80,7 +80,7 @@ export default defineComponent({
       <div class="prev">{{ prevFraction }}</div>
       <div class="arrow_btn" @click="decrementId()">ᐊ</div>
       <div class="fraction__current">
-        <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" />
+        <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" draggable="false" />
         <div class="fraction__current__name">
           <div class="current">{{ currFraction.name }}</div>
           <div class="fraction__indicator">

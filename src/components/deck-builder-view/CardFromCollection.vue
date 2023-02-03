@@ -10,9 +10,14 @@ export default defineComponent({
 
 <template>
   <div class="card">
-    <img class="card__img" src="src/assets/images/cirilla.png" alt="ciri" />
+    <img class="card__img" src="src/assets/images/cirilla.png" alt="ciri" draggable="false" />
     <div class="card__number">
-      <img class="card__number__img" src="src/assets/images/filter/board_cards_white.png" alt="cards" />
+      <img
+        class="card__number__img"
+        src="src/assets/images/filter/board_cards_white.png"
+        alt="cards"
+        draggable="false"
+      />
       <p>x2</p>
     </div>
   </div>
