@@ -61,6 +61,12 @@ export default defineComponent({
   components: {
     CardFromCollection,
   },
+  methods: {
+    changeFilter(filter: Filter): void {
+      this.currFilter = filter.name;
+      this.$emit('change', this.currFilter);
+    },
+  },
 });
 </script>
 
@@ -71,7 +77,7 @@ export default defineComponent({
         class="filter__img"
         v-for:="filter in filters"
         :src="currFilter === filter.name ? filter.imgWhite : filter.img"
-        @click="currFilter = filter.name"
+        @click="changeFilter(filter)"
         alt="сортировка"
         draggable="false"
       />

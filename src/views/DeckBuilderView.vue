@@ -6,12 +6,23 @@ import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 
 export default defineComponent({
   data() {
-    return {};
+    return {
+      collectionFilter: 'all',
+      deckFilter: 'all',
+    };
   },
   components: {
     FractionChoose,
     CardCollection,
     InfoCollection,
+  },
+  methods: {
+    changeFilterCollection(data: string) {
+      this.collectionFilter = data;
+    },
+    changeFilterDeck(data: string) {
+      this.deckFilter = data;
+    },
   },
 });
 </script>
@@ -23,12 +34,12 @@ export default defineComponent({
     </video>
     <div class="UI">
       <div class="fraction">
-        <FractionChoose></FractionChoose>
+        <FractionChoose :collectionFilter="collectionFilter" :deckFilter="deckFilter"></FractionChoose>
       </div>
       <div class="builder">
-        <CardCollection></CardCollection>
+        <CardCollection @change="changeFilterCollection"></CardCollection>
         <InfoCollection></InfoCollection>
-        <CardCollection></CardCollection>
+        <CardCollection @change="changeFilterDeck"></CardCollection>
       </div>
     </div>
   </main>

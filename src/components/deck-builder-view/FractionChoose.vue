@@ -45,6 +45,15 @@ export default defineComponent({
           emblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
         },
       ] as Fraction[],
+      filters: {
+        all: 'Все карты',
+        melee: 'Рукопашные отряды',
+        ranged: 'Дальнобойные отряды',
+        siege: 'Осадные отряды',
+        hero: 'Герои',
+        weather: 'Погодные карты',
+        special: 'Специальные карты',
+      },
     };
   },
   methods: {
@@ -67,13 +76,23 @@ export default defineComponent({
       this.prevFraction = this.fractions[(currId - 1) % FRACTIONS_LENGTH].name;
     },
   },
+  props: {
+    collectionFilter: {
+      type: String,
+      default: 'all',
+    },
+    deckFilter: {
+      type: String,
+      default: 'all',
+    },
+  },
 });
 </script>
 
 <template>
   <div class="collection collection__cart">
     <p class="collection__text">Коллекция карт</p>
-    <p class="collection__sort">Все карты</p>
+    <p class="collection__filter">{{ filters[collectionFilter as keyof typeof filters] }}</p>
   </div>
   <div class="fraction__moves">
     <div class="fraction__choose">
@@ -100,7 +119,7 @@ export default defineComponent({
   </div>
   <div class="collection collection__deck">
     <p class="collection__text">Карты колоды</p>
-    <p class="collection__sort">Все карты</p>
+    <p class="collection__filter deck__filter">{{ filters[deckFilter as keyof typeof filters] }}</p>
   </div>
 </template>
 
@@ -115,7 +134,7 @@ export default defineComponent({
     align-items: flex-end;
   }
 
-  &__sort {
+  &__filter {
     text-transform: uppercase;
     color: #fefefe;
     font-size: 1.5vw;
@@ -124,6 +143,10 @@ export default defineComponent({
   &__text {
     color: #b8b8b8;
     font-size: 1.5vw;
+  }
+
+  .deck__filter {
+    text-align: end;
   }
 }
 .fraction__moves {
