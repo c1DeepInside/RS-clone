@@ -28,10 +28,10 @@ export default defineComponent({
 </script>
 
 <template>
+  <video autoplay muted loop class="background">
+    <source src="@/assets/videos/backFog.mp4" type="video/mp4" />
+  </video>
   <main class="main">
-    <video autoplay muted loop class="background">
-      <source src="@/assets/videos/backFog.mp4" type="video/mp4" />
-    </video>
     <div class="UI">
       <div class="fraction">
         <FractionChoose :collectionFilter="collectionFilter" :deckFilter="deckFilter"></FractionChoose>
@@ -59,21 +59,20 @@ html {
 
 .main {
   position: relative;
-  z-index: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: rgba($color: #000000, $alpha: 0.7);
   width: 100vw;
   height: calc(100vw * 9 / 16);
 }
 
 .background {
-  z-index: 1;
+  z-index: 0;
   width: 100vw;
   height: calc(100vw * 9 / 16);
   position: absolute;
-  opacity: 0.3;
 }
 
 .UI {
