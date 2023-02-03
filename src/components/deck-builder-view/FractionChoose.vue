@@ -129,6 +129,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: end;
+  gap: 0.2vw;
 
   &__deck {
     align-items: flex-end;
@@ -137,7 +138,7 @@ export default defineComponent({
   &__filter {
     text-transform: uppercase;
     color: #fefefe;
-    font-size: 1.5vw;
+    font-size: 1.3vw;
   }
 
   &__text {
@@ -150,7 +151,7 @@ export default defineComponent({
   }
 }
 .fraction__moves {
-  width: 70%;
+  width: 68%;
   justify-content: center;
   display: flex;
   flex-direction: column;
@@ -172,7 +173,7 @@ export default defineComponent({
 .fraction__current {
   display: flex;
   justify-content: center;
-  width: 50%;
+  width: 40%;
 }
 .fraction__current__name {
   display: flex;
@@ -182,7 +183,7 @@ export default defineComponent({
   align-self: end;
 }
 .fraction__emblem {
-  width: 13%;
+  width: 15%;
   object-fit: contain;
 }
 .fraction__description {
