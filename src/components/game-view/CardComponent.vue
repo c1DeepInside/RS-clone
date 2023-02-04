@@ -29,7 +29,7 @@ export default defineComponent({
     <div
       class="card__count"
       :style="{
-        backgroundImage: `url('/src/assets/images/power_normal.png')`,
+        backgroundImage: `url('/src/assets/images/card_power.png')`,
       }"
     >
       <div>4</div>
@@ -72,9 +72,9 @@ export default defineComponent({
 
   &__count {
     position: relative;
-    top: -4%;
-    left: -4%;
-    width: 70%;
+    top: 0;
+    left: -1%;
+    width: 35%;
     height: 50%;
     margin-bottom: -71%;
     background-size: contain;
@@ -86,8 +86,8 @@ export default defineComponent({
       justify-content: center;
       align-items: center;
       position: relative;
-      top: 9%;
-      left: 7%;
+      top: 1%;
+      left: 24%;
       width: 50%;
       height: 50%;
       font-weight: 700;

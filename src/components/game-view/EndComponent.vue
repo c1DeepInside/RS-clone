@@ -29,9 +29,9 @@ export default defineComponent({
       <thead>
         <tr>
           <th class="table__header"></th>
-          <th class="table__header">Round 1</th>
-          <th class="table__header">Round 2</th>
-          <th class="table__header">Round 3</th>
+          <th class="table__header">Раунд 1</th>
+          <th class="table__header">Раунд 2</th>
+          <th class="table__header">Раунд 3</th>
         </tr>
       </thead>
       <tbody class="table__body">
@@ -50,8 +50,8 @@ export default defineComponent({
       </tbody>
     </table>
     <div class="end__btns">
-      <button class="btn-game end__btn">Edit</button>
-      <button class="btn-game end__btn" @click="showEndGame">Replay</button>
+      <button class="btn-game end__btn">Изменить</button>
+      <button class="btn-game end__btn" @click="showEndGame">Повторить</button>
     </div>
   </div>
 </template>

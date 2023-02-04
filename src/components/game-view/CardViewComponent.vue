@@ -21,7 +21,7 @@ export default defineComponent({
     <div
       class="card-view__img"
       :style="{
-        backgroundImage: `url('/src/assets/images/realms_blue_stripes_info.jpg')`,
+        backgroundImage: `url('/src/assets/images/card_blue_stripes.png')`,
       }"
     ></div>
     <div v-if="isDescription" class="card-view__information information-card">
@@ -31,10 +31,8 @@ export default defineComponent({
           backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
         }"
       ></div>
-      <h2 class="information-card__title">Tight Bond</h2>
-      <p class="information-card__descr">
-        Place next to a card with the same name to double the strength of both cards.
-      </p>
+      <h2 class="information-card__title">Прочная связь</h2>
+      <p class="information-card__descr">Выложите рядом с картой с тем же названием, чтобы удвоить силу обеих карт.</p>
     </div>
   </div>
 </template>

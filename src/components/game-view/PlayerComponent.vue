@@ -2,6 +2,14 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
+  data() {
+    return {
+      imageAvatar:
+        this.name === 'Player 1'
+          ? 'src/assets/images/player_avatar_enemy.png'
+          : 'src/assets/images/player_avatar_geralt.png',
+    };
+  },
   props: {
     name: {
       type: String,
@@ -9,7 +17,7 @@ export default defineComponent({
     },
     deckName: {
       type: String,
-      default: 'Nifgaardian Empire',
+      default: 'Нильфгаард',
     },
     count: {
       type: String,
@@ -28,7 +36,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="player__img">
+  <div
+    class="player__img"
+    :style="{
+      backgroundImage: `url(${imageAvatar})`,
+    }"
+  >
     <div>
       <div
         :style="{
@@ -54,7 +67,7 @@ export default defineComponent({
   <div class="player__score player__score-more">
     <div>0</div>
   </div>
-  <div :class="['player__passed', { 'player__passed-true': isPass }]">Passed</div>
+  <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
 </template>
 
 <style lang="scss" scoped>
@@ -66,19 +79,18 @@ export default defineComponent({
     width: 21.9%;
     height: 80%;
     margin-bottom: -24%;
-    background-image: url('@/assets/images/profile.png');
     background-position: center;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     border-radius: 100%;
 
     div {
       position: relative;
-      left: -10%;
-      top: -6%;
-      height: 118%;
-      width: 118%;
-      background-image: url('@/assets/images/icon_player_border.png');
+      left: -28%;
+      top: -23%;
+      height: 152%;
+      width: 152%;
+      background-image: url('@/assets/images/player_avatar_border.png');
       background-position: center;
       background-size: contain;
       background-repeat: no-repeat;
@@ -86,11 +98,11 @@ export default defineComponent({
 
       div {
         position: relative;
-        width: 43%;
-        height: 43%;
-        left: -10.5%;
-        top: 0.5%;
-        background-image: url('@/assets/images/deck_shield_realms.png');
+        width: 30%;
+        height: 30%;
+        left: 4.5%;
+        top: 4.5%;
+        background-image: url('@/assets/images/player_faction_northern.png');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -132,7 +144,7 @@ export default defineComponent({
     width: 17%;
     margin-bottom: -9%;
     padding-left: 7%;
-    background-image: url('@/assets/images/icon_card_count.png');
+    background-image: url('@/assets/images/board_cards.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: left;
@@ -188,10 +200,10 @@ export default defineComponent({
         top: -32%;
         width: 195%;
         height: 170%;
-        background-image: url('@/assets/images/icon_high_score.png');
+        background-image: url('@/assets/images/player_winner.png');
         background-repeat: no-repeat;
-        background-size: contain;
-        background-position: bottom;
+        background-size: cover;
+        background-position: center;
       }
     }
 
@@ -206,7 +218,7 @@ export default defineComponent({
     width: 0;
     height: 0;
     position: relative;
-    left: 90%;
+    left: 94%;
     top: 87%;
     font-weight: 700;
     font-size: 1.5vw;
@@ -223,8 +235,13 @@ export default defineComponent({
   }
 }
 
-.game__player-1 .player__score {
-  background-image: url('@/assets/images/score_total_op.png');
+.game__player-1 {
+  .player__score {
+    background-image: url('@/assets/images/score_total_op.png');
+  }
+  .player__img {
+    background-size: auto;
+  }
 }
 
 .game__player-2 {
@@ -232,7 +249,7 @@ export default defineComponent({
     &__img {
       div {
         div {
-          top: 59%;
+          top: 56%;
         }
       }
     }

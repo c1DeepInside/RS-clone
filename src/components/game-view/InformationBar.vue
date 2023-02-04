@@ -6,14 +6,13 @@ export default defineComponent({});
 
 <template>
   <!-- "information-true появится сообщение" -->
-  <div class="information">
-    <div class="information__content information__content-yourPassed"></div>
+  <div class="information information-true">
+    <div class="information__content information__content-enemyMove"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .information {
-  display: none;
   width: 100%;
   height: 14%;
   position: absolute;
@@ -46,10 +45,17 @@ export default defineComponent({});
       height: 47.25%;
       position: absolute;
       left: 100.5%;
-      top: 28.1%;
+      top: 21.1%;
       font-size: 1.5vw;
       color: $GOLDEN_COLOR;
       font-weight: 700;
+    }
+
+    &-roundStart {
+      background-image: url('@/assets/images/board_round_start.png');
+      &::after {
+        content: 'Начало раунда';
+      }
     }
 
     &-loseRound {
@@ -59,59 +65,59 @@ export default defineComponent({});
       }
     }
 
-    &-winRound {
-      background-image: url('@/assets/images/notif_win_round.png');
+    &-enemyStart {
+      background-image: url('@/assets/images/board_coin_enemy.png');
       &::after {
-        content: 'You have won the round';
+        content: 'Противник ходит первым';
       }
     }
 
-    &-yourStart {
-      background-image: url('@/assets/images/notif_me_coin.png');
-      &::after {
-        content: 'You will make the first move';
-      }
-    }
-
-    &-opponentStart {
-      background-image: url('@/assets/images/notif_op_coin.png');
-      &::after {
-        content: 'The opponent will make the first move';
-      }
-    }
-
-    &-roundStart {
-      background-image: url('@/assets/images/notif_round_start.png');
-      &::after {
-        content: 'Round start';
-      }
-    }
-
-    &-yourMove {
-      background-image: url('@/assets/images/notif_me_turn.png');
-      &::after {
-        content: 'Your move';
-      }
-    }
-
-    &-opponentMove {
+    &-enemyMove {
       background-image: url('@/assets/images/notif_op_turn.png');
       &::after {
-        content: "Opponent's move";
+        content: 'Ход противника';
       }
     }
 
-    &-yourPassed {
+    &-enemyWinRound {
+      background-image: url('@/assets/images/notif_op_coin.png');
+      &::after {
+        content: 'Противник выиграл раунд';
+      }
+    }
+
+    &-enemyPassed {
+      background-image: url('@/assets/images/notif_round_passed.png');
+      &::after {
+        content: 'Противник спасовал';
+      }
+    }
+
+    &-alliesStart {
+      background-image: url('@/assets/images/board_coin_allies.png');
+      &::after {
+        content: 'Вы делаете первый ход';
+      }
+    }
+
+    &-alliesMove {
+      background-image: url('@/assets/images/notif_me_turn.png');
+      &::after {
+        content: 'Ваш ход!';
+      }
+    }
+
+    &-alliesWinRound {
+      background-image: url('@/assets/images/win_round.png');
+      &::after {
+        content: 'Вы выиграли раунд!';
+      }
+    }
+
+    &-alliesPassed {
       background-image: url('@/assets/images/notif_round_passed.png');
       &::after {
         content: 'You made a pass';
-      }
-    }
-
-    &-opponentPassed {
-      background-image: url('@/assets/images/notif_round_passed.png');
-      &::after {
-        content: 'The opponent made a pass';
       }
     }
   }

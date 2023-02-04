@@ -56,7 +56,7 @@ export default defineComponent({
         <div class="game__player game__player-1 player">
           <PlayerComponent
             name="Player 1"
-            deckName="Nifgaardian Empire"
+            deckName="Нильфгаард"
             count="10"
             img="/src/assets/images/deck_shield_realms.png"
           />
@@ -66,11 +66,11 @@ export default defineComponent({
           <CardComponent />
           <CardComponent />
         </div>
-        <button @click="showPass" class="btn-game game__pass">Fold</button>
+        <button @click="showPass" class="btn-game game__pass">Спасовать</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
-            deckName="Nifgaardian Empire"
+            deckName="Королевства Севера"
             count="10"
             img="/src/assets/images/deck_shield_realms.png"
             :isPass="isPass"
@@ -84,7 +84,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button @click="showEndGame" class="btn-game game__give-up">Give Up</button>
+        <button @click="showEndGame" class="btn-game game__give-up">Сдаться</button>
       </div>
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
@@ -248,8 +248,8 @@ export default defineComponent({
   &__pass {
     position: relative;
     top: 2%;
-    left: 44%;
-    width: 23%;
+    left: 41%;
+    width: 27%;
     height: 4%;
   }
 
@@ -312,9 +312,10 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     position: absolute;
-    background-color: rgba($color: #101010, $alpha: 0.8);
+    background-color: rgba($color: #101010, $alpha: 0.9);
     width: 3vw;
     left: 1.5vw;
+    bottom: 0;
     height: 2vw;
     z-index: 1;
     font-size: 1.3vw;
