@@ -11,8 +11,10 @@ export default defineComponent({
   data() {
     return {
       isPass: false,
+      isGiveUpAnimation: false,
       isEnd: false,
       selectedItem: -1,
+      timer: 0,
     };
   },
   methods: {
@@ -20,7 +22,16 @@ export default defineComponent({
       this.isPass = !this.isPass;
     },
     showEndGame() {
-      this.isEnd = !this.isEnd;
+      this.isGiveUpAnimation = true;
+      this.timer = setTimeout(() => {
+        this.isEnd = !this.isEnd;
+        this.isGiveUpAnimation = false;
+      }, 4000);
+    },
+    dontShowEndGame() {
+      this.isGiveUpAnimation = false;
+      clearTimeout(this.timer);
+      console.log(this.timer);
     },
     updateSelectedItem(value: number) {
       this.selectedItem = value;
@@ -84,7 +95,15 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button @click="showEndGame" class="btn-game game__give-up">Сдаться</button>
+
+        <button
+          @mousedown="showEndGame"
+          @mouseup="dontShowEndGame"
+          @mouseout="dontShowEndGame"
+          :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
+        >
+          Сдаться
+        </button>
       </div>
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
@@ -259,6 +278,25 @@ export default defineComponent({
     left: 63%;
     width: 23%;
     height: 4%;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2%;
+      background-color: $GOLDEN_COLOR;
+      transform: scaleX(0);
+      transform-origin: 0% 0%;
+      transition: transform 4s ease-in-out;
+    }
+  }
+
+  .give-animation::after {
+    transform: scaleX(1);
+    transform-origin: 0% 50%;
+    height: 2%;
   }
 }
 

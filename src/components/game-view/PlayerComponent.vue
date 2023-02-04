@@ -235,7 +235,6 @@ export default defineComponent({
     &-true {
       opacity: 1;
       visibility: visible;
-      // text-shadow: 0 0 0 $TAN_COLOR;
       text-shadow: 0 0 2vw $TAN_COLOR;
       animation: glow 1s ease-in-out infinite alternate;
     }
