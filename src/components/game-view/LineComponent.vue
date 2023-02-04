@@ -32,15 +32,40 @@ export default defineComponent({
       <CardComponent />
       <CardComponent />
     </div>
+    <div class="weather__wrap">
+      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
+      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.weather {
+  &__wrap {
+    position: absolute;
+    height: 100%;
+    width: 93%;
+    left: 3.3vw;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: rotateX(180deg);
+}
+
+.second_rain {
+  left: 3vw;
+}
+
 .line {
   height: 6.4vw;
   width: 100%;
   display: flex;
   align-items: flex-end;
+  position: relative;
 
   .power {
     &__wrap {

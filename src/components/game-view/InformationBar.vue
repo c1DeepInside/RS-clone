@@ -6,7 +6,7 @@ export default defineComponent({});
 
 <template>
   <!-- "information-true появится сообщение" -->
-  <div class="information information-true">
+  <div class="information information">
     <div class="information__content information__content-enemyMove"></div>
   </div>
 </template>
