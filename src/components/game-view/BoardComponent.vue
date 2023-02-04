@@ -71,7 +71,7 @@ export default defineComponent({
       }
 
       &__melee {
-        margin-top: 0.75vw;
+        margin-top: 0.8vw;
       }
     }
 
@@ -88,7 +88,7 @@ export default defineComponent({
       }
 
       &__melee {
-        margin-top: 0.75vw;
+        margin-top: 0.65vw;
       }
     }
   }

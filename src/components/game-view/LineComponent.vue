@@ -34,16 +34,12 @@ export default defineComponent({
       <CardComponent />
     </div>
     <div v-if="lineType === 'siege'" class="weather__wrap">
-      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
-      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
+      <img class="weather weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
+      <img class="weather weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
-    <div v-if="lineType === 'range'" class="weather__wrap">
-      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
-      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
-    </div>
+    <div v-if="lineType === 'range'" class="weather__wrap"></div>
     <div v-if="lineType === 'melee'" class="weather__wrap">
-      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
-      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
+      <img class="weather weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
   </div>
 </template>
@@ -51,20 +47,32 @@ export default defineComponent({
 <style lang="scss" scoped>
 .weather {
   &__wrap {
+    top: 0.1vw;
     position: absolute;
     height: 100%;
-    width: 93%;
-    left: 3.3vw;
+    width: 93.3%;
+    left: 3.15vw;
     overflow: hidden;
     pointer-events: none;
+    z-index: 5;
   }
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  transform: rotateX(180deg);
-}
 
+  &_rain {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transform: rotateX(180deg);
+    opacity: 0.7;
+  }
+
+  &_frost {
+    position: absolute;
+    opacity: 0.8;
+    width: 100%;
+    top: -0.7vw;
+  }
+}
 .second_rain {
   left: 3vw;
 }
