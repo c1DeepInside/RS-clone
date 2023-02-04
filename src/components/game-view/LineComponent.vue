@@ -33,13 +33,16 @@ export default defineComponent({
       <CardComponent />
       <CardComponent />
     </div>
-    <div v-if="lineType === 'siege'" class="weather__wrap">
-      <img class="weather weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
-      <img class="weather weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
+    <div v-if="lineType === 'siege'" class="weather__wrap" style="display: none">
+      <img class="weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
+      <img class="weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
-    <div v-if="lineType === 'range'" class="weather__wrap"></div>
-    <div v-if="lineType === 'melee'" class="weather__wrap">
-      <img class="weather weather_frost" src="@/assets/images/frost.png" alt="frost" />
+    <div v-if="lineType === 'range'" class="weather__wrap" style="display: none">
+      <div class="weather_fog first_fog"></div>
+      <div class="weather_fog second_fog"></div>
+    </div>
+    <div v-if="lineType === 'melee'" class="weather__wrap" style="display: none">
+      <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
   </div>
 </template>
@@ -47,14 +50,22 @@ export default defineComponent({
 <style lang="scss" scoped>
 .weather {
   &__wrap {
-    top: 0.2vw;
+    top: -0.5vw;
     position: absolute;
-    height: 100%;
-    width: 93.3%;
+    height: 7vw;
+    width: 93.5%;
     left: 3.15vw;
     overflow: hidden;
     pointer-events: none;
     z-index: 5;
+  }
+
+  &_fog {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-repeat: repeat;
+    background-size: cover;
   }
 
   &_rain {
@@ -64,17 +75,62 @@ export default defineComponent({
     pointer-events: none;
     transform: rotateX(180deg);
     opacity: 0.7;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
   }
 
   &_frost {
     position: absolute;
-    opacity: 0.8;
+    opacity: 0.65;
     width: 100%;
-    top: -0.8vw;
+    top: -0.2vw;
+    background: linear-gradient(0deg, rgba(158, 224, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
   }
 }
+
 .second_rain {
   left: 3vw;
+}
+
+.second_fog {
+  background: url('src/assets/images/fog.png');
+  opacity: 0.25;
+  animation: fogAnimation 80s linear 0s infinite;
+}
+
+.first_fog {
+  background: url('src/assets/images/fog.png');
+  animation: fogAnimation2 80s linear 0s infinite;
+  opacity: 0.25;
+}
+
+@keyframes fogAnimation {
+  0% {
+    background-position-x: 0%;
+    background-position-y: 0%;
+  }
+  50% {
+    background-position-x: 100%;
+    background-position-y: 50%;
+  }
+  100% {
+    background-position-x: 0%;
+    background-position-y: 0%;
+  }
+}
+
+@keyframes fogAnimation2 {
+  0% {
+    background-position-x: 100%;
+    background-position-y: 0%;
+  }
+  50% {
+    background-position-x: 0%;
+    background-position-y: 50%;
+  }
+  100% {
+    background-position-x: 100%;
+    background-position-y: 0%;
+  }
 }
 
 .line {
