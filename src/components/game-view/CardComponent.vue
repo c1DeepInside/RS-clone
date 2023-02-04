@@ -1,5 +1,7 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     img: {
       type: String,
@@ -14,7 +16,7 @@ export default {
       default: false,
     },
   },
-};
+});
 </script>
 
 <template>
@@ -57,7 +59,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .card {
   margin: 0 0.1vw;
   height: 6.35vw;

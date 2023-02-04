@@ -1,8 +1,9 @@
 <script lang="ts">
+import { defineComponent } from 'vue';
 import CardComponent from './CardComponent.vue';
-import LineComponent from '@/components/GameView/LineComponent.vue';
+import LineComponent from './LineComponent.vue';
 
-export default {
+export default defineComponent({
   data() {
     return {
       isShowCard: false,
@@ -20,21 +21,21 @@ export default {
     CardComponent,
     LineComponent,
   },
-};
+});
 </script>
 
 <template>
   <div class="board">
     <div class="field">
       <div class="field__enemy">
-        <LineComponent :type="isEnemy" class="field__enemy__siege"></LineComponent>
-        <LineComponent :type="isEnemy" class="field__enemy__range"></LineComponent>
-        <LineComponent :type="isEnemy" class="field__enemy__melee"></LineComponent>
+        <LineComponent class="field__enemy__siege" :type="isEnemy" />
+        <LineComponent class="field__enemy__range" :type="isEnemy" />
+        <LineComponent class="field__enemy__melee" :type="isEnemy" />
       </div>
       <div class="field__allies">
-        <LineComponent :type="!isEnemy" class="field__allies__siege"></LineComponent>
-        <LineComponent :type="!isEnemy" class="field__allies__range"></LineComponent>
-        <LineComponent :type="!isEnemy" class="field__allies__melee"></LineComponent>
+        <LineComponent class="field__allies__melee" :type="!isEnemy" />
+        <LineComponent class="field__allies__range" :type="!isEnemy" />
+        <LineComponent class="field__allies__siege" :type="!isEnemy" />
       </div>
     </div>
     <div class="board__hand">
@@ -45,7 +46,7 @@ export default {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .board {
   .field {
     height: 43.5vw;

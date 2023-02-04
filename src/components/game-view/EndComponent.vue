@@ -1,5 +1,7 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     isEnd: {
       type: Boolean,
@@ -17,7 +19,7 @@ export default {
       this.$emit('update:showEnd', this.showEnd);
     },
   },
-};
+});
 </script>
 
 <template>
@@ -53,14 +55,15 @@ export default {
     </div>
   </div>
 </template>
-<style scoped lang="scss">
+
+<style lang="scss" scoped>
 .end {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
   position: absolute;
   top: 0;
   z-index: 1000;
-  background-color: rgba(10, 10, 10, 0.9);
+  background-color: rgba($color: #101010, $alpha: 0.9);
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;

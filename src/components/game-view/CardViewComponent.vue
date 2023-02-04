@@ -1,5 +1,7 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   data() {
     return {
       isDescription: true,
@@ -11,8 +13,9 @@ export default {
       default: -1,
     },
   },
-};
+});
 </script>
+
 <template>
   <div :class="['card-view', { 'card-view-true': selectedItem !== -1 }]">
     <div
@@ -35,7 +38,8 @@ export default {
     </div>
   </div>
 </template>
-<style scoped lang="scss">
+
+<style lang="scss" scoped>
 .card-view {
   position: absolute;
   top: 0;
@@ -67,7 +71,7 @@ export default {
   left: 67.95vw;
   height: 7.87vw;
   width: 29.12vw;
-  background-color: rgba(10, 10, 10, 0.9);
+  background-color: rgba($color: #101010, $alpha: 0.9);
   border: 0.1vw solid $GOLDEN_COLOR;
   border-width: 0.1vw 0;
   color: $TAN_COLOR;

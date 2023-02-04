@@ -1,5 +1,7 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     name: {
       type: String,
@@ -22,7 +24,7 @@ export default {
       default: false,
     },
   },
-};
+});
 </script>
 
 <template>
@@ -55,7 +57,7 @@ export default {
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Passed</div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .player {
   &__img {
     position: relative;

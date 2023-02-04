@@ -1,5 +1,7 @@
 <script lang="ts">
-export default {};
+import { defineComponent } from 'vue';
+
+export default defineComponent({});
 </script>
 
 <template>
@@ -16,7 +18,7 @@ export default {};
   height: 14%;
   position: absolute;
   top: 43%;
-  background-color: rgba(10, 10, 10, 0.9);
+  background-color: rgba($color: #101010, $alpha: 0.9);
   z-index: 100;
   opacity: 0;
   visibility: hidden;
@@ -105,6 +107,7 @@ export default {};
         content: 'You made a pass';
       }
     }
+
     &-opponentPassed {
       background-image: url('@/assets/images/notif_round_passed.png');
       &::after {

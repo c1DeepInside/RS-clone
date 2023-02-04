@@ -1,11 +1,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PlayerComponent from '@/components/GameView/PlayerComponent.vue';
-import CardComponent from '@/components/GameView/CardComponent.vue';
-import BoardComponent from '@/components/GameView/BoardComponent.vue';
-import CardViewComponent from '@/components/GameView/CardViewComponent.vue';
-import InformationBar from '@/components/GameView/InformationBar.vue';
-import EndComponent from '@/components/GameView/EndComponent.vue';
+import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
+import CardComponent from '@/components/game-view/CardComponent.vue';
+import BoardComponent from '@/components/game-view/BoardComponent.vue';
+import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
+import InformationBar from '@/components/game-view/InformationBar.vue';
+import EndComponent from '@/components/game-view/EndComponent.vue';
 
 export default defineComponent({
   data() {
@@ -116,7 +116,7 @@ export default defineComponent({
   </main>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
@@ -201,7 +201,7 @@ export default defineComponent({
   &__player {
     height: 12.5%;
     width: 88.5%;
-    background-color: rgba(20, 20, 20, 0.6);
+    background-color: rgba($color: #101010, $alpha: 0.8);
 
     &-1 {
       margin-top: 10%;
@@ -311,7 +311,7 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     position: absolute;
-    background-color: rgba(20, 20, 20, 0.8);
+    background-color: rgba($color: #101010, $alpha: 0.8);
     width: 3vw;
     left: 1.5vw;
     height: 2vw;
