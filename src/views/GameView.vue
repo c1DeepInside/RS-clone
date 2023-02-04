@@ -11,8 +11,10 @@ export default defineComponent({
   data() {
     return {
       isPass: false,
+      isGiveUpAnimation: false,
       isEnd: false,
       selectedItem: -1,
+      timer: 0,
     };
   },
   methods: {
@@ -20,7 +22,16 @@ export default defineComponent({
       this.isPass = !this.isPass;
     },
     showEndGame() {
-      this.isEnd = !this.isEnd;
+      this.isGiveUpAnimation = true;
+      this.timer = setTimeout(() => {
+        this.isEnd = !this.isEnd;
+        this.isGiveUpAnimation = false;
+      }, 4000);
+    },
+    dontShowEndGame() {
+      this.isGiveUpAnimation = false;
+      clearTimeout(this.timer);
+      console.log(this.timer);
     },
     updateSelectedItem(value: number) {
       this.selectedItem = value;
@@ -46,7 +57,7 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card">
+          <div class="game__leader-card card-off">
             <CardComponent />
           </div>
           <div class="game__leader-icon">
@@ -78,13 +89,20 @@ export default defineComponent({
         </div>
         <div class="game__leader game__leader-2">
           <div class="game__leader-card">
-            <CardComponent />
+            <CardComponent @click="selectedItem = 1" />
           </div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
         </div>
-        <button @click="showEndGame" class="btn-game game__give-up">Сдаться</button>
+        <button
+          @mousedown="showEndGame"
+          @mouseup="dontShowEndGame"
+          @mouseout="dontShowEndGame"
+          :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
+        >
+          Сдаться
+        </button>
       </div>
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
@@ -171,11 +189,22 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
 
+      &:hover {
+        background-color: rgba($color: #fe9902, $alpha: 0.1);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.6);
+      }
+
       .card {
-        pointer-events: none;
         position: absolute;
         height: 98%;
         width: 95%;
+
+        &:hover {
+          border: 0.5px outset $GOLDEN_COLOR;
+          border-radius: 0.3vw;
+          z-index: 1;
+          transform: translateY(-0.5vw);
+        }
       }
     }
 
@@ -259,7 +288,31 @@ export default defineComponent({
     left: 63%;
     width: 23%;
     height: 4%;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2%;
+      background-color: $GOLDEN_COLOR;
+      transform: scaleX(0);
+      transform-origin: 0% 0%;
+      transition: transform 4s ease-in-out;
+    }
   }
+
+  .give-animation::after {
+    transform: scaleX(1);
+    transform-origin: 0% 50%;
+    height: 2%;
+  }
+}
+
+.card-off {
+  pointer-events: none;
+  opacity: 0.2;
 }
 
 .deck {

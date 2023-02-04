@@ -186,8 +186,8 @@ export default defineComponent({
     width: 12%;
     top: 31%;
     margin-bottom: -12%;
-    font-weight: 700;
-    font-size: 2.29vw;
+    font-weight: 500;
+    font-size: 1.4vw;
     color: $BLACK_COLOR_MAIN;
     text-shadow: 0 0 5px $WHITE_COLOR;
     background-size: contain;
@@ -199,7 +199,7 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       position: relative;
-      top: 9%;
+      top: 26%;
     }
 
     &-more {
@@ -235,7 +235,6 @@ export default defineComponent({
     &-true {
       opacity: 1;
       visibility: visible;
-      // text-shadow: 0 0 0 $TAN_COLOR;
       text-shadow: 0 0 2vw $TAN_COLOR;
       animation: glow 1s ease-in-out infinite alternate;
     }
