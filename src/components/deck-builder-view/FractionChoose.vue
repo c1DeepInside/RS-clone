@@ -11,8 +11,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   data() {
     return {
-      prevFraction: 'Чудовища',
-      nextFraction: 'Нильфгаард',
+      currentId: 0,
       currFraction: {
         id: 0,
         name: 'Королевства Севера',
@@ -58,22 +57,23 @@ export default defineComponent({
   },
   methods: {
     decrementIdx() {
-      let currId = this.currFraction.id === 0 ? FRACTIONS_LENGTH : this.currFraction.id;
-      currId = (currId - 1) % FRACTIONS_LENGTH;
-      this.currFraction = this.fractions[currId];
-
-      this.changePrevNext(currId);
+      let currId = this.currentId === 0 ? FRACTIONS_LENGTH : this.currentId;
+      this.currentId = (currId - 1) % FRACTIONS_LENGTH;
+      this.currFraction = this.fractions[this.currentId % FRACTIONS_LENGTH];
     },
     incrementIdx() {
-      let currId = (this.currFraction.id + 1) % FRACTIONS_LENGTH;
-      this.currFraction = this.fractions[currId];
-
-      this.changePrevNext(currId);
+      this.currentId = (this.currentId + 1) % FRACTIONS_LENGTH;
+      this.currFraction = this.fractions[this.currentId % FRACTIONS_LENGTH];
     },
-    changePrevNext(currId: number) {
-      this.nextFraction = this.fractions[(currId + 1) % FRACTIONS_LENGTH].name;
-      currId = currId === 0 ? FRACTIONS_LENGTH : currId;
-      this.prevFraction = this.fractions[(currId - 1) % FRACTIONS_LENGTH].name;
+  },
+  computed: {
+    getPrevFraction(): string {
+      let prevId = this.currentId === 0 ? FRACTIONS_LENGTH : this.currentId;
+      prevId = prevId === 0 ? FRACTIONS_LENGTH : prevId;
+      return this.fractions[(prevId - 1) % FRACTIONS_LENGTH].name;
+    },
+    getNextFraction(): string {
+      return this.fractions[(this.currentId + 1) % FRACTIONS_LENGTH].name;
     },
   },
   props: {
@@ -96,7 +96,7 @@ export default defineComponent({
   </div>
   <div class="fraction__moves">
     <div class="fraction__choose">
-      <div class="prev">{{ prevFraction }}</div>
+      <div class="prev">{{ getPrevFraction }}</div>
       <div class="arrow_btn" @click="decrementIdx()">ᐊ</div>
       <div class="fraction__current">
         <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" draggable="false" />
@@ -108,7 +108,7 @@ export default defineComponent({
         </div>
       </div>
       <div class="arrow_btn" @click="incrementIdx()">ᐅ</div>
-      <div class="next">{{ nextFraction }}</div>
+      <div class="next">{{ getNextFraction }}</div>
     </div>
     <div class="fraction__description">
       {{ currFraction.description }}
