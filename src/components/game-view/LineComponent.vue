@@ -11,6 +11,7 @@ export default defineComponent({
   },
   props: {
     type: Boolean,
+    lineType: String,
   },
   components: {
     CardComponent,
@@ -32,7 +33,15 @@ export default defineComponent({
       <CardComponent />
       <CardComponent />
     </div>
-    <div class="weather__wrap">
+    <div v-if="lineType === 'siege'" class="weather__wrap">
+      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
+      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
+    </div>
+    <div v-if="lineType === 'range'" class="weather__wrap">
+      <img class="weather" src="@/assets/images/rain1.gif" alt="" />
+      <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
+    </div>
+    <div v-if="lineType === 'melee'" class="weather__wrap">
       <img class="weather" src="@/assets/images/rain1.gif" alt="" />
       <img class="weather second_rain" src="@/assets/images/rain1.gif" alt="" />
     </div>

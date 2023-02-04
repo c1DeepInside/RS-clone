@@ -9,6 +9,11 @@ export default defineComponent({
       isShowCard: false,
       selectedItem: -1,
       isEnemy: true,
+      linesTypes: {
+        siege: 'siege',
+        melee: 'melee',
+        range: 'range',
+      },
     };
   },
   methods: {
@@ -28,14 +33,14 @@ export default defineComponent({
   <div class="board">
     <div class="field">
       <div class="field__enemy">
-        <LineComponent class="field__enemy__siege" :type="isEnemy" />
-        <LineComponent class="field__enemy__range" :type="isEnemy" />
-        <LineComponent class="field__enemy__melee" :type="isEnemy" />
+        <LineComponent class="field__enemy__siege" :type="isEnemy" :lineType="linesTypes.siege" />
+        <LineComponent class="field__enemy__range" :type="isEnemy" :lineType="linesTypes.range" />
+        <LineComponent class="field__enemy__melee" :type="isEnemy" :lineType="linesTypes.melee" />
       </div>
       <div class="field__allies">
-        <LineComponent class="field__allies__melee" :type="!isEnemy" />
-        <LineComponent class="field__allies__range" :type="!isEnemy" />
-        <LineComponent class="field__allies__siege" :type="!isEnemy" />
+        <LineComponent class="field__allies__melee" :type="!isEnemy" :lineType="linesTypes.melee" />
+        <LineComponent class="field__allies__range" :type="!isEnemy" :lineType="linesTypes.range" />
+        <LineComponent class="field__allies__siege" :type="!isEnemy" :lineType="linesTypes.siege" />
       </div>
     </div>
     <div class="board__hand">
