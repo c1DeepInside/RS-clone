@@ -65,7 +65,8 @@ export default defineComponent({
     <div class="player__deck-name">{{ deckName }}</div>
   </template>
   <div class="player__score player__score-more">
-    <div>0</div>
+    <span>0</span>
+    <div></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
 </template>
@@ -157,7 +158,7 @@ export default defineComponent({
     width: 9%;
     height: 31%;
     margin-bottom: -9.25%;
-    background-image: url('@/assets/images/icon_gem_off.png');
+    background-image: url('@/assets/images/player_gem_off.png');
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -174,7 +175,7 @@ export default defineComponent({
     }
 
     &-true {
-      background-image: url('@/assets/images/icon_gem_on.png');
+      background-image: url('@/assets/images/player_gem_on.png');
     }
   }
 
@@ -193,24 +194,27 @@ export default defineComponent({
     background-repeat: no-repeat;
     background-position: center;
 
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      top: 9%;
+    }
+
     &-more {
       div {
-        position: relative;
+        position: absolute;
         left: -46%;
-        top: -32%;
+        top: -28%;
         width: 195%;
         height: 170%;
         background-image: url('@/assets/images/player_winner.png');
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+        animation: pulse 2s infinite;
       }
-    }
-
-    div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
 
@@ -231,10 +235,36 @@ export default defineComponent({
     &-true {
       opacity: 1;
       visibility: visible;
+      // text-shadow: 0 0 0 $TAN_COLOR;
+      text-shadow: 0 0 2vw $TAN_COLOR;
+      animation: glow 1s ease-in-out infinite alternate;
     }
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: -0.5vw 0 1.5vw $TAN_COLOR;
+  }
+  50% {
+    text-shadow: 0.5vw 0 1.5vw $TAN_COLOR;
+  }
+  100% {
+    text-shadow: 0 0 1.5vw $TAN_COLOR;
+  }
+}
 .game__player-1 {
   .player__score {
     background-image: url('@/assets/images/score_total_op.png');
