@@ -120,7 +120,7 @@ export default defineComponent({
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
-  background-image: url('@/assets/images/game_board.jpg');
+  background-image: url('@/assets/images/board.png');
   background-size: 100% auto;
   background-repeat: no-repeat;
 }
@@ -226,6 +226,22 @@ export default defineComponent({
     width: 54.9%;
     height: 12.75%;
     z-index: 1;
+
+    &:hover {
+      background-color: rgba($color: #fe9902, $alpha: 0.1);
+      box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.6);
+    }
+
+    .card {
+      border-radius: 0.2vw;
+
+      &:hover {
+        border: 0.5px outset $GOLDEN_COLOR;
+        border-radius: 0.2vw;
+        z-index: 1;
+        transform: translateY(-0.5vw);
+      }
+    }
   }
 
   &__pass {
@@ -277,6 +293,17 @@ export default defineComponent({
     height: 100%;
     overflow: visible;
     z-index: 1;
+  }
+
+  &__cemetery {
+    &:hover {
+      background-color: rgba($color: #fe9902, $alpha: 0.1);
+      box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.6);
+    }
+
+    .card {
+      border-radius: 0.2vw;
+    }
   }
 
   &__counter {

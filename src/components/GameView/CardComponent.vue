@@ -64,7 +64,9 @@ export default {
   width: 4.45vw;
   background-repeat: no-repeat;
   background-size: contain;
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
+  border-top-left-radius: 0.2vw;
+  border-top-right-radius: 0.2vw;
 
   &__count {
     position: relative;
