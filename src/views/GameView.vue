@@ -57,7 +57,7 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card">
+          <div class="game__leader-card card-off">
             <CardComponent />
           </div>
           <div class="game__leader-icon">
@@ -190,11 +190,22 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
 
+      &:hover {
+        background-color: rgba($color: #fe9902, $alpha: 0.1);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.6);
+      }
+
       .card {
-        pointer-events: none;
         position: absolute;
         height: 98%;
         width: 95%;
+
+        &:hover {
+          border: 0.5px outset $GOLDEN_COLOR;
+          border-radius: 0.3vw;
+          z-index: 1;
+          transform: translateY(-0.5vw);
+        }
       }
     }
 
@@ -298,6 +309,11 @@ export default defineComponent({
     transform-origin: 0% 50%;
     height: 2%;
   }
+}
+
+.card-off {
+  pointer-events: none;
+  opacity: 0.2;
 }
 
 .deck {
