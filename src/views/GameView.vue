@@ -89,13 +89,12 @@ export default defineComponent({
         </div>
         <div class="game__leader game__leader-2">
           <div class="game__leader-card">
-            <CardComponent />
+            <CardComponent @click="selectedItem = 1" />
           </div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
         </div>
-
         <button
           @mousedown="showEndGame"
           @mouseup="dontShowEndGame"
