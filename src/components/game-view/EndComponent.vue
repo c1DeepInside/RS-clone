@@ -90,6 +90,10 @@ export default defineComponent({
     background-image: url('@/assets/images/end_win.png');
   }
 
+  &-draw {
+    background-image: url('@/assets/images/end_draw.png');
+  }
+
   &__btns {
     display: flex;
     justify-content: space-between;
