@@ -7,7 +7,7 @@ export default defineComponent({});
 <template>
   <!-- "information-true появится сообщение" -->
   <div class="information information-true">
-    <div class="information__content information__content-enemyMove"></div>
+    <div class="information__content information__content-enemySkellige"></div>
   </div>
 </template>
 
@@ -59,9 +59,51 @@ export default defineComponent({});
     }
 
     &-loseRound {
-      background-image: url('@/assets/images/notif_lose_round.png');
+      background-image: url('@/assets/images/board_lose_round.png');
       &::after {
-        content: 'You have lost the round';
+        content: 'Противник выиграл раунд';
+      }
+    }
+
+    &-drawRound {
+      background-image: url('@/assets/images/board_draw_round.png');
+      &::after {
+        content: 'Раунд завершился вничью';
+      }
+    }
+
+    &-north {
+      background-image: url('@/assets/images/board_north.png');
+      &::after {
+        content: 'Из-за умения фракции королевств Севера - Север берет дополнительную карту.';
+      }
+    }
+
+    &-monsters {
+      background-image: url('@/assets/images/board_monsters.png');
+      &::after {
+        content: 'Из-за умения фракции королевств Севера - Север берет дополнительную карту.';
+      }
+    }
+
+    &-scoiatael {
+      background-image: url('@/assets/images/board_scoiatael.png');
+      &::after {
+        content: "Противник воспользовался свойством фракции скоя'таэлей, чтобы пойти первым.";
+      }
+    }
+
+    &-enemySkellige {
+      background-image: url('@/assets/images/board_skellige.png');
+      &::after {
+        content: 'Сработала способность Скеллиге противника!';
+      }
+    }
+
+    &-alliesSkellige {
+      background-image: url('@/assets/images/board_skellige.png');
+      &::after {
+        content: 'Сработала способность Скеллиге!';
       }
     }
 
@@ -73,21 +115,21 @@ export default defineComponent({});
     }
 
     &-enemyMove {
-      background-image: url('@/assets/images/notif_op_turn.png');
+      background-image: url('@/assets/images/board_turn_enemy.png');
       &::after {
         content: 'Ход противника';
       }
     }
 
     &-enemyWinRound {
-      background-image: url('@/assets/images/notif_op_coin.png');
+      background-image: url('@/assets/images/board_turn_enemy.png');
       &::after {
         content: 'Противник выиграл раунд';
       }
     }
 
     &-enemyPassed {
-      background-image: url('@/assets/images/notif_round_passed.png');
+      background-image: url('@/assets/images/board_round_passed.png');
       &::after {
         content: 'Противник спасовал';
       }
@@ -101,23 +143,23 @@ export default defineComponent({});
     }
 
     &-alliesMove {
-      background-image: url('@/assets/images/notif_me_turn.png');
+      background-image: url('@/assets/images/board_turn_allies.png');
       &::after {
         content: 'Ваш ход!';
       }
     }
 
     &-alliesWinRound {
-      background-image: url('@/assets/images/win_round.png');
+      background-image: url('@/assets/images/board_win_round.png');
       &::after {
         content: 'Вы выиграли раунд!';
       }
     }
 
     &-alliesPassed {
-      background-image: url('@/assets/images/notif_round_passed.png');
+      background-image: url('@/assets/images/board_round_passed.png');
       &::after {
-        content: 'You made a pass';
+        content: 'Вы спасовали';
       }
     }
   }

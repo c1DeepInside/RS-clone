@@ -157,7 +157,7 @@ export default defineComponent({
     width: 9%;
     height: 31%;
     margin-bottom: -9.25%;
-    background-image: url('@/assets/images/icon_gem_off.png');
+    background-image: url('@/assets/images/player_gem_off.png');
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -174,7 +174,7 @@ export default defineComponent({
     }
 
     &-true {
-      background-image: url('@/assets/images/icon_gem_on.png');
+      background-image: url('@/assets/images/player_gem_on.png');
     }
   }
 
