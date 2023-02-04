@@ -57,14 +57,14 @@ export default defineComponent({
     };
   },
   methods: {
-    decrementId() {
+    decrementIdx() {
       let currId = this.currFraction.id === 0 ? FRACTIONS_LENGTH : this.currFraction.id;
       currId = (currId - 1) % FRACTIONS_LENGTH;
       this.currFraction = this.fractions[currId];
 
       this.changePrevNext(currId);
     },
-    incrementId() {
+    incrementIdx() {
       let currId = (this.currFraction.id + 1) % FRACTIONS_LENGTH;
       this.currFraction = this.fractions[currId];
 
@@ -97,7 +97,7 @@ export default defineComponent({
   <div class="fraction__moves">
     <div class="fraction__choose">
       <div class="prev">{{ prevFraction }}</div>
-      <div class="arrow_btn" @click="decrementId()">ᐊ</div>
+      <div class="arrow_btn" @click="decrementIdx()">ᐊ</div>
       <div class="fraction__current">
         <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" draggable="false" />
         <div class="fraction__current__name">
@@ -110,7 +110,7 @@ export default defineComponent({
           </div>
         </div>
       </div>
-      <div class="arrow_btn" @click="incrementId()">ᐅ</div>
+      <div class="arrow_btn" @click="incrementIdx()">ᐅ</div>
       <div class="next">{{ nextFraction }}</div>
     </div>
     <div class="fraction__description">
