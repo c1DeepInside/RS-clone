@@ -27,6 +27,7 @@ export default defineComponent({
       Раунд продолжается до тех пор, пока не будут использованы все карты или до момента, когда один из игроков не будет
       однозначно доминировать над другим
     </p>
+    <p>Для лучшего геймплея, можем посоветовать развернуть игру на полный экран, нажав клавишу F11.</p>
     <button @click="$emit('readRules', true)" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
   </div>
 </template>
@@ -43,7 +44,7 @@ export default defineComponent({
   left: 50%;
   transform: translate(-50%, -50%);
   width: 40rem;
-  height: 36rem;
+  height: 39rem;
   color: $GOLDEN_COLOR;
   font-size: 21px;
   line-height: 1.2;
