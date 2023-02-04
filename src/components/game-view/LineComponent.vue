@@ -47,7 +47,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .weather {
   &__wrap {
-    top: 0.1vw;
+    top: 0.2vw;
     position: absolute;
     height: 100%;
     width: 93.3%;
@@ -70,7 +70,7 @@ export default defineComponent({
     position: absolute;
     opacity: 0.8;
     width: 100%;
-    top: -0.7vw;
+    top: -0.8vw;
   }
 }
 .second_rain {
