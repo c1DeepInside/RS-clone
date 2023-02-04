@@ -64,7 +64,7 @@ export default defineComponent({
   methods: {
     changeFilter(filter: Filter): void {
       this.currFilter = filter.name;
-      this.$emit('change', this.currFilter);
+      this.$emit('filterChanged', this.currFilter);
     },
   },
 });

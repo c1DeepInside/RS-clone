@@ -37,9 +37,9 @@ export default defineComponent({
         <FractionChoose :collectionFilter="collectionFilter" :deckFilter="deckFilter"></FractionChoose>
       </div>
       <div class="builder">
-        <CardCollection @change="changeFilterCollection"></CardCollection>
+        <CardCollection @filterChanged="changeFilterCollection"></CardCollection>
         <InfoCollection></InfoCollection>
-        <CardCollection @change="changeFilterDeck"></CardCollection>
+        <CardCollection @filterChanged="changeFilterDeck"></CardCollection>
       </div>
     </div>
   </main>
