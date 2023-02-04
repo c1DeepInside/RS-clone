@@ -73,6 +73,7 @@ export default defineComponent({
     &__allies {
       height: 50%;
       position: relative;
+
       &__siege {
         margin-top: 0.6vw;
       }

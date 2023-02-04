@@ -124,6 +124,7 @@ export default defineComponent({
   background-size: 100% auto;
   background-repeat: no-repeat;
 }
+
 .click {
   position: fixed;
   width: 100%;

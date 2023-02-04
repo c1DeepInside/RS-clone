@@ -222,9 +222,11 @@ export default defineComponent({
     }
   }
 }
+
 .game__player-1 .player__score {
   background-image: url('@/assets/images/score_total_op.png');
 }
+
 .game__player-2 {
   .player {
     &__img {
@@ -234,23 +236,29 @@ export default defineComponent({
         }
       }
     }
+
     &__hand-count {
       top: 18.5%;
     }
+
     &__gem-1 {
       top: 14.5%;
       left: 70.75%;
     }
+
     &__gem-2 {
       top: 14.5%;
       left: 80%;
     }
+
     &__name {
       top: 60%;
     }
+
     &__deck-name {
       top: 80%;
     }
+
     &__score {
       background-image: url('@/assets/images/score_total_me.png');
     }

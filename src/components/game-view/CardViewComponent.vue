@@ -97,6 +97,7 @@ export default defineComponent({
     font-weight: 700;
     font-size: 1.2vw;
   }
+
   &__descr {
     width: 90%;
     height: 50%;
