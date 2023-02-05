@@ -115,7 +115,7 @@ export default defineComponent({
   </div>
   <div class="collection collection__deck">
     <p class="collection__text">Карты колоды</p>
-    <p class="collection__filter deck__filter">{{ filters[deckFilter as keyof typeof filters] }}</p>
+    <p class="collection__filter deck__filter">{{ filters[deckFilter] }}</p>
   </div>
 </template>
 
