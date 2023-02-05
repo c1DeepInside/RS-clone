@@ -6,6 +6,7 @@ import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
+import MusicComponent from '@/components/game-view/MusicComponent.vue';
 
 export default defineComponent({
   data() {
@@ -47,6 +48,7 @@ export default defineComponent({
     CardViewComponent,
     EndComponent,
     InformationBar,
+    MusicComponent,
   },
 });
 </script>
@@ -131,16 +133,23 @@ export default defineComponent({
     <CardViewComponent :selectedItem="selectedItem" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
+    <MusicComponent class="music" />
   </main>
 </template>
 
 <style lang="scss" scoped>
+.music {
+  position: absolute;
+  right: 5.5vw;
+  bottom: 1.6vw;
+}
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
   background-image: url('@/assets/images/board.png');
   background-size: 100% auto;
   background-repeat: no-repeat;
+  position: relative;
 }
 
 .click {

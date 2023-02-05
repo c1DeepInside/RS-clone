@@ -15,7 +15,7 @@ export default defineComponent({});
     <p class="information-card__descr">Выложите рядом с картой с тем же названием, чтобы удвоить силу обеих карт.</p>
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .information-card {
   position: absolute;
   top: 43.1vw;
