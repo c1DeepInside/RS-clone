@@ -9,31 +9,28 @@ export default defineComponent({
         {
           text: 'Карты в колоде',
           img: 'src/assets/images/filter/board_cards.png',
-          maxCount: '',
           count: 28,
         },
         {
           text: 'Карты отрядов',
           img: 'src/assets/images/filter/melee_tan.png',
-          maxCount: '/22',
+          maxCount: 22,
           count: 14,
         },
         {
           text: 'Специальные карты',
           img: 'src/assets/images/filter/sky_tan.png',
-          maxCount: '/10',
+          maxCount: 10,
           count: 8,
         },
         {
           text: 'Общая сила карт отрядов',
           img: 'src/assets/images/filter/melee_ranged.png',
-          maxCount: '',
           count: 160,
         },
         {
           text: 'Герои',
           img: 'src/assets/images/filter/hero_tan.png',
-          maxCount: '',
           count: 8,
         },
       ],
@@ -56,7 +53,7 @@ export default defineComponent({
         <p class="deck__text">{{ deckInfo.text }}</p>
         <div class="deck__numbers">
           <img class="deck__img" :src="deckInfo.img" draggable="false" />
-          <p>{{ deckInfo.count }}{{ deckInfo.maxCount }}</p>
+          <p>{{ deckInfo.maxCount ? `${deckInfo.count}/${deckInfo.maxCount}` : deckInfo.count }}</p>
         </div>
       </div>
     </div>
