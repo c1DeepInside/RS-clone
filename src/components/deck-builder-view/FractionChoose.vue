@@ -52,7 +52,7 @@ export default defineComponent({
   },
   methods: {
     decrementIdx() {
-      this.currentId = (this.currentId - (1 % this.fractions.length) + this.fractions.length) % this.fractions.length;
+      this.currentId = (this.currentId - 1 + this.fractions.length) % this.fractions.length;
     },
     incrementIdx() {
       this.currentId = (this.currentId + 1) % this.fractions.length;
@@ -60,9 +60,7 @@ export default defineComponent({
   },
   computed: {
     prevFraction(): Fraction {
-      return this.fractions[
-        (this.currentId - (1 % this.fractions.length) + this.fractions.length) % this.fractions.length
-      ];
+      return this.fractions[(this.currentId - 1 + this.fractions.length) % this.fractions.length];
     },
     nextFraction(): Fraction {
       return this.fractions[(this.currentId + 1) % this.fractions.length];
