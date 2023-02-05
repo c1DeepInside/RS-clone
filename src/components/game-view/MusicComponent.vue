@@ -11,7 +11,7 @@ export default defineComponent({
   methods: {
     playMusic() {
       this.audio.loop = true;
-      this.audio.volume = 0.05;
+      this.audio.volume = 0.07;
       if (this.isPlay) {
         this.audio.pause();
       } else {
