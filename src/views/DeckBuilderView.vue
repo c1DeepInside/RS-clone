@@ -1,14 +1,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FractionChoose from '@/components/deck-builder-view/FractionChoose.vue';
+import FractionChoose, { type Filters } from '@/components/deck-builder-view/FractionChoose.vue';
 import CardCollection from '@/components/deck-builder-view/CardsCollection.vue';
 import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 
 export default defineComponent({
   data() {
     return {
-      collectionFilter: 'all',
-      deckFilter: 'all',
+      collectionFilter: 'all' as Filters,
+      deckFilter: 'all' as Filters,
     };
   },
   components: {
@@ -17,10 +17,10 @@ export default defineComponent({
     InfoCollection,
   },
   methods: {
-    changeFilterCollection(data: string) {
+    changeFilterCollection(data: Filters) {
       this.collectionFilter = data;
     },
-    changeFilterDeck(data: string) {
+    changeFilterDeck(data: Filters) {
       this.deckFilter = data;
     },
   },

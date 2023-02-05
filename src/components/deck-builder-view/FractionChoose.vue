@@ -5,19 +5,14 @@ interface Fraction {
   description: string;
   emblem: string;
 }
-const FRACTIONS_LENGTH = 4;
 
-import { defineComponent } from 'vue';
+export type Filters = 'all' | 'melee' | 'range' | 'siege' | 'hero' | 'weather' | 'special';
+
+import { defineComponent, type PropType } from 'vue';
 export default defineComponent({
   data() {
     return {
       currentId: 0,
-      currFraction: {
-        id: 0,
-        name: 'Королевства Севера',
-        description: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда.',
-        emblem: 'src/assets/images/faction-emblems/northern_emblem.png',
-      },
       fractions: [
         {
           id: 0,
@@ -47,43 +42,48 @@ export default defineComponent({
       filters: {
         all: 'Все карты',
         melee: 'Рукопашные отряды',
-        ranged: 'Дальнобойные отряды',
+        range: 'Дальнобойные отряды',
         siege: 'Осадные отряды',
         hero: 'Герои',
         weather: 'Погодные карты',
         special: 'Специальные карты',
-      },
+      } as Record<Filters, string>,
     };
   },
   methods: {
     decrementIdx() {
-      let currId = this.currentId === 0 ? FRACTIONS_LENGTH : this.currentId;
-      this.currentId = (currId - 1) % FRACTIONS_LENGTH;
-      this.currFraction = this.fractions[this.currentId % FRACTIONS_LENGTH];
+      let currId = this.currentId === 0 ? this.fractions.length : this.currentId;
+      this.currentId = (currId - 1) % this.fractions.length;
     },
     incrementIdx() {
-      this.currentId = (this.currentId + 1) % FRACTIONS_LENGTH;
-      this.currFraction = this.fractions[this.currentId % FRACTIONS_LENGTH];
+      this.currentId = (this.currentId + 1) % this.fractions.length;
     },
   },
   computed: {
-    getPrevFraction(): string {
-      let prevId = this.currentId === 0 ? FRACTIONS_LENGTH : this.currentId;
-      prevId = prevId === 0 ? FRACTIONS_LENGTH : prevId;
-      return this.fractions[(prevId - 1) % FRACTIONS_LENGTH].name;
+    prevFraction(): Fraction {
+      let prevId = this.currentId === 0 ? this.fractions.length : this.currentId;
+      prevId = prevId === 0 ? this.fractions.length : prevId;
+      return this.fractions[(prevId - 1) % this.fractions.length];
     },
-    getNextFraction(): string {
-      return this.fractions[(this.currentId + 1) % FRACTIONS_LENGTH].name;
+    nextFraction(): Fraction {
+      return this.fractions[(this.currentId + 1) % this.fractions.length];
+    },
+    currFraction(): Fraction {
+      return this.fractions[this.currentId];
     },
   },
   props: {
     collectionFilter: {
-      type: String,
-      default: 'all',
+      type: String as PropType<Filters>,
+      default: () => {
+        return 'all';
+      },
     },
     deckFilter: {
-      type: String,
-      default: 'all',
+      type: String as PropType<Filters>,
+      default: () => {
+        return 'all';
+      },
     },
   },
 });
@@ -92,11 +92,11 @@ export default defineComponent({
 <template>
   <div class="collection collection__cart">
     <p class="collection__text">Коллекция карт</p>
-    <p class="collection__filter">{{ filters[collectionFilter as keyof typeof filters] }}</p>
+    <p class="collection__filter">{{ filters[collectionFilter] }}</p>
   </div>
   <div class="fraction__moves">
     <div class="fraction__choose">
-      <div class="prev">{{ getPrevFraction }}</div>
+      <div class="prev">{{ prevFraction.name }}</div>
       <div class="arrow_btn" @click="decrementIdx()">ᐊ</div>
       <div class="fraction__current">
         <img class="fraction__emblem" :src="currFraction.emblem" alt="Герб фракции" draggable="false" />
@@ -108,7 +108,7 @@ export default defineComponent({
         </div>
       </div>
       <div class="arrow_btn" @click="incrementIdx()">ᐅ</div>
-      <div class="next">{{ getNextFraction }}</div>
+      <div class="next">{{ nextFraction.name }}</div>
     </div>
     <div class="fraction__description">
       {{ currFraction.description }}
