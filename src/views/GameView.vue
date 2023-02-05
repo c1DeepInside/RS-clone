@@ -97,14 +97,6 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-        <button
-          @mousedown="showEndGame"
-          @mouseup="dontShowEndGame"
-          @mouseout="dontShowEndGame"
-          :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
-        >
-          Сдаться
-        </button>
       </div>
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
@@ -134,15 +126,53 @@ export default defineComponent({
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />
+    <button
+      @mousedown="showEndGame"
+      @mouseup="dontShowEndGame"
+      @mouseout="dontShowEndGame"
+      :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
+    >
+      Сдаться
+    </button>
   </main>
 </template>
 
 <style lang="scss" scoped>
 .music {
   position: absolute;
-  right: 5.5vw;
+  right: 15vw;
   bottom: 1.6vw;
 }
+
+.game__give-up {
+  position: absolute;
+  right: 5.5vw;
+  bottom: 1.6vw;
+  width: 8vw;
+  padding: 0.5vw;
+  font-size: 1.1vw;
+  color: tan;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2%;
+    background-color: $GOLDEN_COLOR;
+    transform: scaleX(0);
+    transform-origin: 0% 0%;
+    transition: transform 4s ease-in-out;
+  }
+}
+
+.give-animation::after {
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+  height: 2%;
+}
+
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
@@ -289,33 +319,6 @@ export default defineComponent({
     left: 41%;
     width: 27%;
     height: 4%;
-  }
-
-  &__give-up {
-    position: relative;
-    top: -8%;
-    left: 63%;
-    width: 23%;
-    height: 4%;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2%;
-      background-color: $GOLDEN_COLOR;
-      transform: scaleX(0);
-      transform-origin: 0% 0%;
-      transition: transform 4s ease-in-out;
-    }
-  }
-
-  .give-animation::after {
-    transform: scaleX(1);
-    transform-origin: 0% 50%;
-    height: 2%;
   }
 }
 
