@@ -1,10 +1,53 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ExchangePanelComponent from '@/components/GameView/ExchangePanelComponent.vue';
+import SliderComponent from '@/components/GameView/SliderComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
+  data() {
+    return {
+      cards: [
+        {
+          id: 1,
+          name: 'Рубака из Кринфрида',
+          type: 'usual',
+          image: '/src/assets/images/realms_blue_stripes.jpg',
+          description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
+          fractionId: 1,
+          ability: 'bond',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 3,
+        },
+        {
+          id: 2,
+          name: 'Ливень',
+          type: 'special',
+          image: '/src/assets/images/weather_rain.jpg',
+          description: 'В этом краю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 2,
+        },
+        {
+          id: 3,
+          name: 'Цирилла',
+          type: 'hero',
+          image: '/src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+      ] as Card[]
+    }
+  },
   components: {
-    ExchangePanelComponent,
+    SliderComponent,
   },
 });
 </script>
@@ -15,7 +58,7 @@ export default defineComponent({
       Выберите, какую карту обменять.
       <span class="choice-panel__count-carts">0/2</span>
     </div>
-    <ExchangePanelComponent />
+    <SliderComponent :cards="cards" />
   </div>
 </template>
 
