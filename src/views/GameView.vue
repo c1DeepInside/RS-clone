@@ -32,7 +32,6 @@ export default defineComponent({
     dontShowEndGame() {
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
-      console.log(this.timer);
     },
     updateSelectedItem(value: number) {
       this.selectedItem = value;
