@@ -103,7 +103,12 @@ export default defineComponent({
         <div class="fraction__current__name">
           <div class="current">{{ currFraction.name }}</div>
           <div class="fraction__indicator">
-            <span v-for="(item, index) in 4" :key="item" :class="currFraction.id === index ? 'curr__dot' : ''">◆</span>
+            <span
+              v-for="(item, index) in fractions.length"
+              :key="item"
+              :class="currFraction.id === index ? 'curr__dot' : ''"
+              >◆</span
+            >
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@ export default defineComponent({
         },
         {
           id: 3,
-          name: 'ranged',
+          name: 'range',
           img: 'src/assets/images/filter/ranged_tan.png',
           imgWhite: 'src/assets/images/filter/ranged_white.png',
         },
