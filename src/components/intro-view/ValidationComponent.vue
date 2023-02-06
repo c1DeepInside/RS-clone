@@ -58,14 +58,14 @@ export default {
       top: 300px;
       position: fixed;
       margin-top: 10px;
-      color: $WHITE_COLOR;
+      color: white;
       width: 300px;
     }
   }
 
   &__link {
     margin-top: -30px;
-    color: $WHITE_COLOR;
+    color: white;
   }
 
   &__button {
@@ -75,13 +75,13 @@ export default {
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;
-    border: 1px solid $WHITE_COLOR;
+    border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
     transition: background-color 0.2s linear;
     border-radius: 80px;
 
     &:hover {
-      background-color: $WHITE_COLOR;
+      background-color: white;
     }
   }
 }

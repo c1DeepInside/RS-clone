@@ -7,7 +7,7 @@ export default defineComponent({});
 <template>
   <footer class="footer">
     <a href="https://rs.school/js/">
-      <img class="rs-school" src="src/assets/icons/rs-school.svg" alt="" />
+      <img class="rs-school" src="@/assets/icons/rs-school.svg" alt="" />
     </a>
 
     <div class="footer__github-link">

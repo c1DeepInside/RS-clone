@@ -7,6 +7,7 @@ import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
+import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 
 export default defineComponent({
   data() {
