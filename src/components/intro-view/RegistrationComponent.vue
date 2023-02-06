@@ -6,13 +6,13 @@ export default defineComponent({
     return {
       inputs: {
         login: '',
-        password: ''
+        password: '',
       },
       errors: {
         hasErrorName: false,
         hasErrorPassword: false,
-      }
-    }
+      },
+    };
   },
   methods: {
     validateName() {
@@ -32,30 +32,39 @@ export default defineComponent({
         }
       }
 
-      this.errors.hasErrorPassword = this.inputs.password.length >= 6
-        ? this.errors.hasErrorPassword
-        : true;
-    }
+      this.errors.hasErrorPassword = this.inputs.password.length >= 6 ? this.errors.hasErrorPassword : true;
+    },
   },
   emits: {
     registrationFinished(isFinished: boolean): boolean {
       return isFinished;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <template>
   <form class="registration" v-on:submit.prevent>
-    <input v-model="inputs.login" @input="validateName"
-            v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }" 
-            class="registration__input"
-            type="text" placeholder="Введите свое имя/никнейм" required>
+    <input
+      v-model="inputs.login"
+      @input="validateName"
+      v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }"
+      class="registration__input"
+      type="text"
+      placeholder="Введите свое имя/никнейм"
+      required
+    />
 
-    <input v-model="inputs.password" @input="validatePassword"
-            v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }" 
-            class="registration__input" type="password" 
-            placeholder="Введите пароль" autocomplete="current-password" required>
+    <input
+      v-model="inputs.password"
+      @input="validatePassword"
+      v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }"
+      class="registration__input"
+      type="password"
+      placeholder="Введите пароль"
+      autocomplete="current-password"
+      required
+    />
 
     <p v-if="errors.hasErrorPassword" class="registration__input-password">
       Пароль должен содержать не менее 6 символов и 1 цифры
@@ -103,7 +112,7 @@ export default defineComponent({
       display: fixed;
       top: 300px;
       position: fixed;
-      color: $WHITE_COLOR;
+      color: white;
       line-height: 1.2;
       width: 350px;
       text-align: center;
@@ -118,13 +127,13 @@ export default defineComponent({
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;
-    border: 1px solid $WHITE_COLOR;
+    border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
     border-radius: 80px;
-    transition: background-color .2s linear;
+    transition: background-color 0.2s linear;
 
     &:hover {
-      background-color: $WHITE_COLOR;
+      background-color: white;
     }
   }
 }

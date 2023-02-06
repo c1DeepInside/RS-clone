@@ -12,32 +12,37 @@ export default defineComponent({
       showFormValidation: false,
       showFormRegistration: false,
       showRules: false,
-    }
+    };
   },
-  methods: {
-
-  },
+  methods: {},
   components: {
     RegistrationComponent,
     FooterComponent,
     RulesComponent,
-    ValidationComponent
-  }
+    ValidationComponent,
+  },
 });
 </script>
 
 <template>
   <video autoplay muted loop id="backgroundVideo">
-    <source src="@/assets/video/GWENT-TheWitcher.mp4" type="video/mp4">
+    <source src="@/assets/video/GWENT-TheWitcher.mp4" type="video/mp4" />
   </video>
 
   <div class="displayed">
-    <button v-if="!showFormValidation && !showFormRegistration" @click="showFormValidation = true" class="border-button">PLAY</button>
-    <ValidationComponent v-if="showFormValidation && !showRules" 
-    @validation-finished="showRules = true" 
-    @start-registration="showFormRegistration = true, showFormValidation = false"/>
-    <RegistrationComponent v-if="showFormRegistration && !showRules" 
-    @registration-finished="showRules = true"/>
+    <button
+      v-if="!showFormValidation && !showFormRegistration"
+      @click="showFormValidation = true"
+      class="border-button"
+    >
+      PLAY
+    </button>
+    <ValidationComponent
+      v-if="showFormValidation && !showRules"
+      @validation-finished="showRules = true"
+      @start-registration="(showFormRegistration = true), (showFormValidation = false)"
+    />
+    <RegistrationComponent v-if="showFormRegistration && !showRules" @registration-finished="showRules = true" />
     <FooterComponent />
 
     <RulesComponent v-if="showRules" />
@@ -45,7 +50,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 #backgroundVideo {
   position: fixed;
   right: 0;
@@ -76,7 +80,7 @@ export default defineComponent({
   text-transform: uppercase;
   font-size: 24px;
   letter-spacing: 3px;
-  transition: background .2s linear;
+  transition: background 0.2s linear;
 
   &:before,
   &:after {
@@ -93,7 +97,7 @@ export default defineComponent({
     left: 0;
     border-left: 1px solid white;
     border-top: 1px solid white;
-    transition: 0s ease opacity .8s, .2s ease width .4s, .2s ease height .6s;
+    transition: 0s ease opacity 0.8s, 0.2s ease width 0.4s, 0.2s ease height 0.6s;
   }
 
   &:after {
@@ -101,7 +105,7 @@ export default defineComponent({
     right: 0;
     border-right: 1px solid white;
     border-bottom: 1px solid white;
-    transition: 0s ease opacity .4s, .2s ease width, .2s ease height .2s;
+    transition: 0s ease opacity 0.4s, 0.2s ease width, 0.2s ease height 0.2s;
   }
 
   &:hover:before,
@@ -112,11 +116,11 @@ export default defineComponent({
   }
 
   &:hover:before {
-    transition: 0s ease opacity 0s, .2s ease height, .2s ease width .2s;
+    transition: 0s ease opacity 0s, 0.2s ease height, 0.2s ease width 0.2s;
   }
 
   &:hover:after {
-    transition: 0s ease opacity .4s, .2s ease height .4s, .2s ease width .6s;
+    transition: 0s ease opacity 0.4s, 0.2s ease height 0.4s, 0.2s ease width 0.6s;
   }
 
   &:hover {

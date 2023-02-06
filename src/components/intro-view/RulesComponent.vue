@@ -5,33 +5,29 @@ export default defineComponent({
   emits: {
     readRules(isReadRules: boolean): boolean {
       return isReadRules;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <template>
   <div class="rules">
-      <h1 class="rules__title">ПРАВИЛА</h1>
-      <p>
-        Порядок, в котором ходят игроки, определяется броском монеты
-      </p>
-      <p>
-        Игра состоит из двух или трёх раундов. Выигрывает тот, кто победил в двух раундах.
-      </p>
-      <p>
-        В начале игры каждый игрок берёт по 10 случайных карт из своей колоды. После этого любые две карты можно
-        выкинуть и заменить на другие.
-      </p>
-      <p>
-        За ход можно выложить на стол одну карту (но это вовсе не обязательно!). У каждой из этих карт есть показатель
-        силы, который суммируется.
-      </p>
-      <p>
-        Раунд продолжается до тех пор, пока не будут использованы все карты или до момента, когда один из игроков не
-        будет однозначно доминировать над другим
-      </p>
-      <button @click="$emit('readRules', true)" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
+    <h1 class="rules__title">ПРАВИЛА</h1>
+    <p>Порядок, в котором ходят игроки, определяется броском монеты</p>
+    <p>Игра состоит из двух или трёх раундов. Выигрывает тот, кто победил в двух раундах.</p>
+    <p>
+      В начале игры каждый игрок берёт по 10 случайных карт из своей колоды. После этого любые две карты можно выкинуть
+      и заменить на другие.
+    </p>
+    <p>
+      За ход можно выложить на стол одну карту (но это вовсе не обязательно!). У каждой из этих карт есть показатель
+      силы, который суммируется.
+    </p>
+    <p>
+      Раунд продолжается до тех пор, пока не будут использованы все карты или до момента, когда один из игроков не будет
+      однозначно доминировать над другим
+    </p>
+    <button @click="$emit('readRules', true)" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
   </div>
 </template>
 
@@ -58,7 +54,7 @@ export default defineComponent({
     font-size: 26px;
     letter-spacing: 3px;
   }
-  
+
   &__button {
     width: 300px;
     height: 40px;
@@ -67,13 +63,13 @@ export default defineComponent({
     text-transform: uppercase;
     margin-top: 10px;
     color: $BLACK_COLOR;
-    border: 1px solid $WHITE_COLOR;
+    border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.767);
     border-radius: 80px;
-    transition: background-color .2s linear;
+    transition: background-color 0.2s linear;
 
     &:hover {
-      background-color: $WHITE_COLOR;
+      background-color: white;
     }
   }
 }
