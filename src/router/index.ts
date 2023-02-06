@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import IntroView from '../views/IntroView.vue';
+import DeckBuilderView from '../views/DeckBuilderView.vue';
 import GameView from '../views/GameView.vue';
 
 const router = createRouter({
@@ -9,6 +10,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: IntroView,
+    },
+    {
+      path: '/deck',
+      name: 'deck',
+      component: DeckBuilderView,
     },
     {
       path: '/game',

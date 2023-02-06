@@ -1,3 +1,4 @@
+
 @import './reset.scss';
 @import './fonts.scss';
 @import './variables.scss';
@@ -10,7 +11,13 @@ body {
   font-family: $MAIN_FONT;
   font-size: 1rem;
   background-color: $BLACK_COLOR_MAIN;
-  user-select: none;
+  font-weight: 300;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none; 
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; 
 }
 
 body::-webkit-scrollbar {
@@ -25,16 +32,19 @@ body::-webkit-scrollbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 0.2vw solid $WHITE_COLOR;
-  background-color: transparent;
-  border-radius: 0.7vw;
+  border: 0;
+  background-color: rgba($color: #101010, $alpha: 0.7);
+  border-radius: 0.2vw;
   font-weight: 500;
-  font-size: 1.5vw;
+  font-size: 1.2vw;
   color: $WHITE_COLOR;
   transition: all 0.2s ease;
 
   &:hover {
     color: $GOLDEN_COLOR;
-    border-color: $GOLDEN_COLOR;
+    background-color: $BLACK_COLOR_MAIN;
   }
 }
+
+
+
