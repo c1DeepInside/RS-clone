@@ -1,10 +1,22 @@
 <script lang="ts">
+import type Card from '@/interfaces/card';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   data() {
     return {
       isDescription: true,
+      card: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: '',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
     };
   },
   props: {

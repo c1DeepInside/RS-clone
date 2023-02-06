@@ -19,7 +19,7 @@ export default defineComponent({
   props: {
     isSelected: Boolean,
     layoutType: {
-      type: Object as PropType<CardLayoutType>,
+      type: Number as PropType<CardLayoutType>,
     },
     card: Object as PropType<Card>,
   },
@@ -297,14 +297,14 @@ export default defineComponent({
   transform: translate(-50%, -50%);
   color: white;
   font-weight: 300;
-  font-size: 2.2vw;
+  font-size: 1vw;
 }
 
 .game-card {
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: 7vw;
+  min-width: 3vw;
   transform-origin: 0 0;
 
   &__back {

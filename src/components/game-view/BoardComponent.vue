@@ -1,7 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CardComponent from './CardComponent.vue';
 import LineComponent from './LineComponent.vue';
+import cardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -9,6 +10,17 @@ export default defineComponent({
       isShowCard: false,
       selectedItem: -1,
       isEnemy: true,
+      card: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neutral_ciri.jpg',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
     };
   },
   methods: {
@@ -18,7 +30,7 @@ export default defineComponent({
     },
   },
   components: {
-    CardComponent,
+    cardInfoComponent,
     LineComponent,
   },
 });
@@ -40,13 +52,38 @@ export default defineComponent({
     </div>
     <div class="board__hand">
       <div class="board__hand-row">
-        <CardComponent v-for="item in 6" :key="item" @click="showCard(item)" />
+        <div class="card__wrap">
+          <cardInfoComponent :card="card" :layoutType="0" class="card" />
+        </div>
+        <div class="card__wrap">
+          <cardInfoComponent :card="card" :layoutType="0" class="card hide" />
+        </div>
+        <div class="card__wrap">
+          <cardInfoComponent :card="card" :layoutType="0" class="card" />
+        </div>
+        <div class="card__wrap">
+          <cardInfoComponent :card="card" :layoutType="0" class="card" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.hide {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @keyframes cardToSelect {
+
+  }
+}
+.card__wrap {
+  position: relative;
+  height: 100%;
+  width: 4.5vw;
+}
 .board {
   .field {
     height: 43.5vw;
@@ -91,19 +128,20 @@ export default defineComponent({
   &__hand {
     margin-top: 1%;
     width: 100%;
-    height: 13%;
+    height: 7.1vw;
 
     .card:hover {
-      border: 0.5px outset $GOLDEN_COLOR;
       border-radius: 0.3vw;
       z-index: 1;
       transform: translateY(-0.5vw);
+      animation: pulse 1.5s infinite;
     }
 
     &-row {
       margin-left: 3.3vw;
       display: flex;
       justify-content: center;
+      gap: 0.2vw;
       align-items: center;
       width: 93%;
       height: 91%;
@@ -116,9 +154,5 @@ export default defineComponent({
       }
     }
   }
-}
-
-.fog {
-  background-image: url('@/assets/images/overlay_fog.png');
 }
 </style>
