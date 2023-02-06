@@ -293,14 +293,14 @@ export default defineComponent({
 }
 
 .description-title {
-  text-align: right;
+  text-align: center;
   font-weight: 500;
   font-size: 1.18vw;
   padding-right: 5px;
   margin-top: 6%;
   margin-bottom: 14%;
   word-wrap: break-word;
-  padding-left: 20%;
+  padding-left: 25%;
   
   &-center {
     text-align: center;
