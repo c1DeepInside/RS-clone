@@ -103,7 +103,7 @@ export default defineComponent({
       display: fixed;
       top: 300px;
       position: fixed;
-      color: $WHITE_COLOR;
+      color: white;
       line-height: 1.2;
       width: 350px;
       text-align: center;
@@ -118,13 +118,13 @@ export default defineComponent({
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;
-    border: 1px solid $WHITE_COLOR;
+    border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
     border-radius: 80px;
     transition: background-color .2s linear;
 
     &:hover {
-      background-color: $WHITE_COLOR;
+      background-color: white;
     }
   }
 }

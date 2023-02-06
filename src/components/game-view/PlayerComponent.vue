@@ -189,7 +189,7 @@ export default defineComponent({
     font-weight: 500;
     font-size: 1.4vw;
     color: $BLACK_COLOR_MAIN;
-    text-shadow: 0 0 5px $WHITE_COLOR;
+    text-shadow: 0 0 5px white;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

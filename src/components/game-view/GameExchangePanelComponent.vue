@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SliderComponent from '@/components/GameView/common/SliderComponent.vue';
+import SliderComponent from '@/components/common/SliderComponent.vue';
 import type Card from '@/interfaces/card';
 
 export default defineComponent({

@@ -67,13 +67,13 @@ export default defineComponent({
     text-transform: uppercase;
     margin-top: 10px;
     color: $BLACK_COLOR;
-    border: 1px solid $WHITE_COLOR;
+    border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.767);
     border-radius: 80px;
     transition: background-color .2s linear;
 
     &:hover {
-      background-color: $WHITE_COLOR;
+      background-color: white;
     }
   }
 }

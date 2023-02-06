@@ -93,7 +93,7 @@ export default defineComponent({
       font-weight: 700;
       font-size: 1vw;
       color: $BLACK_COLOR_MAIN;
-      text-shadow: 0 0 0.1vw $WHITE_COLOR;
+      text-shadow: 0 0 0.1vw white;
     }
   }
 
