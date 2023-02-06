@@ -1,3 +1,4 @@
+
 @import './reset.scss';
 @import './fonts.scss';
 @import './variables.scss';
@@ -9,6 +10,8 @@
 body {
   font-family: $MAIN_FONT;
   font-size: 1rem;
+  background-color: $BLACK_COLOR_MAIN;
+  font-weight: 300;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none; 
@@ -16,3 +19,32 @@ body {
   -ms-user-select: none;
   user-select: none; 
 }
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.noclick {
+  pointer-events: none;
+}
+
+.btn-game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  background-color: rgba($color: #101010, $alpha: 0.7);
+  border-radius: 0.2vw;
+  font-weight: 500;
+  font-size: 1.2vw;
+  color: $WHITE_COLOR;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $GOLDEN_COLOR;
+    background-color: $BLACK_COLOR_MAIN;
+  }
+}
+
+
+
