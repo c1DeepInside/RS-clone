@@ -41,6 +41,7 @@ export default defineComponent({
     },
   },
   components: {
+    GameExchangePanelComponent,
     PlayerComponent,
     CardComponent,
     BoardComponent,
@@ -53,6 +54,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <GameExchangePanelComponent />
   <main class="page-game">
     <div :class="['click', { noclick: selectedItem === -1 }]" @click="selectedItem = -1"></div>
     <div class="game">
