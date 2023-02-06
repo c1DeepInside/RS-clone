@@ -67,7 +67,11 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div :class="['click', { noclick: isShowCardView === false }]" @click="isShowCardView = false"></div>
+    <div
+      :class="['click', { noclick: isShowCardView === false }]"
+      @click="isShowCardView = false"
+      ref="clickField"
+    ></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -255,6 +259,7 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
+    z-index: 2;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

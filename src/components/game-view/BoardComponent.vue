@@ -7,6 +7,11 @@ import type Card from '@/interfaces/card';
 export default defineComponent({
   data() {
     return {
+      attackType: {
+        melee: 'melee',
+        range: 'range',
+        siege: 'siege',
+      },
       isEnemy: true,
       cards: [
         {
@@ -66,7 +71,7 @@ export default defineComponent({
       const target = event.currentTarget as HTMLElement;
       target.style.transform = `translate(calc(42vw - ${target.offsetLeft}px + 15vw), -17vw) scale(3)`;
       target.style.opacity = '0';
-      const clickField = document.querySelector('.click') as HTMLDivElement;
+      const clickField = this.$parent?.$refs.clickField as HTMLDivElement;
       clickField.addEventListener(
         'click',
         () => {
@@ -88,14 +93,14 @@ export default defineComponent({
   <div class="board">
     <div class="field">
       <div class="field__enemy">
-        <LineComponent class="field__enemy__siege" :type="isEnemy" />
-        <LineComponent class="field__enemy__range" :type="isEnemy" />
-        <LineComponent class="field__enemy__melee" :type="isEnemy" />
+        <LineComponent :class="`field__enemy__${attackType.siege}`" :type="isEnemy" :attackType="attackType.siege" />
+        <LineComponent :class="`field__enemy__${attackType.range}`" :type="isEnemy" :attackType="attackType.range" />
+        <LineComponent :class="`field__enemy__${attackType.melee}`" :type="isEnemy" :attackType="attackType.melee" />
       </div>
       <div class="field__allies">
-        <LineComponent class="field__allies__melee" :type="!isEnemy" />
-        <LineComponent class="field__allies__range" :type="!isEnemy" />
-        <LineComponent class="field__allies__siege" :type="!isEnemy" />
+        <LineComponent :class="`field__enemy__${attackType.siege}`" :type="!isEnemy" :attackType="attackType.melee" />
+        <LineComponent :class="`field__enemy__${attackType.range}`" :type="!isEnemy" :attackType="attackType.range" />
+        <LineComponent :class="`field__enemy__${attackType.melee}`" :type="!isEnemy" :attackType="attackType.siege" />
       </div>
     </div>
     <div class="board__hand">
@@ -120,7 +125,9 @@ export default defineComponent({
 }
 .board {
   .field {
+    position: relative;
     height: 43.5vw;
+    z-index: 2;
 
     &__enemy {
       height: 50%;

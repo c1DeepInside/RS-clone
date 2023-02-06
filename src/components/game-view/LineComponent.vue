@@ -10,6 +10,7 @@ export default defineComponent({
   },
   props: {
     type: Boolean,
+    attackType: String,
   },
   components: {},
 });
@@ -24,8 +25,8 @@ export default defineComponent({
         <p class="power__dmg__number">7</p>
       </div>
     </div>
-    <div class="boost__wrap wrap_animation"></div>
-    <div class="cards__wrap wrap_animation"></div>
+    <div :class="`boost__wrap_${attackType}_${type}`" class="boost__wrap wrap_animation"></div>
+    <div :class="`cards__wrap_${attackType}_${type}`" class="cards__wrap wrap_animation"></div>
   </div>
 </template>
 
