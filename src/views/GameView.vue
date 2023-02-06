@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
-import CardComponent from '@/components/game-view/CardComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
@@ -15,8 +14,19 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      selectedCard: null as Card | null,
+      selectedCard: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
       timer: 0,
+      isShowCardView: false,
     };
   },
   methods: {
@@ -35,8 +45,9 @@ export default defineComponent({
       clearTimeout(this.timer);
       console.log(this.timer);
     },
-    updateSelectedItem(value: Card) {
+    updateSelectedItem(value: Card, show: boolean) {
       this.selectedCard = value;
+      this.isShowCardView = show;
     },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
@@ -45,7 +56,6 @@ export default defineComponent({
   components: {
     GameExchangePanelComponent,
     PlayerComponent,
-    CardComponent,
     BoardComponent,
     CardViewComponent,
     EndComponent,
@@ -57,13 +67,11 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div :class="['click', { noclick: selectedCard === null }]" @click="selectedCard = null"></div>
+    <div :class="['click', { noclick: isShowCardView === false }]" @click="isShowCardView = false"></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off">
-            <CardComponent />
-          </div>
+          <div class="game__leader-card card-off"></div>
           <div class="game__leader-icon">
             <div></div>
           </div>
@@ -120,7 +128,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <CardViewComponent :selectedItem="selectedCard" />
+    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
   </main>
