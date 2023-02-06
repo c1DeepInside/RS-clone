@@ -1,0 +1,59 @@
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  data() {
+    return {};
+  },
+});
+</script>
+
+<template>
+  <div class="card">
+    <img class="card__img" src="src/assets/images/cirilla.png" alt="ciri" draggable="false" />
+    <div class="card__number">
+      <img
+        class="card__number__img"
+        src="src/assets/images/filter/board_cards_white.png"
+        alt="cards"
+        draggable="false"
+      />
+      <p>x2</p>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.card {
+  box-sizing: border-box;
+  position: relative;
+  width: 31.3%;
+  height: 18.9vw;
+  border-radius: 2vw;
+  &__img {
+    width: 100%;
+    border-radius: 1vw;
+    &:hover {
+      box-shadow: 0px 0px 0px 3px rgba($color: #fe9902, $alpha: 1);
+    }
+  }
+
+  &:hover {
+    animation: pulse 2s infinite;
+  }
+
+  &__number {
+    position: absolute;
+    top: 0;
+    right: 0.3vw;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 0.9vw;
+
+    &__img {
+      width: 1.5vw;
+    }
+  }
+}
+</style>
