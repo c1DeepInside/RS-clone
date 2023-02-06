@@ -7,7 +7,7 @@ export default defineComponent({});
 <template>
   <!-- "information-true появится сообщение" -->
   <div class="information">
-    <div class="information__content information__content-enemySkellige"></div>
+    <div class="information__content information__content-roundStart"></div>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ export default defineComponent({});
     &-monsters {
       background-image: url('@/assets/images/board_monsters.png');
       &::after {
-        content: 'Из-за умения фракции королевств Севера - Север берет дополнительную карту.';
+        content: 'Срабатывает способность фракции монстров - одна случайно выбранная карта подразделения монстра остается на доске.';
       }
     }
 
@@ -90,20 +90,6 @@ export default defineComponent({});
       background-image: url('@/assets/images/board_scoiatael.png');
       &::after {
         content: "Противник воспользовался свойством фракции скоя'таэлей, чтобы пойти первым.";
-      }
-    }
-
-    &-enemySkellige {
-      background-image: url('@/assets/images/board_skellige.png');
-      &::after {
-        content: 'Сработала способность Скеллиге противника!';
-      }
-    }
-
-    &-alliesSkellige {
-      background-image: url('@/assets/images/board_skellige.png');
-      &::after {
-        content: 'Сработала способность Скеллиге!';
       }
     }
 
