@@ -147,7 +147,7 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game {
@@ -255,7 +255,6 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
-    z-index: 1;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);
