@@ -68,7 +68,6 @@ export default defineComponent({
   z-index: 90;
   visibility: hidden;
   opacity: 0;
-  transition: all 0.2s ease;
 
   &-true {
     visibility: visible;

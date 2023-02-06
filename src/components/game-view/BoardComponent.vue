@@ -58,7 +58,23 @@ export default defineComponent({
   },
   methods: {
     showCard(card: Card) {
-      this.$emit('update:selectedItem', card, true);
+      setTimeout(() => {
+        this.$emit('update:selectedItem', card, true);
+      }, 240);
+    },
+    startAnimate(event: Event) {
+      const target = event.currentTarget as HTMLElement;
+      target.style.transform = `translate(calc(42vw - ${target.offsetLeft}px + 15vw), -17vw) scale(3)`;
+      target.style.opacity = '0';
+      const clickField = document.querySelector('.click') as HTMLDivElement;
+      clickField.addEventListener(
+        'click',
+        () => {
+          target.style.opacity = '1';
+          target.style.transform = `translate(0, 0)`;
+        },
+        { once: true }
+      );
     },
   },
   components: {
@@ -84,8 +100,11 @@ export default defineComponent({
     </div>
     <div class="board__hand">
       <div class="board__hand-row">
-        <div class="card__wrap" v-for="(card, index) in cards" :key="index">
+        <div class="card__wrap" v-for="(card, index) in cards" :key="index" @click="startAnimate($event)">
           <cardInfoComponent :card="card" :layoutType="0" class="card" @click="showCard(card)" />
+        </div>
+        <div class="card__wrap hide" @click="startAnimate($event)">
+          <cardInfoComponent :card="cards[0]" :layoutType="0" class="card" @click="showCard(cards[0])" />
         </div>
       </div>
     </div>
@@ -93,18 +112,11 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.hide {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  @keyframes cardToSelect {
-  }
-}
 .card__wrap {
   position: relative;
   height: 100%;
   width: 4.5vw;
+  transition: 0.5s;
 }
 .board {
   .field {
