@@ -1,14 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LineComponent from './LineComponent.vue';
-import cardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
     return {
       isShowCard: false,
-      selectedItem: -1,
       isEnemy: true,
       card: {
         name: 'Геральт из Ривии',
@@ -24,9 +23,8 @@ export default defineComponent({
     };
   },
   methods: {
-    showCard(index: number) {
-      this.selectedItem = index;
-      this.$emit('update:selectedItem', this.selectedItem);
+    showCard(card: Card) {
+      this.$emit('update:selectedItem', card);
     },
   },
   components: {
@@ -56,7 +54,7 @@ export default defineComponent({
           <cardInfoComponent :card="card" :layoutType="0" class="card" />
         </div>
         <div class="card__wrap">
-          <cardInfoComponent :card="card" :layoutType="0" class="card hide" />
+          <cardInfoComponent :card="card" :layoutType="0" class="card hide" @click="showCard(card)" />
         </div>
         <div class="card__wrap">
           <cardInfoComponent :card="card" :layoutType="0" class="card" />
@@ -76,7 +74,6 @@ export default defineComponent({
   left: 0;
 
   @keyframes cardToSelect {
-
   }
 }
 .card__wrap {

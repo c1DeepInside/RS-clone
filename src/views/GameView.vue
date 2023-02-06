@@ -7,6 +7,7 @@ import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -14,7 +15,7 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      selectedItem: -1,
+      selectedCard: null as Card | null,
       timer: 0,
     };
   },
@@ -34,8 +35,8 @@ export default defineComponent({
       clearTimeout(this.timer);
       console.log(this.timer);
     },
-    updateSelectedItem(value: number) {
-      this.selectedItem = value;
+    updateSelectedItem(value: Card) {
+      this.selectedCard = value;
     },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
@@ -56,7 +57,7 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div :class="['click', { noclick: selectedItem === -1 }]" @click="selectedItem = -1"></div>
+    <div :class="['click', { noclick: selectedCard === null }]" @click="selectedCard = null"></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -75,11 +76,7 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather">
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-        </div>
+        <div class="game__weather"></div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
@@ -91,9 +88,7 @@ export default defineComponent({
           />
         </div>
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card">
-            <CardComponent @click="selectedItem = 1" />
-          </div>
+          <div class="game__leader-card"></div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
@@ -112,26 +107,20 @@ export default defineComponent({
       </div>
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1">
-            <CardComponent />
-          </div>
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2">
-            <CardComponent />
-          </div>
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
       </div>
     </div>
-    <CardViewComponent :selectedItem="selectedItem" />
+    <CardViewComponent :selectedItem="selectedCard" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
   </main>
