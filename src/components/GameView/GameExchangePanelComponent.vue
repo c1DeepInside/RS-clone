@@ -1,11 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SliderComponent from '@/components/GameView/SliderComponent.vue';
+import SliderComponent from '@/components/GameView/common/SliderComponent.vue';
 import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
     return {
+      show: true,
       cards: [
         {
           id: 1,
@@ -43,6 +44,30 @@ export default defineComponent({
           power: 15,
           quantity: 1,
         },
+        {
+          id: 4,
+          name: 'Фольтест Король Темерии',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_silver.jpg',
+          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          id: 5,
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
       ] as Card[]
     }
   },
@@ -53,8 +78,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="choice-panel">
-    <div class="choice-panel__title">
+  <div v-if="show" class="choice-panel">
+    <div @click="show = !show" class="choice-panel__title">
       Выберите, какую карту обменять.
       <span class="choice-panel__count-carts">0/2</span>
     </div>
@@ -71,7 +96,7 @@ export default defineComponent({
   background-color: rgba(58, 41, 25, 0.486);
 
   &__title {
-    margin-top: 8%;
+    margin-top: 5%;
     display: flex;
     align-items: center;
     justify-content: center;

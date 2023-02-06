@@ -62,7 +62,7 @@ export default defineComponent({
       <p class="card-info__count-power">{{ card?.power }}</p>
     </div>
 
-    <img v-if="card?.type !== 'special'" class="card-info__equipment"
+    <img v-if="card?.type !== 'special' && card?.type !== 'leader'" class="card-info__equipment"
       src="/src/assets/images/build/card_row_close.png" />
     <img v-if="card?.ability !== null && card?.type !== 'special'" class="card-info__ability"
       src="/src/assets/images/build/card_ability_bond.png" />

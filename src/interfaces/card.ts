@@ -1,6 +1,6 @@
 type CardAbility = 'agile' | 'bond' | 'decoy' | 'medic' | 'spy' | 'morale' | 'horn' | 'muster' | 'scorch' | 'rain';
 
-type CardFieldType = 'melee' | 'range' | 'siege' | 'boost' | 'weather';
+type CardFieldType = 'melee' | 'range' | 'siege' | 'boost' | 'weather' | 'leader';
 
 type CardType = 'hero' | 'usual' | 'special' | 'leader';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type Card from '@/interfaces/card';
-import CardInfoCopmponent, { CardLayoutType } from '@/components/GameView/CardInfoComponent.vue';
+import CardInfoCopmponent, { CardLayoutType } from '@/components/GameView/common/CardInfoComponent.vue';
 
 enum CardSize {
   large = 15,
