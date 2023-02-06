@@ -1,11 +1,12 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
+import { cardAbilitiesImg, cardFractionsImg, сardEquipmendImg } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
-  SIMPLE,
-  AVERAGE,
-  EXTENDED,
+  SIMPLE, //card for game
+  AVERAGE, //card for collecting a deck
+  EXTENDED, //info card
 }
 
 export default defineComponent({
@@ -14,12 +15,15 @@ export default defineComponent({
       parentWidth: 0,
       scaleFactor: 1,
       cardLayoutType: CardLayoutType,
+      abilitiesImg: cardAbilitiesImg,
+      equipmendImg: сardEquipmendImg,
+      fraction: cardFractionsImg,
     };
   },
   props: {
     isSelected: Boolean,
     layoutType: {
-      type: Object as PropType<CardLayoutType>,
+      type: Number as PropType<CardLayoutType>,
     },
     card: Object as PropType<Card>,
   },
@@ -34,6 +38,30 @@ export default defineComponent({
       this.parentWidth = card.parentElement?.clientWidth || 0;
       this.scaleFactor = this.parentWidth / card.clientWidth;
     },
+    getEquipmendImage(card?: Card): string {
+      if (!card) {
+        return '';
+      }
+
+      if (card.fieldType.length === 1) {
+        const key = card.fieldType[0];
+
+        if (!(key in сardEquipmendImg)) {
+          return '';
+        }
+
+        // @ts-ignore
+        return сardEquipmendImg[key];
+      }
+
+      if (card.fieldType.length == 2) {
+        if (card.fieldType.includes('melee') && card.fieldType.includes('range')) {
+          return сardEquipmendImg['melee_range'];
+        }
+      }
+
+      return '';
+    }
   },
   updated() {
     // It's safe since width does not mutate so often and it won't trigger an infinity loop
@@ -46,29 +74,46 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="layoutType === cardLayoutType.EXTENDED || layoutType === cardLayoutType.AVERAGE" ref="card" class="card-info" :class="{ selected: isSelected }"
-    :style="{ transform: `scale(${scaleFactor})` }">
+  <div
+    v-if="layoutType === cardLayoutType.EXTENDED || layoutType === cardLayoutType.AVERAGE"
+    ref="card"
+    class="card-info"
+    :class="{ selected: isSelected }"
+    :style="{ transform: `scale(${scaleFactor})` }"
+  >
     <img class="card-info__back" :src="card?.image" />
-    <img v-if="card?.fractionId !== null" class="card-info__banner"
-      src="/src/assets/images/build/card_faction_banner_northern_realms.png" />
+    <img
+      v-if="card?.fractionId !== null"
+      class="card-info__banner"
+      :src="fraction[card?.fractionId!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
-      <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png">
+      <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="card-info__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="card-info__count">
-      <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png">
+      <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
       <p class="card-info__count-power">{{ card?.power }}</p>
     </div>
 
-    <img v-if="card?.type !== 'special' && card?.type !== 'leader'" class="card-info__equipment"
-      src="/src/assets/images/build/card_row_close.png" />
-    <img v-if="card?.ability !== null && card?.type !== 'special'" class="card-info__ability"
-      src="/src/assets/images/build/card_ability_bond.png" />
+    <img
+      v-if="card?.type !== 'special' && card?.type !== 'leader'"
+      class="card-info__equipment"
+      :src="getEquipmendImage(card)"
+    />
+    <img
+      v-if="card?.ability !== null && card?.type !== 'special'"
+      class="card-info__ability"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
-    <img v-if="card?.type === 'special'" class="card-info__special"
-      src="/src/assets/images/build/card_weather_rain.png">
+    <img
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
     <div class="card-info__gradient"></div>
 
@@ -78,7 +123,7 @@ export default defineComponent({
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>
       <div v-else class="card-info__quantity">
-        <img class="quantity-img" src="/src/assets/images/build/preview_count.png">
+        <img class="quantity-img" src="/src/assets/images/build/preview_count.png" />
         <span class="quantity-number">{{ card?.quantity }}</span>
       </div>
     </div>
@@ -87,31 +132,39 @@ export default defineComponent({
   <div v-else ref="card" class="game-card">
     <img class="game-card__back" :src="card?.image" />
 
-    <img v-if="card?.type === 'special'" class="card-info__special"
-      src="/src/assets/images/build/card_weather_rain.png">
+    <img
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      src="/src/assets/images/build/card_weather_rain.png"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
-      <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png">
+      <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="game-card__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="game-card__count">
-      <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png">
+      <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
       <p class="game-card__count-power">{{ card?.power }}</p>
     </div>
 
-    <img v-if="card?.type !== 'special'" class="game-card__equipment"
-      src="/src/assets/images/build/card_row_close.png" />
+    <img
+      v-if="card?.type !== 'special'"
+      class="game-card__equipment"
+      src="/src/assets/images/build/card_row_close.png"
+    />
 
-    <img v-if="card?.ability !== null && card?.type !== 'special'" class="game-card__ability"
-      src="/src/assets/images/build/card_ability_bond.png" />
+    <img
+      v-if="card?.ability !== null && card?.type !== 'special'"
+      class="game-card__ability"
+      src="/src/assets/images/build/card_ability_bond.png"
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
-
 .quantity-img {
- width: 15%;
+  width: 15%;
 }
 
 .selected {
@@ -136,12 +189,14 @@ export default defineComponent({
   &__gradient {
     width: 100%;
     height: 7px;
-    background: linear-gradient(90deg,
-        rgba(218, 165, 32, 1) 0%,
-        rgba(249, 248, 162, 1) 43%,
-        rgba(218, 165, 32, 1) 64%,
-        rgba(249, 248, 162, 1) 82%,
-        rgba(218, 165, 32, 1) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(218, 165, 32, 1) 0%,
+      rgba(249, 248, 162, 1) 43%,
+      rgba(218, 165, 32, 1) 64%,
+      rgba(249, 248, 162, 1) 82%,
+      rgba(218, 165, 32, 1) 100%
+    );
   }
 
   &__quantity {
@@ -173,7 +228,7 @@ export default defineComponent({
       font-size: 3vw;
     }
   }
-  
+
   &__count-hero {
     position: absolute;
     top: -2%;
@@ -219,6 +274,7 @@ export default defineComponent({
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
     height: 17%;
+    min-height: 10vh;
     border-radius: 0 0 1.9vw 1.9vw;
   }
 }
@@ -243,7 +299,9 @@ export default defineComponent({
   padding-right: 5px;
   margin-top: 6%;
   margin-bottom: 14%;
-
+  word-wrap: break-word;
+  padding-left: 20%;
+  
   &-center {
     text-align: center;
     font-weight: 500;

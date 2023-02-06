@@ -1,6 +1,19 @@
-type CardAbility = 'agile' | 'bond' | 'decoy' | 'medic' | 'spy' | 'morale' | 'horn' | 'muster' | 'scorch' | 'rain';
+export type CardAbility =
+  | 'agile'
+  | 'bond'
+  | 'decoy'
+  | 'medic'
+  | 'spy'
+  | 'morale'
+  | 'horn'
+  | 'muster'
+  | 'scorch'
+  | 'rain'
+  | 'fog'
+  | 'frost'
+  | 'clear';
 
-type CardFieldType = 'melee' | 'range' | 'siege' | 'boost' | 'weather' | 'leader';
+export type CardFieldType = 'melee' | 'range' | 'siege' | 'boost' | 'weather' | 'leader';
 
 type CardType = 'hero' | 'usual' | 'special' | 'leader';
 
