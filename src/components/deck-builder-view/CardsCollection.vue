@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-// import CardFromCollection from '@/components/deck-builder-view/CardFromCollection.vue';
 import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
 import type Card from '@/interfaces/card';
 interface Filter {
