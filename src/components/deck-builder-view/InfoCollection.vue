@@ -110,6 +110,7 @@ export default defineComponent({
   align-items: center;
   margin-top: 25%;
   gap: 1vw;
+  height: 37%;
 
   &__text {
     font-size: 1.2vw;
