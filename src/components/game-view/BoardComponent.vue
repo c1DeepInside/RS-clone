@@ -58,20 +58,52 @@ export default defineComponent({
           power: null,
           quantity: 3,
         },
+        {
+          name: 'Таинственный эльф',
+          type: 'hero',
+          image: 'src/assets/images/neu_avallach.png',
+          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+          fractionId: null,
+          ability: 'spy',
+          fieldType: ['melee'],
+          power: '0',
+          quantity: 1,
+        },
+        {
+          name: 'Лекарь Бурой Хоругви',
+          type: 'usual',
+          image: 'src/assets/images/nor_banner_nurse.png',
+          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
+          fractionId: 0,
+          ability: 'medic',
+          fieldType: ['siege'],
+          power: 5,
+          quantity: 1,
+        },
       ] as Card[],
+      currentCard: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
     };
   },
   methods: {
     showCard(card: Card) {
-      setTimeout(() => {
-        this.$emit('update:selectedItem', card, true);
-      }, 240);
+      this.currentCard = card;
+      this.$emit('update:selectedItem', card, true);
     },
     startAnimate(event: Event) {
       const target = event.currentTarget as HTMLElement;
       target.style.transform = `translate(calc(42vw - ${target.offsetLeft}px + 15vw), -17vw) scale(3)`;
       target.style.opacity = '0';
-      const clickField = this.$parent?.$refs.clickField as HTMLDivElement;
+      const clickField = this.$parent?.$refs.clickField as HTMLElement;
       clickField.addEventListener(
         'click',
         () => {
@@ -93,14 +125,47 @@ export default defineComponent({
   <div class="board">
     <div class="field">
       <div class="field__enemy">
-        <LineComponent :class="`field__enemy__${attackType.siege}`" :type="isEnemy" :attackType="attackType.siege" />
-        <LineComponent :class="`field__enemy__${attackType.range}`" :type="isEnemy" :attackType="attackType.range" />
-        <LineComponent :class="`field__enemy__${attackType.melee}`" :type="isEnemy" :attackType="attackType.melee" />
+        <LineComponent
+          :class="`field__enemy__${attackType.siege}`"
+          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability === 'spy'"
+          :type="isEnemy"
+          :attackType="attackType.siege"
+        />
+        <LineComponent
+          :class="`field__enemy__${attackType.range}`"
+          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability === 'spy'"
+          :type="isEnemy"
+          :attackType="attackType.range"
+        />
+        <LineComponent
+          :class="`field__enemy__${attackType.melee}`"
+          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability === 'spy'"
+          :type="isEnemy"
+          :attackType="attackType.melee"
+        />
       </div>
       <div class="field__allies">
-        <LineComponent :class="`field__enemy__${attackType.siege}`" :type="!isEnemy" :attackType="attackType.melee" />
-        <LineComponent :class="`field__enemy__${attackType.range}`" :type="!isEnemy" :attackType="attackType.range" />
-        <LineComponent :class="`field__enemy__${attackType.melee}`" :type="!isEnemy" :attackType="attackType.siege" />
+        <LineComponent
+          :class="`field__allies__${attackType.melee}`"
+          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability !== 'spy'"
+          :activeBoost="currentCard.fieldType.includes('boost')"
+          :type="isEnemy"
+          :attackType="attackType.siege"
+        />
+        <LineComponent
+          :class="`field__allies__${attackType.range}`"
+          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability !== 'spy'"
+          :activeBoost="currentCard.fieldType.includes('boost')"
+          :type="!isEnemy"
+          :attackType="attackType.range"
+        />
+        <LineComponent
+          :class="`field__allies__${attackType.siege}`"
+          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability !== 'spy'"
+          :activeBoost="currentCard.fieldType.includes('boost')"
+          :type="!isEnemy"
+          :attackType="attackType.siege"
+        />
       </div>
     </div>
     <div class="board__hand">
@@ -127,7 +192,6 @@ export default defineComponent({
   .field {
     position: relative;
     height: 43.5vw;
-    z-index: 2;
 
     &__enemy {
       height: 50%;
@@ -151,9 +215,8 @@ export default defineComponent({
     &__allies {
       height: 50%;
       position: relative;
-
       &__siege {
-        margin-top: 0.6vw;
+        margin-top: 0.65vw;
       }
 
       &__range {

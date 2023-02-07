@@ -88,7 +88,7 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather"></div>
+        <div class="game__weather" :class="selectedCard.fieldType.includes('weather') ? 'active__weather' : ''"></div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
@@ -250,6 +250,10 @@ export default defineComponent({
     }
   }
 
+  .active__weather {
+    z-index: 2;
+  }
+
   &__weather {
     position: relative;
     display: flex;
@@ -259,7 +263,6 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
-    z-index: 2;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

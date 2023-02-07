@@ -11,6 +11,8 @@ export default defineComponent({
   props: {
     type: Boolean,
     attackType: String,
+    activeBoost: Boolean,
+    activeLine: Boolean,
   },
   components: {},
 });
@@ -25,12 +27,15 @@ export default defineComponent({
         <p class="power__dmg__number">7</p>
       </div>
     </div>
-    <div :class="`boost__wrap_${attackType}_${type}`" class="boost__wrap wrap_animation"></div>
-    <div :class="`cards__wrap_${attackType}_${type}`" class="cards__wrap wrap_animation"></div>
+    <div :class="activeBoost ? 'active' : ''" class="boost__wrap wrap_animation"></div>
+    <div :class="activeLine ? 'active' : ''" class="cards__wrap wrap_animation"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.active {
+  z-index: 2;
+}
 .line {
   height: 6.4vw;
   width: 100%;
