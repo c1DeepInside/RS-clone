@@ -199,6 +199,18 @@ export default defineComponent({
           power: 15,
           quantity: 1,
         },
+        {
+          id: 15,
+          name: 'Командирский рог',
+          type: 'special',
+          image: 'src/assets/images/spc_horn.png',
+          description: 'Плюс один к морали, минус три к слуху.',
+          fractionId: null,
+          ability: 'horn',
+          fieldType: ['boost'],
+          power: null,
+          quantity: 3,
+        },
       ] as Card[],
     };
   },

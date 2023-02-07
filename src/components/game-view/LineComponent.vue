@@ -51,7 +51,10 @@ export default defineComponent({
       </div>
     </div>
     <div
-      :class="[activeBoost ? 'active' : '', `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
+      :class="[
+        activeBoost && boosts.length < 1 ? 'active' : '',
+        `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
+      ]"
       class="boosts__wrap wrap_animation"
     >
       <div class="boost__wrap" v-for="(card, index) in boosts" :key="index">

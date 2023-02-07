@@ -45,6 +45,7 @@ export default defineComponent({
     },
     startAnimate(event: Event) {
       const target = event.currentTarget as HTMLElement;
+      target.style.transition = '0.5s';
       target.style.transform = `translate(calc(42vw - ${target.offsetLeft}px + 15vw), -17vw) scale(3)`;
       target.style.opacity = '0';
       const clickField = this.$parent?.$refs.clickField as HTMLElement;
@@ -252,7 +253,6 @@ export default defineComponent({
   position: relative;
   height: 100%;
   width: 4.5vw;
-  transition: 0.5s;
 }
 
 .board {
@@ -287,7 +287,7 @@ export default defineComponent({
       }
 
       &__range {
-        margin-top: 0.5vw;
+        margin-top: 0.48vw;
       }
 
       &__melee {
