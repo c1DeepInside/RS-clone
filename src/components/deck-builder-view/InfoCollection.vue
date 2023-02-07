@@ -4,25 +4,34 @@ import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vu
 import type Card from '@/interfaces/card';
 
 export default defineComponent({
-  data() {
-    return {
-      deckInfos: [
+  components: {
+    LeaderOfFraction,
+  },
+  computed: {
+    deckInformation() {
+      return [
         {
           text: 'Карты в колоде',
           img: 'src/assets/images/filter/board_cards.png',
-          count: this.selectedCards.length,
+          count: this.selectedCards.reduce((acc, item) => {
+            return acc + item.quantity;
+          }, 0),
         },
         {
           text: 'Карты отрядов',
           img: 'src/assets/images/filter/melee_tan.png',
           maxCount: 22,
-          count: this.selectedCards.filter((item) => item.type === 'usual' || item.type === 'hero').length,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'usual' || item.type === 'hero' ? acc + item.quantity : acc;
+          }, 0),
         },
         {
           text: 'Специальные карты',
           img: 'src/assets/images/filter/sky_tan.png',
           maxCount: 10,
-          count: this.selectedCards.filter((item) => item.type === 'special').length,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'special' ? acc + item.quantity : acc;
+          }, 0),
         },
         {
           text: 'Общая сила карт отрядов',
@@ -34,13 +43,12 @@ export default defineComponent({
         {
           text: 'Герои',
           img: 'src/assets/images/filter/hero_tan.png',
-          count: this.selectedCards.filter((item) => item.type === 'hero').length,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'hero' ? acc + item.quantity : acc;
+          }, 0),
         },
-      ],
-    };
-  },
-  components: {
-    LeaderOfFraction,
+      ];
+    },
   },
   props: {
     selectedCards: {
@@ -58,7 +66,7 @@ export default defineComponent({
       <LeaderOfFraction />
     </div>
     <div class="deck__info">
-      <div v-for:="deckInfo in deckInfos">
+      <div v-for:="deckInfo in deckInformation">
         <p class="deck__text">{{ deckInfo.text }}</p>
         <div class="deck__numbers">
           <img class="deck__img" :src="deckInfo.img" draggable="false" />
