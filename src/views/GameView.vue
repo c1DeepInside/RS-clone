@@ -30,6 +30,104 @@ export default defineComponent({
       timer: 0,
       isShowCardView: false,
       weatherCards: [] as Card[],
+      cards: [
+        {
+          id: 1,
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: 'Цирилла',
+          type: 'hero',
+          image: 'src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: 'Осадная башня',
+          type: 'usual',
+          image: 'src/assets/images/nor_siege_tower.png',
+          description: 'Башня на колесах... Чего только люди не удумают!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['siege'],
+          power: 6,
+          quantity: 1,
+        },
+        {
+          id: 4,
+          name: 'Ясное небо',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
+          fractionId: null,
+          ability: 'clear',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 5,
+          name: 'Таинственный эльф',
+          type: 'hero',
+          image: 'src/assets/images/neu_avallach.png',
+          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+          fractionId: null,
+          ability: 'spy',
+          fieldType: ['melee'],
+          power: '0',
+          quantity: 1,
+        },
+        {
+          id: 6,
+          name: 'Лекарь Бурой Хоругви',
+          type: 'usual',
+          image: 'src/assets/images/nor_banner_nurse.png',
+          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
+          fractionId: 0,
+          ability: 'medic',
+          fieldType: ['siege'],
+          power: 5,
+          quantity: 1,
+        },
+        {
+          id: 7,
+          name: 'Командирский рог',
+          type: 'special',
+          image: 'src/assets/images/spc_horn.png',
+          description: 'Плюс один к морали, минус три к слуху.',
+          fractionId: null,
+          ability: 'horn',
+          fieldType: ['boost'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 8,
+          name: 'Детмольд',
+          type: 'usual',
+          image: 'src/assets/images/nor_dethmold.png',
+          description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['range'],
+          power: 6,
+          quantity: 1,
+        },
+      ] as Card[],
     };
   },
   methods: {
@@ -48,6 +146,11 @@ export default defineComponent({
       clearTimeout(this.timer);
       console.log(this.timer);
     },
+    closeSelectedItem(value: Card, show: boolean) {
+      this.isFieldBlock = show;
+      this.isShowCardView = show;
+      this.cards = this.cards.filter((card) => card !== value);
+    },
     updateSelectedItem(value: Card, show: boolean) {
       this.isFieldBlock = show;
       setTimeout(() => {
@@ -63,6 +166,9 @@ export default defineComponent({
     },
     putWeatherCard() {
       if (this.isShowCardView) {
+        this.isFieldBlock = false;
+        this.isShowCardView = false;
+        this.cards = this.cards.filter((card) => card !== this.selectedCard);
         this.weatherCards.push(this.selectedCard);
       }
     },
@@ -138,7 +244,12 @@ export default defineComponent({
         </button>
       </div>
       <div class="game__board board">
-        <BoardComponent @update:selectedItem="updateSelectedItem" :isShowCardView="isShowCardView" />
+        <BoardComponent
+          @update:selectedItem="updateSelectedItem"
+          @close:selectedItem="closeSelectedItem"
+          :isShowCardView="isShowCardView"
+          :cards="cards"
+        />
       </div>
       <div class="game__decks deck">
         <div class="deck__content">

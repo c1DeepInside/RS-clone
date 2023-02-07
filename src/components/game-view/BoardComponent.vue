@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import LineComponent from './LineComponent.vue';
 import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import type Card from '@/interfaces/card';
@@ -13,96 +13,6 @@ export default defineComponent({
         siege: 'siege',
       },
       isEnemy: true,
-      cards: [
-        {
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Таинственный эльф',
-          type: 'hero',
-          image: 'src/assets/images/neu_avallach.png',
-          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
-          fractionId: null,
-          ability: 'spy',
-          fieldType: ['melee'],
-          power: '0',
-          quantity: 1,
-        },
-        {
-          name: 'Лекарь Бурой Хоругви',
-          type: 'usual',
-          image: 'src/assets/images/nor_banner_nurse.png',
-          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
-          fractionId: 0,
-          ability: 'medic',
-          fieldType: ['siege'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Детмольд',
-          type: 'usual',
-          image: 'src/assets/images/nor_dethmold.png',
-          description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['range'],
-          power: 6,
-          quantity: 1,
-        },
-      ] as Card[],
       currentCard: {
         name: 'Геральт из Ривии',
         type: 'hero',
@@ -177,7 +87,7 @@ export default defineComponent({
         if (target.classList.contains('boost__wrap__siege__allies')) {
           this.alliesSiegeBoost.push(this.currentCard);
         }
-        this.$emit('update:selectedItem', this.currentCard, false);
+        this.$emit('close:selectedItem', this.currentCard, false);
       }
     },
   },
@@ -189,6 +99,12 @@ export default defineComponent({
     isShowCardView: {
       type: Boolean,
       default: false,
+    },
+    cards: {
+      type: Array as PropType<Card[]>,
+      default: () => {
+        return [];
+      },
     },
   },
 });
@@ -261,11 +177,8 @@ export default defineComponent({
     </div>
     <div class="board__hand">
       <div class="board__hand-row">
-        <div class="card__wrap" v-for="(card, index) in cards" :key="index" @click="startAnimate($event)">
+        <div class="card__wrap" v-for="card in cards" :key="card.id" @click="startAnimate($event)">
           <cardInfoComponent :card="card" :layoutType="0" class="card" @click="showCard(card)" />
-        </div>
-        <div class="card__wrap hide" @click="startAnimate($event)">
-          <cardInfoComponent :card="cards[0]" :layoutType="0" class="card" @click="showCard(cards[0])" />
         </div>
       </div>
     </div>
