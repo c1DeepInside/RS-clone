@@ -47,7 +47,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Король Темерии',
+          name: 'Фольтест',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_silver.jpg',
           description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
@@ -58,7 +58,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Предводитель Севера',
+          name: 'Предводитель',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_gold.jpg',
           description: 'Проклятая политика... Я доверяю только своему оружию.',
@@ -80,7 +80,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Король Темерии',
+          name: 'Темерии',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_silver.jpg',
           description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
@@ -102,7 +102,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Цирилла',
+          name: 'Цирилла 2',
           type: 'hero',
           image: '/src/assets/images/neutral_ciri.jpg',
           description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
@@ -113,7 +113,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Король Темерии',
+          name: 'Король Темерии',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_silver.jpg',
           description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
@@ -124,7 +124,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Предводитель Севера',
+          name: 'Предводитель Севера',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_gold.jpg',
           description: 'Проклятая политика... Я доверяю только своему оружию.',
@@ -135,7 +135,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Предводитель Севера',
+          name: 'Фольтест Севера',
           type: 'leader',
           image: '/src/assets/images/realms_foltest_gold.jpg',
           description: 'Проклятая политика... Я доверяю только своему оружию.',
@@ -146,7 +146,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          name: 'Фольтест Предводитель Севера',
+          name: 'Севера',
           type: 'usual',
           image: '/src/assets/images/realms_foltest_gold.jpg',
           description: 'Проклятая политика... Я доверяю только своему оружию.',
@@ -158,17 +158,17 @@ export default defineComponent({
         },
       ] as Card[],
       deckCards: [
-        {
-          name: 'Ливень',
-          type: 'special',
-          image: '/src/assets/images/weather_rain.jpg',
-          description: 'В этом краю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 2,
-        },
+        // {
+        //   name: 'Ливень',
+        //   type: 'special',
+        //   image: '/src/assets/images/weather_rain.jpg',
+        //   description: 'В этом краю даже дождь смердит мочой.',
+        //   fractionId: null,
+        //   ability: 'rain',
+        //   fieldType: ['weather'],
+        //   power: null,
+        //   quantity: 2,
+        // },
       ] as Card[],
     };
   },
@@ -188,14 +188,54 @@ export default defineComponent({
       this.currentFraction = data;
     },
     changeCollectionCards(data: Card) {
-      this.deckCards.push(data);
       const index = this.collectionCards.indexOf(data);
-      this.collectionCards.splice(index, 1);
+      if (this.collectionCards[index].quantity === 1) {
+        const existingCardIndex = this.deckCards.findIndex((item) => item.name === data.name);
+        if (existingCardIndex !== -1) {
+          this.deckCards[existingCardIndex].quantity++;
+        } else {
+          this.deckCards.push(data);
+        }
+        this.collectionCards.splice(index, 1);
+      } else {
+        this.collectionCards[index].quantity--;
+        const existingCardIndex = this.deckCards.findIndex((item) => item.name === data.name);
+        if (existingCardIndex !== -1) {
+          this.deckCards[existingCardIndex].quantity++;
+        } else {
+          const cardCopy = { ...data };
+          cardCopy.quantity = 1;
+          this.deckCards.push(cardCopy);
+        }
+      }
     },
     changeDeckCards(data: Card) {
-      this.collectionCards.push(data);
       const index = this.deckCards.indexOf(data);
-      this.deckCards.splice(index, 1);
+      if (this.deckCards[index].quantity === 1) {
+        const existingCardIndex = this.collectionCards.findIndex((item) => item.name === data.name);
+        if (existingCardIndex !== -1) {
+          this.collectionCards[existingCardIndex].quantity++;
+        } else {
+          this.collectionCards.push(data);
+        }
+        this.deckCards.splice(index, 1);
+      } else {
+        this.deckCards[index].quantity--;
+        const existingCardIndex = this.collectionCards.findIndex((item) => item.name === data.name);
+        if (existingCardIndex !== -1) {
+          this.collectionCards[existingCardIndex].quantity++;
+        } else {
+          const cardCopy = { ...data };
+          cardCopy.quantity = 1;
+          this.collectionCards.push(cardCopy);
+        }
+      }
+
+      // if (this.deckCards[index].quantity === 1) {
+      //   this.deckCards.splice(index, 1);
+      // } else {
+      //   this.deckCards[index].quantity--;
+      // }
     },
   },
 });
