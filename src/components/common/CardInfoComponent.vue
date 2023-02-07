@@ -1,11 +1,12 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
+import { cardAbilitiesImg, cardFractionsImg, сardEquipmendImg } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
-  SIMPLE,
-  AVERAGE,
-  EXTENDED,
+  SIMPLE, //card for game
+  AVERAGE, //card for collecting a deck
+  EXTENDED, //info card
 }
 
 export default defineComponent({
@@ -14,6 +15,9 @@ export default defineComponent({
       parentWidth: 0,
       scaleFactor: 1,
       cardLayoutType: CardLayoutType,
+      abilitiesImg: cardAbilitiesImg,
+      equipmendImg: сardEquipmendImg,
+      fraction: cardFractionsImg,
     };
   },
   props: {
@@ -34,6 +38,30 @@ export default defineComponent({
       this.parentWidth = card.parentElement?.clientWidth || 0;
       this.scaleFactor = this.parentWidth / card.clientWidth;
     },
+    getEquipmendImage(card?: Card): string {
+      if (!card) {
+        return '';
+      }
+
+      if (card.fieldType.length === 1) {
+        const key = card.fieldType[0];
+
+        if (!(key in сardEquipmendImg)) {
+          return '';
+        }
+
+        // @ts-ignore
+        return сardEquipmendImg[key];
+      }
+
+      if (card.fieldType.length == 2) {
+        if (card.fieldType.includes('melee') && card.fieldType.includes('range')) {
+          return сardEquipmendImg['melee_range'];
+        }
+      }
+
+      return '';
+    }
   },
   updated() {
     // It's safe since width does not mutate so often and it won't trigger an infinity loop
@@ -57,7 +85,7 @@ export default defineComponent({
     <img
       v-if="card?.fractionId !== null"
       class="card-info__banner"
-      src="/src/assets/images/build/card_faction_banner_northern_realms.png"
+      :src="fraction[card?.fractionId!]"
     />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
@@ -73,18 +101,18 @@ export default defineComponent({
     <img
       v-if="card?.type !== 'special' && card?.type !== 'leader'"
       class="card-info__equipment"
-      src="/src/assets/images/build/card_row_close.png"
+      :src="getEquipmendImage(card)"
     />
     <img
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="card-info__ability"
-      src="/src/assets/images/build/card_ability_bond.png"
+      :src="abilitiesImg[card?.ability!]"
     />
 
     <img
       v-if="card?.type === 'special'"
       class="card-info__special"
-      src="/src/assets/images/build/card_weather_rain.png"
+      :src="abilitiesImg[card?.ability!]"
     />
 
     <div class="card-info__gradient"></div>
@@ -246,6 +274,7 @@ export default defineComponent({
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
     height: 17%;
+    min-height: 10vh;
     border-radius: 0 0 1.9vw 1.9vw;
   }
 }
@@ -270,7 +299,9 @@ export default defineComponent({
   padding-right: 5px;
   margin-top: 6%;
   margin-bottom: 14%;
-
+  word-wrap: break-word;
+  padding-left: 20%;
+  
   &-center {
     text-align: center;
     font-weight: 500;
