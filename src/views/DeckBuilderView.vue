@@ -157,19 +157,7 @@ export default defineComponent({
           quantity: 1,
         },
       ] as Card[],
-      deckCards: [
-        // {
-        //   name: 'Ливень',
-        //   type: 'special',
-        //   image: '/src/assets/images/weather_rain.jpg',
-        //   description: 'В этом краю даже дождь смердит мочой.',
-        //   fractionId: null,
-        //   ability: 'rain',
-        //   fieldType: ['weather'],
-        //   power: null,
-        //   quantity: 2,
-        // },
-      ] as Card[],
+      deckCards: [] as Card[],
     };
   },
   components: {
@@ -230,12 +218,6 @@ export default defineComponent({
           this.collectionCards.push(cardCopy);
         }
       }
-
-      // if (this.deckCards[index].quantity === 1) {
-      //   this.deckCards.splice(index, 1);
-      // } else {
-      //   this.deckCards[index].quantity--;
-      // }
     },
   },
 });
@@ -258,7 +240,6 @@ export default defineComponent({
         <CardCollection
           @filterChanged="changeFilterCollection"
           @selectedCard="changeCollectionCards"
-          :isCollection="true"
           :currentFraction="currentFraction"
           :gwentCards="collectionCards"
         />
@@ -267,7 +248,6 @@ export default defineComponent({
           @filterChanged="changeFilterDeck"
           @selectedCard="changeDeckCards"
           :currentFraction="currentFraction"
-          :isCollection="false"
           :gwentCards="deckCards"
         />
       </div>

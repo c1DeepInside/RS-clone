@@ -70,8 +70,7 @@ export default defineComponent({
       this.currFilter = filter.name;
       this.$emit('filterChanged', this.currFilter);
     },
-    takeCard(index: number, item: Card) {
-      console.log(item);
+    takeCard(item: Card) {
       this.$emit('selectedCard', item);
     },
   },
@@ -98,9 +97,6 @@ export default defineComponent({
       type: Array as PropType<Card[]>,
       required: true,
     },
-    isCollection: {
-      type: Boolean,
-    },
   },
 });
 </script>
@@ -119,7 +115,7 @@ export default defineComponent({
     </div>
     <div class="cards">
       <div class="card" v-for="(item, index) in filteredCards" :key="index">
-        <CardInfoCopmponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(index, item)" />
+        <CardInfoCopmponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
       </div>
     </div>
   </div>
