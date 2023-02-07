@@ -62,7 +62,18 @@ export default defineComponent({
       :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
       class="cards__wrap wrap_animation"
     >
-      <div class="card__wrap" v-for="(card, index) in cards" :key="index">
+      <div
+        class="card__wrap"
+        v-for="(card, index) in cards"
+        :key="index"
+        :style="
+          cards.length > 8
+            ? `margin-left: -${cards.length / (7.2 + Math.pow(2.6, -cards.length + 12.6))}vw; left: ${
+                cards.length / (7.2 + Math.pow(2.6, -cards.length + 12.6)) / 2
+              }vw`
+            : ''
+        "
+      >
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
@@ -72,6 +83,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .card__wrap {
   height: 100%;
+  position: relative;
   width: 4.5vw;
 }
 .boost__wrap {

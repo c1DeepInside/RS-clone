@@ -187,6 +187,18 @@ export default defineComponent({
           power: 15,
           quantity: 1,
         },
+        {
+          id: 14,
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
       ] as Card[],
     };
   },
