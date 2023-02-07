@@ -7,6 +7,7 @@ import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 import type Card from '@/interfaces/card';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 
 export default defineComponent({
   data() {
@@ -14,6 +15,7 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
+      isFieldBlock: false,
       selectedCard: {
         name: 'Геральт из Ривии',
         type: 'hero',
@@ -27,6 +29,7 @@ export default defineComponent({
       } as Card,
       timer: 0,
       isShowCardView: false,
+      weatherCards: [] as Card[],
     };
   },
   methods: {
@@ -46,11 +49,22 @@ export default defineComponent({
       console.log(this.timer);
     },
     updateSelectedItem(value: Card, show: boolean) {
-      this.selectedCard = value;
-      this.isShowCardView = show;
+      this.isFieldBlock = show;
+      setTimeout(() => {
+        this.selectedCard = value;
+        this.isShowCardView = show;
+      }, 240);
     },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
+    },
+    updateWeatherCards(card: Card) {
+      this.weatherCards.push(card);
+    },
+    putWeatherCard() {
+      if (this.isShowCardView) {
+        this.weatherCards.push(this.selectedCard);
+      }
     },
   },
   components: {
@@ -60,6 +74,7 @@ export default defineComponent({
     CardViewComponent,
     EndComponent,
     InformationBar,
+    CardInfoComponent,
   },
 });
 </script>
@@ -68,8 +83,8 @@ export default defineComponent({
   <GameExchangePanelComponent />
   <main class="page-game">
     <div
-      :class="['click', { noclick: isShowCardView === false }]"
-      @click="isShowCardView = false"
+      :class="['click', { noclick: isFieldBlock === false }]"
+      @click="(isShowCardView = false), (isFieldBlock = false)"
       ref="clickField"
     ></div>
     <div class="game">
@@ -88,7 +103,15 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather" :class="selectedCard.fieldType.includes('weather') ? 'active__weather' : ''"></div>
+        <div
+          class="game__weather"
+          :class="selectedCard.fieldType.includes('weather') ? 'active__weather' : ''"
+          @click="putWeatherCard"
+        >
+          <div class="card__wrap" v-for="(card, index) in weatherCards" :key="index">
+            <CardInfoComponent :card="card" :layoutType="0" class="card" />
+          </div>
+        </div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
@@ -115,7 +138,7 @@ export default defineComponent({
         </button>
       </div>
       <div class="game__board board">
-        <BoardComponent @update:selectedItem="updateSelectedItem" />
+        <BoardComponent @update:selectedItem="updateSelectedItem" :isShowCardView="isShowCardView" />
       </div>
       <div class="game__decks deck">
         <div class="deck__content">
@@ -139,6 +162,10 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.card__wrap {
+  height: 100%;
+  width: 5vw;
+}
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
@@ -263,6 +290,7 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
+    gap: 0.2vw;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

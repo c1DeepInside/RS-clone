@@ -80,6 +80,28 @@ export default defineComponent({
           power: 5,
           quantity: 1,
         },
+        {
+          name: 'Командирский рог',
+          type: 'special',
+          image: 'src/assets/images/spc_horn.png',
+          description: 'Плюс один к морали, минус три к слуху.',
+          fractionId: null,
+          ability: 'horn',
+          fieldType: ['boost'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Детмольд',
+          type: 'usual',
+          image: 'src/assets/images/nor_dethmold.png',
+          description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['range'],
+          power: 6,
+          quantity: 1,
+        },
       ] as Card[],
       currentCard: {
         name: 'Геральт из Ривии',
@@ -92,6 +114,18 @@ export default defineComponent({
         power: 15,
         quantity: 1,
       } as Card,
+      enemySiegeField: [] as Card[],
+      enemyRangeField: [] as Card[],
+      enemyMeleeField: [] as Card[],
+      alliesMeleeField: [] as Card[],
+      alliesRangeField: [] as Card[],
+      alliesSiegeField: [] as Card[],
+      enemySiegeBoost: [] as Card[],
+      enemyRangeBoost: [] as Card[],
+      enemyMeleeBoost: [] as Card[],
+      alliesMeleeBoost: [] as Card[],
+      alliesRangeBoost: [] as Card[],
+      alliesSiegeBoost: [] as Card[],
     };
   },
   methods: {
@@ -113,10 +147,49 @@ export default defineComponent({
         { once: true }
       );
     },
+    putCard(event: Event) {
+      if (this.isShowCardView) {
+        const target = event.target as HTMLElement;
+        if (target.classList.contains('cards__wrap__siege__enemy')) {
+          this.enemySiegeField.push(this.currentCard);
+        }
+        if (target.classList.contains('cards__wrap__range__enemy')) {
+          this.enemyRangeField.push(this.currentCard);
+        }
+        if (target.classList.contains('cards__wrap__melee__enemy')) {
+          this.enemyMeleeField.push(this.currentCard);
+        }
+        if (target.classList.contains('cards__wrap__melee__allies')) {
+          this.alliesMeleeField.push(this.currentCard);
+        }
+        if (target.classList.contains('cards__wrap__range__allies')) {
+          this.alliesRangeField.push(this.currentCard);
+        }
+        if (target.classList.contains('cards__wrap__siege__allies')) {
+          this.alliesSiegeField.push(this.currentCard);
+        }
+        if (target.classList.contains('boost__wrap__melee__allies')) {
+          this.alliesMeleeBoost.push(this.currentCard);
+        }
+        if (target.classList.contains('boost__wrap__range__allies')) {
+          this.alliesRangeBoost.push(this.currentCard);
+        }
+        if (target.classList.contains('boost__wrap__siege__allies')) {
+          this.alliesSiegeBoost.push(this.currentCard);
+        }
+        this.$emit('update:selectedItem', this.currentCard, false);
+      }
+    },
   },
   components: {
     cardInfoComponent,
     LineComponent,
+  },
+  props: {
+    isShowCardView: {
+      type: Boolean,
+      default: false,
+    },
   },
 });
 </script>
@@ -130,18 +203,27 @@ export default defineComponent({
           :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability === 'spy'"
           :type="isEnemy"
           :attackType="attackType.siege"
+          :cards="enemySiegeField"
+          :boosts="enemySiegeBoost"
+          @click="putCard"
         />
         <LineComponent
           :class="`field__enemy__${attackType.range}`"
           :activeLine="currentCard.fieldType.includes('range') && currentCard.ability === 'spy'"
           :type="isEnemy"
           :attackType="attackType.range"
+          :cards="enemyRangeField"
+          :boosts="enemyRangeBoost"
+          @click="putCard"
         />
         <LineComponent
           :class="`field__enemy__${attackType.melee}`"
           :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability === 'spy'"
           :type="isEnemy"
           :attackType="attackType.melee"
+          :cards="enemyMeleeField"
+          :boosts="enemyMeleeBoost"
+          @click="putCard"
         />
       </div>
       <div class="field__allies">
@@ -149,8 +231,11 @@ export default defineComponent({
           :class="`field__allies__${attackType.melee}`"
           :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability !== 'spy'"
           :activeBoost="currentCard.fieldType.includes('boost')"
-          :type="isEnemy"
-          :attackType="attackType.siege"
+          :type="!isEnemy"
+          :attackType="attackType.melee"
+          :cards="alliesMeleeField"
+          :boosts="alliesMeleeBoost"
+          @click="putCard"
         />
         <LineComponent
           :class="`field__allies__${attackType.range}`"
@@ -158,6 +243,9 @@ export default defineComponent({
           :activeBoost="currentCard.fieldType.includes('boost')"
           :type="!isEnemy"
           :attackType="attackType.range"
+          :cards="alliesRangeField"
+          :boosts="alliesRangeBoost"
+          @click="putCard"
         />
         <LineComponent
           :class="`field__allies__${attackType.siege}`"
@@ -165,6 +253,9 @@ export default defineComponent({
           :activeBoost="currentCard.fieldType.includes('boost')"
           :type="!isEnemy"
           :attackType="attackType.siege"
+          :cards="alliesSiegeField"
+          :boosts="alliesSiegeBoost"
+          @click="putCard"
         />
       </div>
     </div>
@@ -216,7 +307,7 @@ export default defineComponent({
       height: 50%;
       position: relative;
       &__siege {
-        margin-top: 0.65vw;
+        margin-top: 0.7vw;
       }
 
       &__range {
@@ -224,7 +315,7 @@ export default defineComponent({
       }
 
       &__melee {
-        margin-top: 0.75vw;
+        margin-top: 0.55vw;
       }
     }
   }

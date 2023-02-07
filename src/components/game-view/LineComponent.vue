@@ -1,5 +1,7 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
+import type Card from '@/interfaces/card';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 
 export default defineComponent({
   data() {
@@ -13,8 +15,22 @@ export default defineComponent({
     attackType: String,
     activeBoost: Boolean,
     activeLine: Boolean,
+    cards: {
+      type: Array as PropType<Card[]>,
+      default: () => {
+        return [];
+      },
+    },
+    boosts: {
+      type: Array as PropType<Card[]>,
+      default: () => {
+        return [];
+      },
+    },
   },
-  components: {},
+  components: {
+    CardInfoComponent,
+  },
 });
 </script>
 
@@ -27,12 +43,34 @@ export default defineComponent({
         <p class="power__dmg__number">7</p>
       </div>
     </div>
-    <div :class="activeBoost ? 'active' : ''" class="boost__wrap wrap_animation"></div>
-    <div :class="activeLine ? 'active' : ''" class="cards__wrap wrap_animation"></div>
+    <div
+      :class="[activeBoost ? 'active' : '', `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
+      class="boosts__wrap wrap_animation"
+    >
+      <div class="boost__wrap" v-for="(card, index) in boosts" :key="index">
+        <cardInfoComponent :card="card" :layoutType="0" class="card" />
+      </div>
+    </div>
+    <div
+      :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
+      class="cards__wrap wrap_animation"
+    >
+      <div class="card__wrap" v-for="(card, index) in cards" :key="index">
+        <CardInfoComponent :card="card" :layoutType="0" class="card" />
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.card__wrap {
+  height: 100%;
+  width: 4.5vw;
+}
+.boost__wrap {
+  height: 100%;
+  width: 4.3vw;
+}
 .active {
   z-index: 2;
 }
@@ -85,7 +123,7 @@ export default defineComponent({
     }
   }
 
-  .boost__wrap {
+  .boosts__wrap {
     margin-left: 0.4%;
     height: 95%;
     width: 12.3%;
@@ -96,6 +134,7 @@ export default defineComponent({
 
   .cards__wrap {
     margin-left: 0.9%;
+    gap: 0.2vw;
     height: 100%;
     width: 79.5%;
     display: flex;
