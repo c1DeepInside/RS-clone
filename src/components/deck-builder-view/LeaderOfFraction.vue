@@ -1,15 +1,37 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
+import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import SliderComponent from '@/components/common/SliderComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
     return {
       ifModal: false,
+      cardLayoutType: CardLayoutType,
+      leader: this.leadersCards[0] as Card,
     };
   },
   methods: {
     showModal() {
-      this.ifModal = !this.ifModal;
+      this.ifModal = true;
+      document.body.style.overflow = 'hidden';
+    },
+    closeModal(event: Event) {
+      if (event.target === event.currentTarget) {
+        this.ifModal = false;
+        document.body.style.overflow = '';
+      }
+    },
+  },
+  components: {
+    CardInfoCopmponent,
+    SliderComponent,
+  },
+  props: {
+    leadersCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
     },
   },
 });
@@ -17,9 +39,13 @@ export default defineComponent({
 
 <template>
   <div class="leader__img__wrap" @click="showModal">
-    <img class="leader__img" src="src/assets/images/leader.png" alt="лидер" draggable="false" />
+    <CardInfoCopmponent :card="leader" :layout-type="cardLayoutType.EXTENDED" />
   </div>
-  <div v-if="ifModal" class="modal" @click="showModal"></div>
+  <div v-if="ifModal" class="modal" @click="closeModal">
+    <div class="modal__content">
+      <SliderComponent :cards="leadersCards" />
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -31,18 +57,15 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+
+  &__content {
+    margin-top: 8%;
+  }
 }
 .leader__img__wrap {
-  box-sizing: border-box;
-  width: 45%;
+  width: 45.23%;
+  height: 88%;
   border-radius: 2vw;
-  .leader__img {
-    width: 100%;
-    border-radius: 1vw;
-    &:hover {
-      box-shadow: 0px 0px 0px 3px rgba($color: #fe9902, $alpha: 1);
-    }
-  }
 
   &:hover {
     animation: pulse 2s infinite;
