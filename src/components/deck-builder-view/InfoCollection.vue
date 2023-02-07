@@ -7,6 +7,16 @@ export default defineComponent({
   components: {
     LeaderOfFraction,
   },
+  methods: {
+    startGame() {
+      this.$emit(
+        'assembledDeck',
+        this.selectedCards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction)
+      );
+      this.$emit('assembledFraction', this.currentFraction);
+      this.$emit('assembledLeader', 1);
+    },
+  },
   computed: {
     deckInformation() {
       return [
@@ -51,6 +61,12 @@ export default defineComponent({
     },
   },
   props: {
+    currentFraction: {
+      type: Number,
+    },
+    currentLeader: {
+      type: Object as PropType<Card>,
+    },
     selectedCards: {
       type: Array as PropType<Card[]>,
       required: true,
@@ -74,7 +90,7 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <button class="start__game">Начать игру</button>
+    <button class="start__game" @click="startGame">Начать игру</button>
   </div>
 </template>
 

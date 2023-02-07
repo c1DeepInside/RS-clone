@@ -243,7 +243,7 @@ export default defineComponent({
           :currentFraction="currentFraction"
           :gwentCards="collectionCards"
         />
-        <InfoCollection :selectedCards="deckCards" />
+        <InfoCollection :currentFraction="currentFraction" :selectedCards="deckCards" />
         <CardCollection
           @filterChanged="changeFilterDeck"
           @selectedCard="changeDeckCards"
