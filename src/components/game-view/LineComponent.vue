@@ -31,6 +31,13 @@ export default defineComponent({
   components: {
     CardInfoComponent,
   },
+  computed: {
+    showDamage(): number {
+      return this.cards.reduce((prev, next) => {
+        return prev + next.power!;
+      }, 0);
+    },
+  },
 });
 </script>
 
@@ -40,7 +47,7 @@ export default defineComponent({
       <img class="power__img" src="@/assets/images/power_wrap.png" alt="wrap" />
       <div class="power__dmg__wrap">
         <img class="power__dmg" :src="type ? enemyWrap : alliesWrap" alt="wrap" />
-        <p class="power__dmg__number">7</p>
+        <p class="power__dmg__number">{{ Number(showDamage) }}</p>
       </div>
     </div>
     <div

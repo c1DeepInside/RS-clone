@@ -60,22 +60,22 @@ export default defineComponent({
     putCard(event: Event) {
       if (this.isShowCardView) {
         const target = event.target as HTMLElement;
-        if (target.classList.contains('cards__wrap__siege__enemy')) {
+        if (this.currentCard.fieldType.includes('siege') && this.currentCard.ability === 'spy') {
           this.enemySiegeField.push(this.currentCard);
         }
-        if (target.classList.contains('cards__wrap__range__enemy')) {
+        if (this.currentCard.fieldType.includes('range') && this.currentCard.ability === 'spy') {
           this.enemyRangeField.push(this.currentCard);
         }
-        if (target.classList.contains('cards__wrap__melee__enemy')) {
+        if (this.currentCard.fieldType.includes('melee') && this.currentCard.ability === 'spy') {
           this.enemyMeleeField.push(this.currentCard);
         }
-        if (target.classList.contains('cards__wrap__melee__allies')) {
+        if (this.currentCard.fieldType.includes('melee') && this.currentCard.ability !== 'spy') {
           this.alliesMeleeField.push(this.currentCard);
         }
-        if (target.classList.contains('cards__wrap__range__allies')) {
+        if (this.currentCard.fieldType.includes('range') && this.currentCard.ability !== 'spy') {
           this.alliesRangeField.push(this.currentCard);
         }
-        if (target.classList.contains('cards__wrap__siege__allies')) {
+        if (this.currentCard.fieldType.includes('siege') && this.currentCard.ability !== 'spy') {
           this.alliesSiegeField.push(this.currentCard);
         }
         if (target.classList.contains('boost__wrap__melee__allies')) {
@@ -220,7 +220,7 @@ export default defineComponent({
       height: 50%;
       position: relative;
       &__siege {
-        margin-top: 0.7vw;
+        margin-top: 0.75vw;
       }
 
       &__range {
@@ -228,7 +228,7 @@ export default defineComponent({
       }
 
       &__melee {
-        margin-top: 0.55vw;
+        margin-top: 0.63vw;
       }
     }
   }
