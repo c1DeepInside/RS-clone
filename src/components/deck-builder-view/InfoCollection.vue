@@ -4,9 +4,6 @@ import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vu
 import type Card from '@/interfaces/card';
 
 export default defineComponent({
-  components: {
-    LeaderOfFraction,
-  },
   methods: {
     startGame() {
       this.$emit(
@@ -60,12 +57,16 @@ export default defineComponent({
       ];
     },
   },
+  components: {
+    LeaderOfFraction,
+  },
   props: {
     currentFraction: {
       type: Number,
     },
-    currentLeader: {
-      type: Object as PropType<Card>,
+    leadersCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
     },
     selectedCards: {
       type: Array as PropType<Card[]>,
@@ -79,7 +80,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction />
+      <LeaderOfFraction :leadersCards="leadersCards" />
     </div>
     <div class="deck__info">
       <div v-for:="deckInfo in deckInformation">

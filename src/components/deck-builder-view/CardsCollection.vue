@@ -62,9 +62,6 @@ export default defineComponent({
       cards: this.gwentCards,
     };
   },
-  components: {
-    CardInfoCopmponent,
-  },
   methods: {
     changeFilter(filter: Filter): void {
       this.currFilter = filter.name;
@@ -88,6 +85,9 @@ export default defineComponent({
       }
       return this.filterFractions.filter((card) => card.fieldType.some((type) => type === this.currFilter));
     },
+  },
+  components: {
+    CardInfoCopmponent,
   },
   props: {
     currentFraction: {

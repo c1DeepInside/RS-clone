@@ -13,7 +13,6 @@ export default defineComponent({
       currentFraction: 0,
       collectionCards: [
         {
-          id: 0,
           name: 'Рубака из Кринфрида',
           type: 'usual',
           image: '/src/assets/images/realms_blue_stripes.jpg',
@@ -158,12 +157,53 @@ export default defineComponent({
         },
       ] as Card[],
       deckCards: [] as Card[],
+      leadersCards: [
+        {
+          name: 'Фольтест Король Темерии',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_silver.jpg',
+          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+      ] as Card[],
     };
-  },
-  components: {
-    FractionChoose,
-    CardCollection,
-    InfoCollection,
   },
   methods: {
     changeFilterCollection(data: Filters) {
@@ -220,6 +260,11 @@ export default defineComponent({
       }
     },
   },
+  components: {
+    FractionChoose,
+    CardCollection,
+    InfoCollection,
+  },
 });
 </script>
 
@@ -243,7 +288,7 @@ export default defineComponent({
           :currentFraction="currentFraction"
           :gwentCards="collectionCards"
         />
-        <InfoCollection :currentFraction="currentFraction" :selectedCards="deckCards" />
+        <InfoCollection :currentFraction="currentFraction" :leadersCards="leadersCards" :selectedCards="deckCards" />
         <CardCollection
           @filterChanged="changeFilterDeck"
           @selectedCard="changeDeckCards"
