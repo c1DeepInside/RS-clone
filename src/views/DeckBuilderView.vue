@@ -188,8 +188,8 @@ export default defineComponent({
       this.currentFraction = data;
     },
     changeCollectionCards(data: Card) {
+      this.deckCards.push(data);
       const index = this.collectionCards.indexOf(data);
-      console.log(index);
       this.collectionCards.splice(index, 1);
     },
     changeDeckCards(data: Card) {
