@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -9,35 +10,43 @@ export default defineComponent({
         {
           text: 'Карты в колоде',
           img: 'src/assets/images/filter/board_cards.png',
-          count: 28,
+          count: this.selectedCards.length,
         },
         {
           text: 'Карты отрядов',
           img: 'src/assets/images/filter/melee_tan.png',
           maxCount: 22,
-          count: 14,
+          count: this.selectedCards.filter((item) => item.type === 'usual' || item.type === 'hero').length,
         },
         {
           text: 'Специальные карты',
           img: 'src/assets/images/filter/sky_tan.png',
           maxCount: 10,
-          count: 8,
+          count: this.selectedCards.filter((item) => item.type === 'special').length,
         },
         {
           text: 'Общая сила карт отрядов',
           img: 'src/assets/images/filter/melee_ranged.png',
-          count: 160,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.power ? acc + item.power * item.quantity : acc;
+          }, 0),
         },
         {
           text: 'Герои',
           img: 'src/assets/images/filter/hero_tan.png',
-          count: 8,
+          count: this.selectedCards.filter((item) => item.type === 'hero').length,
         },
       ],
     };
   },
   components: {
     LeaderOfFraction,
+  },
+  props: {
+    selectedCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
+    },
   },
 });
 </script>
@@ -46,7 +55,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction></LeaderOfFraction>
+      <LeaderOfFraction />
     </div>
     <div class="deck__info">
       <div v-for:="deckInfo in deckInfos">

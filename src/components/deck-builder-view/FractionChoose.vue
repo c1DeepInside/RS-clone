@@ -53,9 +53,11 @@ export default defineComponent({
   methods: {
     decrementIdx() {
       this.currentId = (this.currentId - 1 + this.fractions.length) % this.fractions.length;
+      this.$emit('currentFraction', this.currentId);
     },
     incrementIdx() {
       this.currentId = (this.currentId + 1) % this.fractions.length;
+      this.$emit('currentFraction', this.currentId);
     },
   },
   computed: {

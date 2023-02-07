@@ -3,12 +3,173 @@ import { defineComponent } from 'vue';
 import FractionChoose, { type Filters } from '@/components/deck-builder-view/FractionChoose.vue';
 import CardCollection from '@/components/deck-builder-view/CardsCollection.vue';
 import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
     return {
       collectionFilter: 'all' as Filters,
       deckFilter: 'all' as Filters,
+      currentFraction: 0,
+      collectionCards: [
+        {
+          id: 0,
+          name: 'Рубака из Кринфрида',
+          type: 'usual',
+          image: '/src/assets/images/realms_blue_stripes.jpg',
+          description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
+          fractionId: 1,
+          ability: 'bond',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 3,
+        },
+        {
+          name: 'Ливень',
+          type: 'special',
+          image: '/src/assets/images/weather_rain.jpg',
+          description: 'В этом краю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 2,
+        },
+        {
+          name: 'Цирилла',
+          type: 'hero',
+          image: '/src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Король Темерии',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_silver.jpg',
+          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Цирилла',
+          type: 'hero',
+          image: '/src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Король Темерии',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_silver.jpg',
+          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Цирилла',
+          type: 'hero',
+          image: '/src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Король Темерии',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_silver.jpg',
+          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'leader',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['leader'],
+          power: null,
+          quantity: 1,
+        },
+        {
+          name: 'Фольтест Предводитель Севера',
+          type: 'usual',
+          image: '/src/assets/images/realms_foltest_gold.jpg',
+          description: 'Проклятая политика... Я доверяю только своему оружию.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee', 'range'],
+          power: null,
+          quantity: 1,
+        },
+      ] as Card[],
+      deckCards: [
+        {
+          name: 'Ливень',
+          type: 'special',
+          image: '/src/assets/images/weather_rain.jpg',
+          description: 'В этом краю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 2,
+        },
+      ] as Card[],
     };
   },
   components: {
@@ -23,6 +184,19 @@ export default defineComponent({
     changeFilterDeck(data: Filters) {
       this.deckFilter = data;
     },
+    changeFraction(data: number) {
+      this.currentFraction = data;
+    },
+    changeCollectionCards(data: Card) {
+      const index = this.collectionCards.indexOf(data);
+      console.log(index);
+      this.collectionCards.splice(index, 1);
+    },
+    changeDeckCards(data: Card) {
+      this.collectionCards.push(data);
+      const index = this.deckCards.indexOf(data);
+      this.deckCards.splice(index, 1);
+    },
   },
 });
 </script>
@@ -34,12 +208,28 @@ export default defineComponent({
   <main class="main">
     <div class="UI">
       <div class="fraction">
-        <FractionChoose :collectionFilter="collectionFilter" :deckFilter="deckFilter"></FractionChoose>
+        <FractionChoose
+          @currentFraction="changeFraction"
+          :collectionFilter="collectionFilter"
+          :deckFilter="deckFilter"
+        />
       </div>
       <div class="builder">
-        <CardCollection @filterChanged="changeFilterCollection"></CardCollection>
-        <InfoCollection></InfoCollection>
-        <CardCollection @filterChanged="changeFilterDeck"></CardCollection>
+        <CardCollection
+          @filterChanged="changeFilterCollection"
+          @selectedCard="changeCollectionCards"
+          :isCollection="true"
+          :currentFraction="currentFraction"
+          :gwentCards="collectionCards"
+        />
+        <InfoCollection :selectedCards="deckCards" />
+        <CardCollection
+          @filterChanged="changeFilterDeck"
+          @selectedCard="changeDeckCards"
+          :currentFraction="currentFraction"
+          :isCollection="false"
+          :gwentCards="deckCards"
+        />
       </div>
     </div>
   </main>
