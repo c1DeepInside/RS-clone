@@ -61,34 +61,84 @@ export default defineComponent({
       if (this.isShowCardView) {
         const target = event.target as HTMLElement;
         if (this.currentCard.fieldType.includes('siege') && this.currentCard.ability === 'spy') {
-          this.enemySiegeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(0.6, 55.5);
+          setTimeout(() => {
+            this.enemySiegeField.push(this.currentCard);
+          }, 400);
         }
         if (this.currentCard.fieldType.includes('range') && this.currentCard.ability === 'spy') {
-          this.enemyRangeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(7.5, 55.5);
+          setTimeout(() => {
+            this.enemyRangeField.push(this.currentCard);
+          }, 400);
         }
         if (this.currentCard.fieldType.includes('melee') && this.currentCard.ability === 'spy') {
-          this.enemyMeleeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(14.6, 55.5);
+          setTimeout(() => {
+            this.enemyMeleeField.push(this.currentCard);
+          }, 400);
         }
         if (this.currentCard.fieldType.includes('melee') && this.currentCard.ability !== 'spy') {
-          this.alliesMeleeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(22.4, 55.5);
+          setTimeout(() => {
+            this.alliesMeleeField.push(this.currentCard);
+          }, 400);
         }
         if (this.currentCard.fieldType.includes('range') && this.currentCard.ability !== 'spy') {
-          this.alliesRangeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(29.3, 55.5);
+          setTimeout(() => {
+            this.alliesRangeField.push(this.currentCard);
+          }, 400);
         }
         if (this.currentCard.fieldType.includes('siege') && this.currentCard.ability !== 'spy') {
-          this.alliesSiegeField.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(36.5, 55.5);
+          setTimeout(() => {
+            this.alliesSiegeField.push(this.currentCard);
+          }, 400);
         }
         if (target.classList.contains('boost__wrap__melee__allies')) {
-          this.alliesMeleeBoost.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(22.4, 31);
+          setTimeout(() => {
+            this.alliesMeleeBoost.push(this.currentCard);
+          }, 400);
         }
         if (target.classList.contains('boost__wrap__range__allies')) {
-          this.alliesRangeBoost.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(29.3, 31);
+          setTimeout(() => {
+            this.alliesRangeBoost.push(this.currentCard);
+          }, 400);
         }
         if (target.classList.contains('boost__wrap__siege__allies')) {
-          this.alliesSiegeBoost.push(this.currentCard);
+          this.$emit('close:selectedItem', this.currentCard, false);
+          this.cardAnimation(36.5, 31);
+          setTimeout(() => {
+            this.alliesSiegeBoost.push(this.currentCard);
+          }, 400);
         }
-        this.$emit('close:selectedItem', this.currentCard, false);
       }
+    },
+    cardAnimation(top: number, left: number) {
+      const element = this.$parent?.$refs.animationWrap as HTMLElement;
+      element.style.transition = '0.5s';
+      element.style.opacity = '0.8';
+      element.style.top = `${top}vw`;
+      element.style.left = `${left}vw`;
+      element.style.scale = '1';
+      setTimeout(() => {
+        element.style.transition = '0s';
+        element.style.opacity = '0';
+        element.style.top = '24vw';
+        element.style.left = '85vw';
+        element.style.scale = '3';
+      }, 400);
     },
   },
   components: {
@@ -192,6 +242,7 @@ export default defineComponent({
   width: 4.5vw;
   transition: 0.5s;
 }
+
 .board {
   .field {
     position: relative;

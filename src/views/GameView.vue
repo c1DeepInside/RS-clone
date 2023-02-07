@@ -127,6 +127,17 @@ export default defineComponent({
           power: 6,
           quantity: 1,
         },
+        {
+          name: 'Талер',
+          type: 'usual',
+          image: 'src/assets/images/nor_thaler.png',
+          description: 'Я вам всем галаза на жопу натяну!',
+          fractionId: 0,
+          ability: 'spy',
+          fieldType: ['siege'],
+          power: 1,
+          quantity: 1,
+        },
       ] as Card[],
     };
   },
@@ -169,8 +180,26 @@ export default defineComponent({
         this.isFieldBlock = false;
         this.isShowCardView = false;
         this.cards = this.cards.filter((card) => card !== this.selectedCard);
-        this.weatherCards.push(this.selectedCard);
+        this.cardAnimation(24, 12.5);
+        setTimeout(() => {
+          this.weatherCards.push(this.selectedCard);
+        }, 400);
       }
+    },
+    cardAnimation(top: number, left: number) {
+      const element = this.$refs.animationWrap as HTMLElement;
+      element.style.transition = '0.5s';
+      element.style.opacity = '0.8';
+      element.style.top = `${top}vw`;
+      element.style.left = `${left}vw`;
+      element.style.scale = '1';
+      setTimeout(() => {
+        element.style.transition = '0s';
+        element.style.opacity = '0';
+        element.style.top = '24vw';
+        element.style.left = '85vw';
+        element.style.scale = '3';
+      }, 400);
     },
   },
   components: {
@@ -266,6 +295,9 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <div class="animation__card__wrap" ref="animationWrap">
+      <CardInfoComponent :card="selectedCard" :layoutType="0" />
+    </div>
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
@@ -273,6 +305,15 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.animation__card__wrap {
+  position: absolute;
+  top: 20vw;
+  left: 85vw;
+  width: 4.5vw;
+  height: 6.5vw;
+  scale: 3;
+  opacity: 0;
+}
 .card__wrap {
   height: 100%;
   width: 5vw;
