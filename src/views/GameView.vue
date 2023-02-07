@@ -1,12 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
-import CardComponent from '@/components/game-view/CardComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -14,8 +14,19 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      selectedItem: -1,
+      selectedCard: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
       timer: 0,
+      isShowCardView: false,
     };
   },
   methods: {
@@ -34,8 +45,9 @@ export default defineComponent({
       clearTimeout(this.timer);
       console.log(this.timer);
     },
-    updateSelectedItem(value: number) {
-      this.selectedItem = value;
+    updateSelectedItem(value: Card, show: boolean) {
+      this.selectedCard = value;
+      this.isShowCardView = show;
     },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
@@ -44,7 +56,6 @@ export default defineComponent({
   components: {
     GameExchangePanelComponent,
     PlayerComponent,
-    CardComponent,
     BoardComponent,
     CardViewComponent,
     EndComponent,
@@ -56,13 +67,15 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div :class="['click', { noclick: selectedItem === -1 }]" @click="selectedItem = -1"></div>
+    <div
+      :class="['click', { noclick: isShowCardView === false }]"
+      @click="isShowCardView = false"
+      ref="clickField"
+    ></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off">
-            <CardComponent />
-          </div>
+          <div class="game__leader-card card-off"></div>
           <div class="game__leader-icon">
             <div></div>
           </div>
@@ -94,9 +107,7 @@ export default defineComponent({
         </div>
 
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card">
-            <CardComponent @click="selectedItem = 1" />
-          </div>
+          <div class="game__leader-card"></div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
@@ -122,7 +133,6 @@ export default defineComponent({
             
           </div>
           <div class="deck__player deck__player-1">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
@@ -131,13 +141,12 @@ export default defineComponent({
 
           </div>
           <div class="deck__player deck__player-2">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
       </div>
     </div>
-    <CardViewComponent :selectedItem="selectedItem" />
+    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
   </main>
@@ -156,7 +165,7 @@ export default defineComponent({
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game {
@@ -264,7 +273,7 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
-    z-index: 1;
+    z-index: 2;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

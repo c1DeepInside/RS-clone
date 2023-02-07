@@ -1,46 +1,52 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
+import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
 
 export default defineComponent({
   data() {
     return {
       isDescription: true,
-      card: {
-        name: 'Геральт из Ривии',
-        type: 'hero',
-        image: '',
-        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-        fractionId: null,
-        ability: null,
-        fieldType: ['melee'],
-        power: 15,
-        quantity: 1,
-      } as Card,
     };
   },
   props: {
     selectedItem: {
-      type: Number,
-      default: -1,
+      type: Object as PropType<Card>,
+      default: () => {
+        return {
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        };
+      },
     },
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  components: {
+    cardInfoComponent,
   },
 });
 </script>
 
 <template>
-  <div :class="['card-view', { 'card-view-true': selectedItem !== -1 }]">
-    <div
-      class="card-view__img"
-      :style="{
-        backgroundImage: `url('/src/assets/images/card_blue_stripes.png')`,
-      }"
-    ></div>
+  <div :class="['card-view', { 'card-view-true': isShow }]">
+    <div class="card__wrap">
+      <cardInfoComponent :card="selectedItem" :layoutType="2" />
+    </div>
     <div v-if="isDescription" class="card-view__information information-card">
       <div
         class="information-card__img"
         :style="{
-          backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
+          backgroundImage: `url('')`,
         }"
       ></div>
       <h2 class="information-card__title">Прочная связь</h2>
@@ -51,12 +57,17 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .card-view {
+  .card__wrap {
+    position: absolute;
+    top: 12vw;
+    left: 80vw;
+    width: 16.1vw;
+  }
   position: absolute;
   top: 0;
   z-index: 90;
   visibility: hidden;
   opacity: 0;
-  transition: all 0.2s ease;
 
   &-true {
     visibility: visible;
