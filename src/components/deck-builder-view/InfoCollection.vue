@@ -4,14 +4,22 @@ import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vu
 import type Card from '@/interfaces/card';
 
 export default defineComponent({
+  data() {
+    return {
+      currentLeader: this.leadersCards[0] as Card,
+    };
+  },
   methods: {
+    changeSelectedLeader(data: Card) {
+      this.currentLeader = data;
+    },
     startGame() {
       this.$emit(
         'assembledDeck',
         this.selectedCards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction)
       );
       this.$emit('assembledFraction', this.currentFraction);
-      this.$emit('assembledLeader', 1);
+      this.$emit('assembledLeader', this.currentLeader);
     },
   },
   computed: {
@@ -80,7 +88,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction :leadersCards="leadersCards" />
+      <LeaderOfFraction @selectedLeader="changeSelectedLeader" :leadersCards="leadersCards" />
     </div>
     <div class="deck__info">
       <div v-for:="deckInfo in deckInformation">

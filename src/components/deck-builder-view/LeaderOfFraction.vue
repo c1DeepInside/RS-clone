@@ -14,14 +14,20 @@ export default defineComponent({
   },
   methods: {
     showModal() {
-      this.ifModal = true;
       document.body.style.overflow = 'hidden';
+      this.ifModal = true;
     },
     closeModal(event: Event) {
       if (event.target === event.currentTarget) {
-        this.ifModal = false;
         document.body.style.overflow = '';
+        this.ifModal = false;
       }
+    },
+    changeLeader(data: Card) {
+      document.body.style.overflow = '';
+      this.ifModal = false;
+      this.leader = data;
+      this.$emit('selectedLeader', this.leader);
     },
   },
   components: {
@@ -43,7 +49,7 @@ export default defineComponent({
   </div>
   <div v-if="ifModal" class="modal" @click="closeModal">
     <div class="modal__content">
-      <SliderComponent :cards="leadersCards" />
+      <SliderComponent @selectedCard="changeLeader" :cards="leadersCards" />
     </div>
   </div>
 </template>
