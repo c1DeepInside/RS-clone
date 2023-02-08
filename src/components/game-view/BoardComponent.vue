@@ -230,18 +230,14 @@ export default defineComponent({
       <div class="board__hand-row">
         <div
           class="card__wrap"
-          v-for="card in cards"
-          :key="card.id"
+          v-for="(item, index) in cards"
+          :key="index"
           @click="startAnimate($event)"
-          :style="
-            cards.length > 10
-              ? `margin-left: -${cards.length / (8.5 + Math.pow(2.15, -cards.length + 15))}vw; left: ${
-                  cards.length / (8.5 + Math.pow(2.15, -cards.length + 15)) / 2
-                }vw`
-              : ''
-          "
+          :style="`margin-left: -${cards.length / (8.5 + Math.pow(2.15, -cards.length + 15))}vw; left: ${
+            cards.length / (8.5 + Math.pow(2.15, -cards.length + 15)) / 2
+          }vw`"
         >
-          <cardInfoComponent :card="card" :layoutType="0" class="card" @click="showCard(card)" />
+          <cardInfoComponent :card="item" :layoutType="0" class="card" @click="showCard(item)" />
         </div>
       </div>
     </div>

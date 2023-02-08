@@ -233,7 +233,10 @@ export default defineComponent({
     closeSelectedItem(value: Card, show: boolean) {
       this.isFieldBlock = show;
       this.isShowCardView = show;
-      this.cards = this.cards.filter((card) => card !== value);
+      const index = this.cards.indexOf(value);
+      this.cards.splice(index, 1);
+      console.log(this.cards);
+      console.log(index);
     },
     updateSelectedItem(value: Card, show: boolean) {
       this.isFieldBlock = show;
