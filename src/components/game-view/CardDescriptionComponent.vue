@@ -43,9 +43,6 @@ export default defineComponent({
 </template>
 <style lang="scss" scoped>
 .information-card {
-  position: absolute;
-  top: 43.1vw;
-  left: 67.95vw;
   height: 7.87vw;
   width: 29.12vw;
   background-color: rgba($color: #101010, $alpha: 1);

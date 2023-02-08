@@ -29,14 +29,22 @@ export default defineComponent({
     <div class="card__wrap">
       <CardInfoComponent :card="selectedItem" :layoutType="2" />
     </div>
-    <CardDescriptionComponent
-      v-if="isDescription && selectedItem?.ability !== null || selectedItem?.type === 'hero'"
-      :card="selectedItem"
-    />
+
+    <div class="description-card">
+      <CardDescriptionComponent
+        v-if="(isDescription && selectedItem?.ability !== null) || selectedItem?.type === 'hero'"
+        :card="selectedItem"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.description-card {
+  position: absolute;
+  top: 43.1vw;
+  left: 67.95vw;
+}
 .card-view {
   .card__wrap {
     position: absolute;
@@ -44,6 +52,7 @@ export default defineComponent({
     left: 80vw;
     width: 16.1vw;
   }
+
   position: absolute;
   top: 0;
   z-index: 90;

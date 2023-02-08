@@ -113,8 +113,8 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     gap: 5px;
-    height: 70px;
-    font-size: 26px;
+    height: 5vw;
+    font-size: 1.8vw;
     letter-spacing: -1px;
     background-color: $BLACK_COLOR_MAIN;
     color: $TAN_COLOR;
