@@ -1,5 +1,6 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
+import { cardAbilitiesImg } from '@/utilits/cardBuildImgs';
 import { descriptionAbilities } from '@/utilits/descriptionCard';
 import { leaderDescription } from '@/utilits/leaderDescription';
 import { defineComponent, type PropType } from 'vue';
@@ -9,6 +10,7 @@ export default defineComponent({
     return {
       description: descriptionAbilities,
       leaderDescription: leaderDescription,
+      abilityImg: cardAbilitiesImg,
     };
   },
   components: {},
@@ -46,7 +48,9 @@ export default defineComponent({
       :style="{
         backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
       }"
-    ></div>
+    >
+  </div>
+  <img v-if="card?.ability !== null" :src="abilityImg[card?.ability!]" class="information-card__ability-image">
     <h2 class="information-card__title">{{ getTitleCard() }}</h2>
     <p class="information-card__descr">{{ getDescriptionCard() }}</p>
   </div>
@@ -61,6 +65,7 @@ export default defineComponent({
   color: $TAN_COLOR;
   text-align: center;
   pointer-events: none;
+  position: relative;
 
   &__img {
     position: relative;
@@ -89,6 +94,13 @@ export default defineComponent({
     top: 0.5vw;
     left: 2vw;
     font-size: 1vw;
+  }
+
+  &__ability-image {
+    position: absolute;
+    top: 1vw;
+    left: 1vw;
+    width: 2vw;
   }
 }
 </style>
