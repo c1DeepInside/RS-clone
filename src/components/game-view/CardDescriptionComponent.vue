@@ -1,12 +1,14 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
 import { descriptionAbilities } from '@/utilits/descriptionCard';
+import { leaderDescription } from '@/utilits/leaderDescription';
 import { defineComponent, type PropType } from 'vue';
 
 export default defineComponent({
   data() {
     return {
       description: descriptionAbilities,
+      leaderDescription: leaderDescription,
     };
   },
   components: {},
@@ -16,15 +18,23 @@ export default defineComponent({
   methods: {
     getTitleCard(): string {
       if (this.card?.type === 'hero' && this.card?.ability === null) return 'Герой';
+
+      if (this.card?.type === 'leader') {
+        return this.card.name;
+      }
+
       return this.description[this.card?.ability!].title;
-      //TODO: add description leaders
     },
     getDescriptionCard(): string {
       if (this.card?.type === 'hero' && this.card?.ability === null) {
         return 'Не подвергается воздействию каких-либо карт или умений';
       }
+
+      if (this.card?.type === 'leader') {
+        return this.leaderDescription[this.card.name];
+      }
+
       return this.description[this.card?.ability!].description;
-      //TODO: add description leaders
     },
   },
 });

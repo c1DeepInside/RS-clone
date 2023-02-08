@@ -32,7 +32,7 @@ export default defineComponent({
 
     <div class="description-card">
       <CardDescriptionComponent
-        v-if="(isDescription && selectedItem?.ability !== null) || selectedItem?.type === 'hero'"
+        v-if="(isDescription && selectedItem?.ability !== null) || selectedItem?.type !== 'usual'"
         :card="selectedItem"
       />
     </div>

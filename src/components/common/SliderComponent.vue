@@ -100,7 +100,7 @@ export default defineComponent({
 
     <div class="description-card">
       <CardDescriptionComponent
-        v-if="cards[selectedCardIdx]?.ability !== null || cards[selectedCardIdx]?.type === 'hero'"
+        v-if="cards[selectedCardIdx]?.ability !== null || cards[selectedCardIdx]?.type !== 'usual'"
         :card="cards[selectedCardIdx]"
       />
     </div>
@@ -153,7 +153,7 @@ export default defineComponent({
 }
 
 .description-card {
-  margin-top: -6.5%;
+  margin-top: -7%;
   margin-left: 29%;
 }
 
