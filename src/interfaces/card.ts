@@ -8,6 +8,7 @@ export type CardAbility =
   | 'horn'
   | 'muster'
   | 'scorch'
+  | 'specScorch'
   | 'rain'
   | 'fog'
   | 'frost'
