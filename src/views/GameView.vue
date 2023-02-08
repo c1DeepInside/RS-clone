@@ -5,6 +5,7 @@ import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
+import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 import type Card from '@/interfaces/card';
 
@@ -43,7 +44,6 @@ export default defineComponent({
     dontShowEndGame() {
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
-      console.log(this.timer);
     },
     updateSelectedItem(value: Card, show: boolean) {
       this.selectedCard = value;
@@ -60,6 +60,7 @@ export default defineComponent({
     CardViewComponent,
     EndComponent,
     InformationBar,
+    MusicComponent,
   },
 });
 </script>
@@ -149,16 +150,61 @@ export default defineComponent({
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
+    <MusicComponent class="music" />
+    <button
+      @mousedown="showEndGame"
+      @mouseup="dontShowEndGame"
+      @mouseout="dontShowEndGame"
+      :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
+    >
+      Сдаться
+    </button>
   </main>
 </template>
 
 <style lang="scss" scoped>
+.music {
+  position: absolute;
+  right: 15vw;
+  bottom: 1.6vw;
+}
+
+.game__give-up {
+  position: absolute;
+  right: 5.5vw;
+  bottom: 1.6vw;
+  width: 8vw;
+  padding: 0.5vw;
+  font-size: 1.1vw;
+  color: tan;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2%;
+    background-color: $GOLDEN_COLOR;
+    transform: scaleX(0);
+    transform-origin: 0% 0%;
+    transition: transform 4s ease-in-out;
+  }
+}
+
+.give-animation::after {
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+  height: 2%;
+}
+
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
   background-image: url('@/assets/images/board.png');
   background-size: 100% auto;
   background-repeat: no-repeat;
+  position: relative;
 }
 
 .click {
@@ -298,33 +344,6 @@ export default defineComponent({
     left: 41%;
     width: 27%;
     height: 4%;
-  }
-
-  &__give-up {
-    position: relative;
-    top: -8%;
-    left: 63%;
-    width: 23%;
-    height: 4%;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2%;
-      background-color: $GOLDEN_COLOR;
-      transform: scaleX(0);
-      transform-origin: 0% 0%;
-      transition: transform 4s ease-in-out;
-    }
-  }
-
-  .give-animation::after {
-    transform: scaleX(1);
-    transform-origin: 0% 50%;
-    height: 2%;
   }
 }
 

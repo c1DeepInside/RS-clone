@@ -140,11 +140,11 @@ export default defineComponent({
       }
 
       &__range {
-        margin-top: 0.4vw;
+        margin-top: 0.5vw;
       }
 
       &__melee {
-        margin-top: 0.75vw;
+        margin-top: 0.72vw;
       }
     }
 
@@ -153,7 +153,7 @@ export default defineComponent({
       position: relative;
 
       &__siege {
-        margin-top: 0.6vw;
+        margin-top: 0.8vw;
       }
 
       &__range {
@@ -161,7 +161,7 @@ export default defineComponent({
       }
 
       &__melee {
-        margin-top: 0.75vw;
+        margin-top: 0.65vw;
       }
     }
   }
