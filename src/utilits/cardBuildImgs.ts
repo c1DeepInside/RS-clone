@@ -28,6 +28,6 @@ export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range';
 export const сardEquipmendImg: Record<CardEquipmendType, string> = {
   melee: '/src/assets/images/build/card_row_close.png',
   range: '/src/assets/images/build/card_row_ranged.png',
-  siege: '/src/assets/images/build/card_row_agile.png',
+  siege: '/src/assets/images/build/card_row_siege.png',
   melee_range: '/src/assets/images/build/card_row_agile.png',
 }

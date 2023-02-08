@@ -16,7 +16,7 @@ export default defineComponent({
           description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
           fractionId: 0,
           ability: 'bond',
-          fieldType: ['melee'],
+          fieldType: ['melee', 'range'],
           power: 5,
           quantity: 3,
         },
