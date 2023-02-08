@@ -118,8 +118,8 @@ export default defineComponent({
     <div class="card-info__gradient"></div>
 
     <div class="card-info__description">
-      <h1 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h1>
-      <h1 v-else class="description-title-center">{{ card?.name }}</h1>
+      <h3 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h3>
+      <h3 v-else class="description-title-center">{{ card?.name }}</h3>
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>
       <div v-else class="card-info__quantity">
@@ -151,7 +151,7 @@ export default defineComponent({
     <img
       v-if="card?.type !== 'special'"
       class="game-card__equipment"
-      src="/src/assets/images/build/card_row_close.png"
+      :src="getEquipmendImage(card)"
     />
 
     <img
@@ -273,8 +273,8 @@ export default defineComponent({
   &__description {
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
+    color: black;
     height: 17%;
-    min-height: 10vh;
     border-radius: 0 0 1.9vw 1.9vw;
   }
 }
@@ -293,15 +293,13 @@ export default defineComponent({
 }
 
 .description-title {
-  text-align: right;
+  text-align: center;
   font-weight: 500;
   font-size: 1.18vw;
-  padding-right: 5px;
+  padding-left: 25%;
   margin-top: 6%;
   margin-bottom: 14%;
-  word-wrap: break-word;
-  padding-left: 20%;
-  
+
   &-center {
     text-align: center;
     font-weight: 500;
@@ -358,7 +356,7 @@ export default defineComponent({
       top: 49%;
       left: 49%;
       transform: translate(-49%, -49%);
-      font-size: 2.2vw;
+      font-size: 1vw;
     }
   }
 

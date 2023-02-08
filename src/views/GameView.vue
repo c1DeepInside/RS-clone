@@ -306,6 +306,7 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
+
         <div class="game__player game__player-1 player">
           <PlayerComponent
             name="Player 1"
@@ -324,6 +325,7 @@ export default defineComponent({
           </div>
         </div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
+
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
@@ -333,12 +335,14 @@ export default defineComponent({
             :isPass="isPass"
           />
         </div>
+
         <div class="game__leader game__leader-2">
           <div class="game__leader-card"></div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
         </div>
+
         <button
           @mousedown="showEndGame"
           @mouseup="dontShowEndGame"
@@ -348,6 +352,7 @@ export default defineComponent({
           Сдаться
         </button>
       </div>
+
       <div class="game__board board">
         <BoardComponent
           @update:selectedItem="updateSelectedItem"
@@ -356,15 +361,20 @@ export default defineComponent({
           :cards="cards"
         />
       </div>
+      
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1"></div>
+          <div class="deck__cemetery deck__cemetery-1">
+            
+          </div>
           <div class="deck__player deck__player-1">
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2"></div>
+          <div class="deck__cemetery deck__cemetery-2">
+
+          </div>
           <div class="deck__player deck__player-2">
             <div class="deck__counter">28</div>
           </div>
