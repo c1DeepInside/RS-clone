@@ -236,8 +236,6 @@ export default defineComponent({
       this.isShowCardView = show;
       const index = this.cards.indexOf(value);
       this.cards.splice(index, 1);
-      console.log(this.cards);
-      console.log(index);
     },
     updateSelectedItem(value: Card, show: boolean) {
       this.isFieldBlock = show;
@@ -344,7 +342,6 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-
       </div>
 
       <div class="game__board board">
@@ -355,20 +352,16 @@ export default defineComponent({
           :cards="cards"
         />
       </div>
-      
+
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1">
-            
-          </div>
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2">
-
-          </div>
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
             <div class="deck__counter">28</div>
           </div>

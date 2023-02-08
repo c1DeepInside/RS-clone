@@ -8,7 +8,7 @@ export default defineComponent({});
     <div
       class="information-card__img"
       :style="{
-        backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
+        backgroundImage: ``,
       }"
     ></div>
     <h2 class="information-card__title">Прочная связь</h2>
