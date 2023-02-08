@@ -91,9 +91,7 @@ export default defineComponent({
           />
         </div>
 
-        <div class="game__weather">
-
-        </div>
+        <div class="game__weather"></div>
 
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
 
@@ -127,20 +125,16 @@ export default defineComponent({
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
       </div>
-      
+
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1">
-            
-          </div>
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2">
-
-          </div>
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
             <div class="deck__counter">28</div>
           </div>
