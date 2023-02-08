@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
-import CardComponent from '@/components/game-view/CardComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
@@ -44,7 +43,6 @@ export default defineComponent({
   components: {
     GameExchangePanelComponent,
     PlayerComponent,
-    CardComponent,
     BoardComponent,
     CardViewComponent,
     EndComponent,
@@ -75,11 +73,7 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather">
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-        </div>
+        <div class="game__weather"></div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent

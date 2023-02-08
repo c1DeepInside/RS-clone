@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CardComponent from './CardComponent.vue';
 import LineComponent from './LineComponent.vue';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 
 export default defineComponent({
   data() {
@@ -18,7 +18,7 @@ export default defineComponent({
     },
   },
   components: {
-    CardComponent,
+    CardInfoComponent,
     LineComponent,
   },
 });
@@ -40,7 +40,7 @@ export default defineComponent({
     </div>
     <div class="board__hand">
       <div class="board__hand-row">
-        <CardComponent v-for="item in 6" :key="item" @click="showCard(item)" />
+        <CardInfoComponent v-for="item in 6" :key="item" @click="showCard(item)" />
       </div>
     </div>
   </div>

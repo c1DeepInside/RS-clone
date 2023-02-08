@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CardComponent from './CardComponent.vue';
 
 export default defineComponent({
   data() {
@@ -12,9 +11,7 @@ export default defineComponent({
   props: {
     type: Boolean,
   },
-  components: {
-    CardComponent,
-  },
+  components: {},
 });
 </script>
 
@@ -27,11 +24,8 @@ export default defineComponent({
         <p class="power__dmg__number">7</p>
       </div>
     </div>
-    <div class="boost__wrap wrap_animation"><CardComponent /></div>
-    <div class="cards__wrap wrap_animation">
-      <CardComponent />
-      <CardComponent />
-    </div>
+    <div class="boost__wrap wrap_animation"></div>
+    <div class="cards__wrap wrap_animation"></div>
   </div>
 </template>
 
