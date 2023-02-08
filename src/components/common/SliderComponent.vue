@@ -45,6 +45,14 @@ export default defineComponent({
 
       return CardSize.small;
     },
+    takeCard(card: Card, index: number) {
+      if (this.selectedCardIdx === index - 2) {
+        this.$emit('selectedCard', card);
+        this.selectedCardIdx = 0;
+      } else {
+        this.selectedCardIdx = index - 2;
+      }
+    },
   },
   computed: {
     offset(): number {
@@ -82,7 +90,7 @@ export default defineComponent({
           :card="card"
           :layout-type="cardLayoutType.EXTENDED"
           :is-selected="idx - 2 === selectedCardIdx"
-          @click="selectedCardIdx = idx - 2"
+          @click="takeCard(card, idx)"
           v-if="card"
         />
 
