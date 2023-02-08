@@ -141,6 +141,16 @@ export default defineComponent({
         element.style.scale = '3';
       }, 400);
     },
+    isFogRainFrost(weather: string): boolean {
+      let isActive = false;
+      for (let i = 0; i < this.weatherCards.length; i++) {
+        isActive = this.weatherCards[i].ability === weather;
+        if (isActive) {
+          break;
+        }
+      }
+      return isActive;
+    },
   },
   components: {
     cardInfoComponent,
@@ -157,6 +167,23 @@ export default defineComponent({
         return [];
       },
     },
+    weatherCards: {
+      type: Array as PropType<Card[]>,
+      default: () => {
+        return [];
+      },
+    },
+  },
+  computed: {
+    isRain(): boolean {
+      return this.isFogRainFrost('rain');
+    },
+    isFog(): boolean {
+      return this.isFogRainFrost('fog');
+    },
+    isFrost(): boolean {
+      return this.isFogRainFrost('frost');
+    },
   },
 });
 </script>
@@ -172,6 +199,7 @@ export default defineComponent({
           :attackType="attackType.siege"
           :cards="enemySiegeField"
           :boosts="enemySiegeBoost"
+          :isActiveWeather="isRain"
           @click="putCard"
         />
         <LineComponent
@@ -181,6 +209,7 @@ export default defineComponent({
           :attackType="attackType.range"
           :cards="enemyRangeField"
           :boosts="enemyRangeBoost"
+          :isActiveWeather="isFog"
           @click="putCard"
         />
         <LineComponent
@@ -190,6 +219,7 @@ export default defineComponent({
           :attackType="attackType.melee"
           :cards="enemyMeleeField"
           :boosts="enemyMeleeBoost"
+          :isActiveWeather="isFrost"
           @click="putCard"
         />
       </div>
@@ -202,6 +232,7 @@ export default defineComponent({
           :attackType="attackType.melee"
           :cards="alliesMeleeField"
           :boosts="alliesMeleeBoost"
+          :isActiveWeather="isFrost"
           @click="putCard"
         />
         <LineComponent
@@ -212,6 +243,7 @@ export default defineComponent({
           :attackType="attackType.range"
           :cards="alliesRangeField"
           :boosts="alliesRangeBoost"
+          :isActiveWeather="isFog"
           @click="putCard"
         />
         <LineComponent
@@ -222,6 +254,7 @@ export default defineComponent({
           :attackType="attackType.siege"
           :cards="alliesSiegeField"
           :boosts="alliesSiegeBoost"
+          :isActiveWeather="isRain"
           @click="putCard"
         />
       </div>

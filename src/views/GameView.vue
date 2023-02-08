@@ -69,18 +69,6 @@ export default defineComponent({
           quantity: 1,
         },
         {
-          id: 4,
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
           id: 5,
           name: 'Таинственный эльф',
           type: 'hero',
@@ -165,43 +153,51 @@ export default defineComponent({
           quantity: 1,
         },
         {
+          name: 'Мороз',
+          type: 'special',
+          image: 'src/assets/images/spc_frost.png',
+          description: 'Мечта хорошего командира... кошмар плохого.',
+          fractionId: null,
+          ability: 'frost',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Мгла',
+          type: 'special',
+          image: 'src/assets/images/spc_fog.png',
+          description: 'Вот туман-то... хоть глаз выколи.',
+          fractionId: null,
+          ability: 'fog',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Ясное небо',
+          type: 'special',
+          image: 'src/assets/images/spc_clearsky.png',
+          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
+          fractionId: null,
+          ability: 'clear',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
           id: 12,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 13,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 14,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 15,
           name: 'Командирский рог',
           type: 'special',
           image: 'src/assets/images/spc_horn.png',
@@ -229,7 +225,6 @@ export default defineComponent({
     dontShowEndGame() {
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
-      console.log(this.timer);
     },
     closeSelectedItem(value: Card, show: boolean) {
       this.isFieldBlock = show;
@@ -320,7 +315,12 @@ export default defineComponent({
           :class="selectedCard.fieldType.includes('weather') && isShowCardView ? 'active__weather' : ''"
           @click="putWeatherCard"
         >
-          <div class="card__wrap" v-for="(card, index) in weatherCards" :key="index">
+          <div
+            class="card__wrap"
+            v-for="(card, index) in weatherCards"
+            :key="index"
+            :style="weatherCards.length > 2 ? `margin-left: -0.6vw; left: 0.3vw` : ''"
+          >
             <CardInfoComponent :card="card" :layoutType="0" class="card" />
           </div>
         </div>
@@ -350,6 +350,7 @@ export default defineComponent({
           @close:selectedItem="closeSelectedItem"
           :isShowCardView="isShowCardView"
           :cards="cards"
+          :weatherCards="weatherCards"
         />
       </div>
 
@@ -432,6 +433,7 @@ export default defineComponent({
   opacity: 0;
 }
 .card__wrap {
+  position: relative;
   height: 100%;
   width: 5vw;
 }

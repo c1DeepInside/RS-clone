@@ -11,8 +11,11 @@ export default defineComponent({
     };
   },
   props: {
+    isActiveWeather: {
+      type: Boolean,
+      default: false,
+    },
     type: Boolean,
-    lineType: String,
     attackType: String,
     activeBoost: Boolean,
     activeLine: Boolean,
@@ -81,15 +84,15 @@ export default defineComponent({
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
-    <div v-if="lineType === 'siege'" class="weather__wrap" style="display: none">
+    <div v-if="attackType === 'siege' && isActiveWeather" class="weather__wrap">
       <img class="weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
       <img class="weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
-    <div v-if="lineType === 'range'" class="weather__wrap" style="display: none">
+    <div v-if="attackType === 'range' && isActiveWeather" class="weather__wrap">
       <div class="weather_fog first_fog"></div>
       <div class="weather_fog second_fog"></div>
     </div>
-    <div v-if="lineType === 'melee'" class="weather__wrap" style="display: none">
+    <div v-if="attackType === 'melee' && isActiveWeather" class="weather__wrap">
       <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
   </div>
@@ -168,6 +171,7 @@ export default defineComponent({
 
 .second_rain {
   left: 3vw;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .second_fog {
