@@ -1,7 +1,8 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
 import { defineComponent, type PropType } from 'vue';
-import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import CardDescriptionComponent from '@/components/game-view/CardDescriptionComponent.vue';
 
 export default defineComponent({
   data() {
@@ -10,29 +11,15 @@ export default defineComponent({
     };
   },
   props: {
-    selectedItem: {
-      type: Object as PropType<Card>,
-      default: () => {
-        return {
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        };
-      },
-    },
+    selectedItem: Object as PropType<Card>,
     isShow: {
       type: Boolean,
       default: false,
     },
   },
   components: {
-    cardInfoComponent,
+    CardInfoComponent,
+    CardDescriptionComponent,
   },
 });
 </script>
@@ -40,18 +27,12 @@ export default defineComponent({
 <template>
   <div :class="['card-view', { 'card-view-true': isShow }]">
     <div class="card__wrap">
-      <cardInfoComponent :card="selectedItem" :layoutType="2" />
+      <CardInfoComponent :card="selectedItem" :layoutType="2" />
     </div>
-    <div v-if="isDescription" class="card-view__information information-card">
-      <div
-        class="information-card__img"
-        :style="{
-          backgroundImage: `url('')`,
-        }"
-      ></div>
-      <h2 class="information-card__title">Прочная связь</h2>
-      <p class="information-card__descr">Выложите рядом с картой с тем же названием, чтобы удвоить силу обеих карт.</p>
-    </div>
+    <CardDescriptionComponent
+      v-if="isDescription && selectedItem?.ability !== null || selectedItem?.type === 'hero'"
+      :card="selectedItem"
+    />
   </div>
 </template>
 

@@ -15,6 +15,7 @@ export default defineComponent({
       isEnemy: true,
       cards: [
         {
+          id: 1,
           name: 'Геральт из Ривии',
           type: 'hero',
           image: 'src/assets/images/neu_geralt.png',
@@ -26,6 +27,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
+          id: 2,
           name: 'Цирилла',
           type: 'hero',
           image: 'src/assets/images/neutral_ciri.jpg',
@@ -37,6 +39,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
+          id: 3,
           name: 'Осадная башня',
           type: 'usual',
           image: 'src/assets/images/nor_siege_tower.png',
@@ -48,6 +51,7 @@ export default defineComponent({
           quantity: 1,
         },
         {
+          id: 4,
           name: 'Ясное небо',
           type: 'special',
           image: 'src/assets/images/spc_rain.png',
@@ -56,6 +60,18 @@ export default defineComponent({
           ability: 'clear',
           fieldType: ['weather'],
           power: null,
+          quantity: 3,
+        },
+        {
+          id: 5,
+          name: 'Следопыт из Дол Блатанны',
+          type: 'usual',
+          image: '/src/assets/images/scoiatael_dol_infantry_1.jpg',
+          description: 'Нюх у них как у гончих. Глаза, как у орла. А сердце изо льдаю',
+          fractionId: 1,
+          ability: 'agile',
+          fieldType: ['melee', 'range'],
+          power: 6,
           quantity: 3,
         },
       ] as Card[],

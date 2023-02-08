@@ -1,7 +1,33 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import type Card from '@/interfaces/card';
+import { descriptionAbilities } from '@/utilits/descriptionCard';
+import { defineComponent, type PropType } from 'vue';
 
-export default defineComponent({});
+export default defineComponent({
+  data() {
+    return {
+      description: descriptionAbilities,
+    };
+  },
+  components: {},
+  props: {
+    card: Object as PropType<Card>,
+  },
+  methods: {
+    getTitleCard(): string {
+      if (this.card?.type === 'hero' && this.card?.ability === null) return 'Герой';
+      return this.description[this.card?.ability!].title;
+      //TODO: add description leaders
+    },
+    getDescriptionCard(): string {
+      if (this.card?.type === 'hero' && this.card?.ability === null) {
+        return 'Не подвергается воздействию каких-либо карт или умений';
+      }
+      return this.description[this.card?.ability!].description;
+      //TODO: add description leaders
+    },
+  },
+});
 </script>
 <template>
   <div class="card-view__information information-card">
@@ -11,8 +37,8 @@ export default defineComponent({});
         backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
       }"
     ></div>
-    <h2 class="information-card__title">Прочная связь</h2>
-    <p class="information-card__descr">Выложите рядом с картой с тем же названием, чтобы удвоить силу обеих карт.</p>
+    <h2 class="information-card__title">{{ getTitleCard() }}</h2>
+    <p class="information-card__descr">{{ getDescriptionCard() }}</p>
   </div>
 </template>
 <style lang="scss" scoped>
