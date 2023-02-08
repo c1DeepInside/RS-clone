@@ -317,7 +317,7 @@ export default defineComponent({
         </div>
         <div
           class="game__weather"
-          :class="selectedCard.fieldType.includes('weather') ? 'active__weather' : ''"
+          :class="selectedCard.fieldType.includes('weather') && isShowCardView ? 'active__weather' : ''"
           @click="putWeatherCard"
         >
           <div class="card__wrap" v-for="(card, index) in weatherCards" :key="index">
@@ -549,6 +549,25 @@ export default defineComponent({
 
   .active__weather {
     z-index: 2;
+    animation: pulseField 2s infinite;
+
+    @keyframes pulseField {
+      0% {
+        background-color: rgba($color: #fe9902, $alpha: 0);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+      50% {
+        background-color: rgba($color: #fe9902, $alpha: 0.1);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+      100% {
+        background-color: rgba($color: #fe9902, $alpha: 0);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+    }
+    &:hover {
+      animation: none;
+    }
   }
 
   &__weather {

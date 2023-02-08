@@ -167,7 +167,7 @@ export default defineComponent({
       <div class="field__enemy">
         <LineComponent
           :class="`field__enemy__${attackType.siege}`"
-          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability === 'spy'"
+          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability === 'spy' && isShowCardView"
           :type="isEnemy"
           :attackType="attackType.siege"
           :cards="enemySiegeField"
@@ -176,7 +176,7 @@ export default defineComponent({
         />
         <LineComponent
           :class="`field__enemy__${attackType.range}`"
-          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability === 'spy'"
+          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability === 'spy' && isShowCardView"
           :type="isEnemy"
           :attackType="attackType.range"
           :cards="enemyRangeField"
@@ -185,7 +185,7 @@ export default defineComponent({
         />
         <LineComponent
           :class="`field__enemy__${attackType.melee}`"
-          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability === 'spy'"
+          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability === 'spy' && isShowCardView"
           :type="isEnemy"
           :attackType="attackType.melee"
           :cards="enemyMeleeField"
@@ -196,8 +196,8 @@ export default defineComponent({
       <div class="field__allies">
         <LineComponent
           :class="`field__allies__${attackType.melee}`"
-          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability !== 'spy'"
-          :activeBoost="currentCard.fieldType.includes('boost')"
+          :activeLine="currentCard.fieldType.includes('melee') && currentCard.ability !== 'spy' && isShowCardView"
+          :activeBoost="currentCard.fieldType.includes('boost') && isShowCardView"
           :type="!isEnemy"
           :attackType="attackType.melee"
           :cards="alliesMeleeField"
@@ -206,8 +206,8 @@ export default defineComponent({
         />
         <LineComponent
           :class="`field__allies__${attackType.range}`"
-          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability !== 'spy'"
-          :activeBoost="currentCard.fieldType.includes('boost')"
+          :activeLine="currentCard.fieldType.includes('range') && currentCard.ability !== 'spy' && isShowCardView"
+          :activeBoost="currentCard.fieldType.includes('boost') && isShowCardView"
           :type="!isEnemy"
           :attackType="attackType.range"
           :cards="alliesRangeField"
@@ -216,8 +216,8 @@ export default defineComponent({
         />
         <LineComponent
           :class="`field__allies__${attackType.siege}`"
-          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability !== 'spy'"
-          :activeBoost="currentCard.fieldType.includes('boost')"
+          :activeLine="currentCard.fieldType.includes('siege') && currentCard.ability !== 'spy' && isShowCardView"
+          :activeBoost="currentCard.fieldType.includes('boost') && isShowCardView"
           :type="!isEnemy"
           :attackType="attackType.siege"
           :cards="alliesSiegeField"

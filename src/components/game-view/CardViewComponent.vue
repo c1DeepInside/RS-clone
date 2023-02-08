@@ -44,15 +44,7 @@ export default defineComponent({
     <div class="card__wrap">
       <cardInfoComponent :card="selectedItem" :layoutType="2" />
     </div>
-    <div v-if="isDescription" class="card-view__information information-card">
-      <div
-        class="information-card__img"
-        :style="{
-          backgroundImage: `url('')`,
-        }"
-      ></div>
-      <CardDescriptionComponent v-if="isDescription" />
-    </div>
+    <CardDescriptionComponent v-if="isDescription" />
   </div>
 </template>
 
