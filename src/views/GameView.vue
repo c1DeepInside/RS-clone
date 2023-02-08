@@ -242,8 +242,12 @@ export default defineComponent({
     updateShowEnd(value: boolean) {
       this.isEnd = value;
     },
-    updateWeatherCards(card: Card) {
-      this.weatherCards.push(card);
+    showSunAnimation() {
+      const target = this.$refs.sunAnimation as HTMLElement;
+      target.style.display = 'block';
+      setTimeout(() => {
+        target.style.display = 'none';
+      }, 2000);
     },
     putWeatherCard() {
       if (this.isShowCardView) {
@@ -253,6 +257,11 @@ export default defineComponent({
         this.cardAnimation(24, 12.5);
         setTimeout(() => {
           this.weatherCards.push(this.selectedCard);
+          /* add cards to hang up */
+          if (this.selectedCard.ability === 'clear') {
+            this.showSunAnimation();
+            this.weatherCards = [];
+          }
         }, 400);
       }
     },
@@ -384,10 +393,36 @@ export default defineComponent({
     >
       Сдаться
     </button>
+    <div class="sun__animation__wrap" ref="sunAnimation">
+      <img class="sun__animation" src="src/assets/images/sun-animation.png" />
+    </div>
   </main>
 </template>
 
 <style lang="scss" scoped>
+.sun__animation {
+  width: 50vw;
+}
+.sun__animation__wrap {
+  opacity: 0.8;
+  position: absolute;
+  top: -2vw;
+  left: -2vw;
+  animation: sun 2s infinite;
+  display: none;
+
+  @keyframes sun {
+    0% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0.8;
+    }
+  }
+}
 .music {
   position: absolute;
   right: 15vw;
