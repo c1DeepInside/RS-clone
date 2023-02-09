@@ -6,6 +6,7 @@ import type Card from '@/interfaces/card';
 export default defineComponent({
   data() {
     return {
+      error: false,
       currentLeader: this.leadersCards[0] as Card,
     };
   },
@@ -14,12 +15,15 @@ export default defineComponent({
       this.currentLeader = data;
     },
     startGame() {
-      this.$emit(
-        'assembledDeck',
-        this.selectedCards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction)
-      );
-      this.$emit('assembledFraction', this.currentFraction);
-      this.$emit('assembledLeader', this.currentLeader);
+      const checkCards = this.deckInformation.find((item) => item.error === true);
+      if (!checkCards) {
+        this.$emit(
+          'assembledDeck',
+          this.selectedCards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction)
+        );
+        this.$emit('assembledFraction', this.currentFraction);
+        this.$emit('assembledLeader', this.currentLeader);
+      }
     },
   },
   computed: {
@@ -39,6 +43,12 @@ export default defineComponent({
           count: this.selectedCards.reduce((acc, item) => {
             return item.type === 'usual' || item.type === 'hero' ? acc + item.quantity : acc;
           }, 0),
+          error:
+            this.selectedCards.reduce((acc, item) => {
+              return item.type === 'usual' || item.type === 'hero' ? acc + item.quantity : acc;
+            }, 0) < 22
+              ? true
+              : false,
         },
         {
           text: 'Специальные карты',
@@ -47,6 +57,12 @@ export default defineComponent({
           count: this.selectedCards.reduce((acc, item) => {
             return item.type === 'special' ? acc + item.quantity : acc;
           }, 0),
+          error:
+            this.selectedCards.reduce((acc, item) => {
+              return item.type === 'special' ? acc + item.quantity : acc;
+            }, 0) > 10
+              ? true
+              : false,
         },
         {
           text: 'Общая сила карт отрядов',
@@ -95,7 +111,9 @@ export default defineComponent({
         <p class="deck__text">{{ deckInfo.text }}</p>
         <div class="deck__numbers">
           <img class="deck__img" :src="deckInfo.img" draggable="false" />
-          <p>{{ deckInfo.maxCount ? `${deckInfo.count}/${deckInfo.maxCount}` : deckInfo.count }}</p>
+          <p :class="{ error: deckInfo.error }">
+            {{ deckInfo.maxCount ? `${deckInfo.count}/${deckInfo.maxCount}` : deckInfo.count }}
+          </p>
         </div>
       </div>
     </div>
@@ -148,6 +166,10 @@ export default defineComponent({
     gap: 0.5vw;
     justify-content: center;
     align-items: center;
+
+    .error {
+      color: red;
+    }
   }
 
   &__text {
