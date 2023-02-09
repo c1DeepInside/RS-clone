@@ -26,12 +26,26 @@ export default defineComponent({
         this.ifModal = false;
       }
     },
+    currentLeader() {
+      this.leader = this.leadersCards[0];
+    },
     changeLeader(data: Card) {
       document.body.style.overflow = '';
       this.ifModal = false;
       this.leader = data;
       this.$emit('selectedLeader', this.leader);
     },
+  },
+  watch: {
+    leadersCards: {
+      handler() {
+        this.currentLeader();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.currentLeader();
   },
   components: {
     CardInfoCopmponent,

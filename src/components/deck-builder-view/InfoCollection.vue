@@ -80,6 +80,9 @@ export default defineComponent({
         },
       ];
     },
+    filterLeaders() {
+      return this.leadersCards.filter((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
+    },
   },
   components: {
     LeaderOfFraction,
@@ -104,7 +107,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction @selectedLeader="changeSelectedLeader" :leadersCards="leadersCards" />
+      <LeaderOfFraction @selectedLeader="changeSelectedLeader" :leadersCards="filterLeaders" />
     </div>
     <div class="deck__info">
       <div v-for:="deckInfo in deckInformation">
