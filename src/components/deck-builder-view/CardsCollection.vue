@@ -73,6 +73,7 @@ export default defineComponent({
   },
   computed: {
     filterFractions() {
+      console.log(this.currentFraction);
       return this.cards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction);
     },
     filteredCards() {
@@ -114,7 +115,7 @@ export default defineComponent({
       />
     </div>
     <div class="cards">
-      <div class="card" v-for="(item, index) in filteredCards" :key="index">
+      <div class="card" v-for="item in filteredCards" :key="item.id">
         <CardInfoCopmponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
       </div>
     </div>

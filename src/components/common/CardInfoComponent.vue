@@ -82,7 +82,11 @@ export default defineComponent({
     :style="{ transform: `scale(${scaleFactor})` }"
   >
     <img class="card-info__back" :src="card?.image" />
-    <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
+    <img
+      v-if="card?.fractionId !== null && card?.type !== 'leader'"
+      class="card-info__banner"
+      :src="fraction[card?.fractionId!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
       <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -110,7 +114,7 @@ export default defineComponent({
     <div class="card-info__gradient"></div>
 
     <div class="card-info__description">
-      <h3 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h3>
+      <h3 v-if="card?.fractionId !== null && card?.type !== 'leader'" class="description-title">{{ card?.name }}</h3>
       <h3 v-else class="description-title-center">{{ card?.name }}</h3>
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>

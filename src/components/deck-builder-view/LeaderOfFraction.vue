@@ -12,6 +12,9 @@ export default defineComponent({
       leader: this.leadersCards[0] as Card,
     };
   },
+  emits: {
+    selectedLeader: null,
+  },
   methods: {
     showModal() {
       document.body.style.overflow = 'hidden';
