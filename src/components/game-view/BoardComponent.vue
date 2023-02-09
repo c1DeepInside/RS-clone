@@ -1,8 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LineComponent from './LineComponent.vue';
-import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
-import type Card from '@/interfaces/card';
+import HandComponent from './HandComponent.vue';
 import { mapActions, mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
@@ -19,10 +18,6 @@ export default defineComponent({
     };
   },
   methods: {
-    showCard(card: Card) {
-      this.setSelectedCard(card);
-      this.setIsShowSelected(true);
-    },
     startAnimate(event: Event) {
       const target = event.currentTarget as HTMLElement;
       target.style.transition = '0.5s';
@@ -75,8 +70,8 @@ export default defineComponent({
     }),
   },
   components: {
-    cardInfoComponent,
     LineComponent,
+    HandComponent,
   },
   computed: {
     isRain(): boolean {
@@ -175,31 +170,11 @@ export default defineComponent({
         />
       </div>
     </div>
-    <div class="board__hand">
-      <div class="board__hand-row">
-        <div
-          class="card__wrap"
-          v-for="(item, index) in hand"
-          :key="index"
-          @click="startAnimate($event)"
-          :style="`margin-left: -${hand.length / (8.5 + Math.pow(2.15, -hand.length + 15))}vw; left: ${
-            hand.length / (8.5 + Math.pow(2.15, -hand.length + 15)) / 2
-          }vw`"
-        >
-          <cardInfoComponent :card="item" :layoutType="0" class="card" @click="showCard(item)" />
-        </div>
-      </div>
-    </div>
+    <HandComponent />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.card__wrap {
-  position: relative;
-  height: 100%;
-  width: 4.5vw;
-}
-
 .board {
   .field {
     position: relative;
@@ -237,36 +212,6 @@ export default defineComponent({
 
       &__melee {
         margin-top: 0.63vw;
-      }
-    }
-  }
-
-  &__hand {
-    margin-top: 1%;
-    width: 100%;
-    height: 7.1vw;
-
-    .card:hover {
-      border-radius: 0.3vw;
-      z-index: 1;
-      transform: translateY(-0.5vw);
-      animation: pulse 1.5s infinite;
-    }
-
-    &-row {
-      margin-left: 3.3vw;
-      display: flex;
-      justify-content: center;
-      gap: 0.2vw;
-      align-items: center;
-      width: 93%;
-      height: 91%;
-      position: relative;
-      z-index: 1;
-
-      &:hover {
-        background-color: rgba($color: #fe9902, $alpha: 0.1);
-        box-shadow: 0px 0px 0px 0.2vw rgba($color: #fe9902, $alpha: 0.6);
       }
     }
   }

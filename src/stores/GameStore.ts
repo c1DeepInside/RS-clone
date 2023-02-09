@@ -181,6 +181,7 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 3,
       },
     ] as Card[],
+    enemyHand: [] as Card[],
     board: {
       enemy: {
         siege: [] as Card[],

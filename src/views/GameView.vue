@@ -93,11 +93,6 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div
-      :class="['click', { noclick: isShowSelectedCard === false }]"
-      @click="setIsShowSelected(false)"
-      ref="clickField"
-    ></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -152,7 +147,6 @@ export default defineComponent({
       <div class="game__board board">
         <BoardComponent />
       </div>
-
 
       <div class="game__decks deck">
         <div class="deck__content">
@@ -272,13 +266,6 @@ export default defineComponent({
   background-size: 100% auto;
   background-repeat: no-repeat;
   position: relative;
-}
-
-.click {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
 }
 
 .game {
