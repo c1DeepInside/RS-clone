@@ -2,7 +2,7 @@
 import { defineComponent, type PropType } from 'vue';
 import type Card from '@/interfaces/card';
 import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
-import CardDescriptionComponent from '@/components/game-view/CardDescriptionComponent.vue';
+import CardDescriptionComponent from '@/components/common/CardDescriptionComponent.vue';
 
 enum CardSize {
   large = 15,
