@@ -76,15 +76,15 @@ export default defineComponent({
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
-        const idx = this.discard.enemy.length-1;
+        const idx = this.discard.enemy.length - 1;
         return this.discard.enemy[idx];
       }
-      const idx = this.discard.allies.length-1;
+      const idx = this.discard.allies.length - 1;
       return this.discard.allies[idx];
     },
     getDiscard() {
       return this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies;
-    }
+    },
   },
   computed: {
     ...mapState(useGameStore, {
@@ -123,7 +123,7 @@ export default defineComponent({
       <div class="game__players">
         <div class="game__leader game__leader-1">
           <div class="game__leader-card card-off">
-            <img class="game__leader-image" :src="leader.enemy.image" draggable="false">
+            <img class="game__leader-image" :src="leader.enemy.image" draggable="false" />
           </div>
 
           <div class="game__leader-icon">
@@ -167,7 +167,7 @@ export default defineComponent({
 
         <div class="game__leader game__leader-2">
           <div @click="setSelectedCard(leader.allies), setIsShowSelected(true)" class="game__leader-card">
-            <img class="game__leader-image" :src="leader.allies.image" draggable="false">
+            <img class="game__leader-image" :src="leader.allies.image" draggable="false" />
           </div>
 
           <div class="game__leader-icon game__leader-active">
@@ -182,37 +182,37 @@ export default defineComponent({
 
       <div class="game__decks deck">
         <div class="deck__content">
-<!-- enemy discard last card -->
+          <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
-            <div @click="showDiscard = true, whoseDiscard = 'enemy'" class="card-wrapper">
+            <div @click="(showDiscard = true), (whoseDiscard = 'enemy')" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('enemy')" :layout-type="0" />
             </div>
           </div>
 
           <div class="deck__player deck__player-1">
-            <img class="deck__background" :src="deckBack[leader.enemy.fractionId!]" draggable="false">
+            <img class="deck__background" :src="deckBack[leader.enemy.fractionId!]" draggable="false" />
             <div class="deck__counter">{{ deck.enemy.length }}</div>
           </div>
         </div>
-<!-- allies discard last card -->
+        <!-- allies discard last card -->
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-2">
-            <div @click="showDiscard = true, whoseDiscard = 'allies'" class="card-wrapper">
+            <div @click="(showDiscard = true), (whoseDiscard = 'allies')" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('allies')" :layout-type="0" />
             </div>
           </div>
 
           <div class="deck__player deck__player-2">
-            <img class="deck__background" :src="deckBack[leader.allies.fractionId!]" draggable="false">
+            <img class="deck__background" :src="deckBack[leader.allies.fractionId!]" draggable="false" />
             <div class="deck__counter">{{ deck.allies.length }}</div>
           </div>
         </div>
       </div>
-<!-- discard slider -->
+      <!-- discard slider -->
       <div v-if="showDiscard" class="discard">
         <div class="discard__close" @click="showDiscard = false"></div>
 
-        <SliderComponent :cards="getDiscard()"/>
+        <SliderComponent :cards="getDiscard()" />
       </div>
     </div>
 
@@ -239,7 +239,6 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-
 .discard {
   position: fixed;
   top: 0;

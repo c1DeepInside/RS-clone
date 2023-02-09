@@ -82,7 +82,12 @@ export default defineComponent({
     :style="{ transform: `scale(${scaleFactor})` }"
   >
     <img draggable="false" class="card-info__back" :src="card?.image" />
-    <img draggable="false" v-if="card?.fractionId !== null && card?.type !== 'leader'" class="card-info__banner" :src="fraction[card?.fractionId!]" />
+    <img
+      draggable="false"
+      v-if="card?.fractionId !== null && card?.type !== 'leader'"
+      class="card-info__banner"
+      :src="fraction[card?.fractionId!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
       <img draggable="false" class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -94,18 +99,25 @@ export default defineComponent({
       <p class="card-info__count-power">{{ card?.power }}</p>
     </div>
 
-    <img draggable="false"
+    <img
+      draggable="false"
       v-if="card?.type !== 'special' && card?.type !== 'leader'"
       class="card-info__equipment"
       :src="getEquipmendImage(card)"
     />
-    <img draggable="false"
+    <img
+      draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="card-info__ability"
       :src="abilitiesImg[card?.ability!]"
     />
 
-    <img draggable="false" v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img
+      draggable="false"
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
     <div class="card-info__gradient"></div>
 
@@ -124,7 +136,12 @@ export default defineComponent({
   <div v-else ref="card" class="game-card">
     <img draggable="false" class="game-card__back" :src="card?.image" />
 
-    <img draggable="false" v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img
+      draggable="false"
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
       <img draggable="false" class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -136,9 +153,15 @@ export default defineComponent({
       <p class="game-card__count-power">{{ card?.power }}</p>
     </div>
 
-    <img draggable="false" v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
+    <img
+      draggable="false"
+      v-if="card?.type !== 'special'"
+      class="game-card__equipment"
+      :src="getEquipmendImage(card)"
+    />
 
-    <img draggable="false"
+    <img
+      draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="game-card__ability"
       :src="abilitiesImg[card?.ability!]"
