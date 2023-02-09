@@ -26,6 +26,14 @@ export default defineComponent({
       type: Number as PropType<CardLayoutType>,
     },
     card: Object as PropType<Card>,
+    ifBuff: {
+      type: Boolean,
+      default: false,
+    },
+    ifDebuff: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     updateScaleFactor() {
@@ -91,7 +99,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="card-info__count">
       <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="card-info__count-power">{{ card?.power }}</p>
+      <p class="card-info__count-power">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img
@@ -133,7 +143,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="game-card__count">
       <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="game-card__count-power">{{ card?.power }}</p>
+      <p class="game-card__count-power" :class="[ifBuff ? 'card-buff' : '', ifDebuff ? 'card-debuff' : '']">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
@@ -337,10 +349,18 @@ export default defineComponent({
 
     &-power {
       position: absolute;
-      top: 49%;
-      left: 49%;
+      top: 47%;
+      left: 47%;
+      font-weight: 400;
       transform: translate(-49%, -49%);
       font-size: 1vw;
+    }
+    .card-buff {
+      color: green;
+    }
+
+    .card-debuff {
+      color: red;
     }
   }
 

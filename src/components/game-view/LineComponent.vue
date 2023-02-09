@@ -140,7 +140,7 @@ export default defineComponent({
       class="cards__wrap wrap_animation"
     >
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
-        <CardInfoComponent :card="card" :layoutType="0" class="card" />
+        <CardInfoComponent :card="card" :layoutType="0" class="card" :ifBuff="ifBoost" :ifDebuff="ifFogRainFrost" />
       </div>
     </div>
 
