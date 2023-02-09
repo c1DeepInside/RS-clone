@@ -43,7 +43,7 @@ export default defineComponent({
   left: 50%;
   transform: translate(-50%, -50%);
   width: 40rem;
-  height: 36rem;
+  height: 39rem;
   color: $GOLDEN_COLOR;
   font-size: 21px;
   line-height: 1.2;
