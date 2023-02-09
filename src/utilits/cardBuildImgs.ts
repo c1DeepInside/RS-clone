@@ -18,10 +18,10 @@ export const cardAbilitiesImg: Record<CardAbility, string> = {
 };
 
 export const cardFractionsImg: Record<number, string> = {
-  3: '/src/assets/images/build/card_faction_banner_nifgaard.png',
-  2: '/src/assets/images/build/card_faction_banner_no_mans_land.png',
+  1: '/src/assets/images/build/card_faction_banner_nilfgaard.png',
+  3: '/src/assets/images/build/card_faction_banner_no_mans_land.png',
   0: '/src/assets/images/build/card_faction_banner_northern_realms.png',
-  1: '/src/assets/images/build/card_faction_banner_scoiatael.png',
+  2: '/src/assets/images/build/card_faction_banner_scoiatael.png',
 };
 
 export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range';
