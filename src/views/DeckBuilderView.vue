@@ -228,11 +228,8 @@ export default defineComponent({
           power: null,
           quantity: 10,
         },
-      ] as Card[],
-      deckCards: [] as Card[],
-      leadersCards: [
         {
-          id: 0,
+          id: 18,
           name: 'Фольтест Король Темерии',
           type: 'leader',
           fieldType: [],
@@ -244,7 +241,7 @@ export default defineComponent({
           image: 'src/assets/images/realms_foltest_silver.jpg',
         },
         {
-          id: 1,
+          id: 19,
           name: 'Фольтест Предводитель Севера',
           type: 'leader',
           fieldType: [],
@@ -256,7 +253,7 @@ export default defineComponent({
           image: 'src/assets/images/realms_foltest_gold.jpg',
         },
         {
-          id: 2,
+          id: 20,
           name: 'Фольтест Завоеватель',
           type: 'leader',
           fieldType: [],
@@ -268,7 +265,7 @@ export default defineComponent({
           image: 'src/assets/images/realms_foltest_copper.jpg',
         },
         {
-          id: 3,
+          id: 21,
           name: 'Фольтест Железный Владыка',
           type: 'leader',
           fieldType: [],
@@ -280,7 +277,7 @@ export default defineComponent({
           image: 'src/assets/images/realms_foltest_bronze.jpg',
         },
         {
-          id: 4,
+          id: 22,
           name: 'Эмгыр вар Эмрейс Йож из Эрленвальда',
           type: 'leader',
           fieldType: [],
@@ -292,7 +289,7 @@ export default defineComponent({
           image: 'src/assets/images/nilfgaard_emhyr_gold.jpg',
         },
         {
-          id: 5,
+          id: 23,
           name: 'Эмгыр вар Эмрейс Император Нильфграада',
           type: 'leader',
           fieldType: [],
@@ -304,7 +301,7 @@ export default defineComponent({
           image: 'src/assets/images/nilfgaard_emhyr_bronze.jpg',
         },
         {
-          id: 6,
+          id: 24,
           name: 'Францеска Финдабаир Истинная эльфка',
           type: 'leader',
           fieldType: [],
@@ -316,7 +313,7 @@ export default defineComponent({
           image: 'src/assets/images/scoiatael_francesca_gold.jpg',
         },
         {
-          id: 7,
+          id: 25,
           name: 'Францеска Финдабаир Маргаритка из Долин',
           type: 'leader',
           fieldType: [],
@@ -328,7 +325,7 @@ export default defineComponent({
           image: 'src/assets/images/scoiatael_francesca_silver.jpg',
         },
         {
-          id: 8,
+          id: 26,
           name: 'Эредин Бреакк Глас Командир Дикой Охоты',
           type: 'leader',
           fieldType: [],
@@ -340,7 +337,7 @@ export default defineComponent({
           image: 'src/assets/images/monsters_eredin_silver.jpg',
         },
         {
-          id: 9,
+          id: 27,
           name: 'Эредин Бреакк Глас Владыка Тир на Лиа',
           type: 'leader',
           fieldType: [],
@@ -352,6 +349,11 @@ export default defineComponent({
           image: 'src/assets/images/monsters_eredin_gold.jpg',
         },
       ] as Card[],
+      deckCards: [] as Card[],
+      deckCardsNorth: [] as Card[],
+      deckCardsNilfgaard: [] as Card[],
+      deckCardsScoiatel: [] as Card[],
+      deckCardsMonsters: [] as Card[],
     };
   },
   methods: {
@@ -363,6 +365,23 @@ export default defineComponent({
     },
     changeFraction(data: number) {
       this.currentFraction = data;
+      this.currentDeckCards();
+    },
+    currentDeckCards() {
+      switch (this.currentFraction) {
+        case 0:
+          this.deckCards = this.deckCardsNorth;
+          break;
+        case 1:
+          this.deckCards = this.deckCardsNilfgaard;
+          break;
+        case 2:
+          this.deckCards = this.deckCardsScoiatel;
+          break;
+        case 3:
+          this.deckCards = this.deckCardsMonsters;
+          break;
+      }
     },
     changeCollectionCards(data: Card) {
       const index = this.collectionCards.indexOf(data);
@@ -409,6 +428,9 @@ export default defineComponent({
       }
     },
   },
+  created() {
+    this.currentDeckCards();
+  },
   components: {
     FractionChoose,
     CardCollection,
@@ -437,7 +459,7 @@ export default defineComponent({
           :currentFraction="currentFraction"
           :gwentCards="collectionCards"
         />
-        <InfoCollection :currentFraction="currentFraction" :leadersCards="leadersCards" :selectedCards="deckCards" />
+        <InfoCollection :currentFraction="currentFraction" :leadersCards="collectionCards" :selectedCards="deckCards" />
         <CardCollection
           @filterChanged="changeFilterDeck"
           @selectedCard="changeDeckCards"

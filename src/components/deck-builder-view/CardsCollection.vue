@@ -59,7 +59,6 @@ export default defineComponent({
       currFilter: 'all',
 
       cardLayoutType: CardLayoutType,
-      cards: this.gwentCards,
     };
   },
   methods: {
@@ -73,7 +72,9 @@ export default defineComponent({
   },
   computed: {
     filterFractions() {
-      return this.cards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction);
+      return this.gwentCards.filter(
+        (item) => item.fractionId === null || (item.fractionId === this.currentFraction && item.type !== 'leader')
+      );
     },
     filteredCards() {
       if (this.currFilter === 'all') {
