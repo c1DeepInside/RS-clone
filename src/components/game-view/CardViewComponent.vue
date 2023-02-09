@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import CardDescriptionComponent from './CardDescriptionComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
@@ -15,13 +15,6 @@ export default defineComponent({
       board: 'board',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
-    }),
-    ...mapActions(useGameStore, {
-      setIsShowSelected: 'setIsShowSelected',
-      setSelectedCard: 'setSelectedCard',
-      removeFromHand: 'removeFromHand',
-      addToLine: 'addToLine',
-      removeFromLine: 'removeFromLine',
     }),
   },
   components: {

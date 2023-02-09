@@ -1,7 +1,7 @@
 <script lang="ts">
 import { useGameStore } from '@/stores/GameStore';
 import { defineComponent } from 'vue';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -34,6 +34,22 @@ export default defineComponent({
     ...mapState(useGameStore, {
       hand: 'hand',
       enemyHand: 'enemyHand',
+      getAlliesPower: 'alliesPower',
+      getEnemyPower: 'enemyPower',
+    }),
+    alliesPower(): number {
+      this.setAlliesPower();
+      return this.getAlliesPower;
+    },
+    enemyPower(): number {
+      this.setEnemyPower();
+      return this.getEnemyPower;
+    },
+  },
+  methods: {
+    ...mapActions(useGameStore, {
+      setAlliesPower: 'setAlliesPower',
+      setEnemyPower: 'setEnemyPower',
     }),
   },
 });
@@ -69,7 +85,7 @@ export default defineComponent({
     <div class="player__deck-name">{{ deckName }}</div>
   </template>
   <div class="player__score player__score-more">
-    <span>0</span>
+    <span>{{ name === 'Player 1' ? Number(enemyPower) : Number(alliesPower) }}</span>
     <div></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>

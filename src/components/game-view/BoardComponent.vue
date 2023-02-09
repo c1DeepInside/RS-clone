@@ -57,10 +57,8 @@ export default defineComponent({
     },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
-      setSelectedCard: 'setSelectedCard',
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
-      removeFromLine: 'removeFromLine',
     }),
   },
   components: {
@@ -69,8 +67,6 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useGameStore, {
-      hand: 'hand',
-      board: 'board',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
     }),

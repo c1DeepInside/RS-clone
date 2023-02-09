@@ -36,11 +36,7 @@ export default defineComponent({
   },
   methods: {
     ...mapActions(useGameStore, {
-      setIsShowSelected: 'setIsShowSelected',
-      setSelectedCard: 'setSelectedCard',
-      removeFromHand: 'removeFromHand',
-      addToLine: 'addToLine',
-      removeFromLine: 'removeFromLine',
+      setPower: 'setPower',
     }),
   },
   components: {
@@ -48,7 +44,6 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useGameStore, {
-      hand: 'hand',
       board: 'board',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
@@ -83,9 +78,11 @@ export default defineComponent({
       return isBoostCard || this.board[`${this.type}Boost`][this.attackType].length > 0;
     },
     linePower(): number {
-      return this.cards.reduce((prev, next) => {
+      const power = this.cards.reduce((prev, next) => {
         return prev + next.power!;
       }, 0);
+      this.setPower(power, this.attackType, this.type);
+      return power;
     },
     activeLine(): boolean {
       let ifSpy = this.selectedCard.ability === 'spy';

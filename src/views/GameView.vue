@@ -62,12 +62,11 @@ export default defineComponent({
     },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
-      setSelectedCard: 'setSelectedCard',
       removeFromHand: 'removeFromHand',
-      addToLine: 'addToLine',
-      removeFromLine: 'removeFromLine',
       clearWeathers: 'clearWeathers',
       addToWeather: 'addToWeather',
+      setAlliesPower: 'setAlliesPower',
+      setEnemyPower: 'setEnemyPower',
     }),
   },
   computed: {
@@ -76,6 +75,7 @@ export default defineComponent({
       board: 'board',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
+      enemyPower: 'enemyPower',
     }),
   },
   components: {

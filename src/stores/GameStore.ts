@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type Card from '@/interfaces/card';
-import type { cardLineType } from '@/utilits/lineTypes';
+import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -182,6 +182,20 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 3,
       },
     ] as Card[],
+    power: {
+      enemy: {
+        siege: 0,
+        range: 0,
+        melee: 0,
+      },
+      allies: {
+        siege: 0,
+        range: 0,
+        melee: 0,
+      },
+    },
+    alliesPower: 0,
+    enemyPower: 0,
     enemyHand: [] as Card[],
     board: {
       enemy: {
@@ -235,6 +249,15 @@ export const useGameStore = defineStore('gameStore', {
     },
   }),
   actions: {
+    setPower(power: number, line: cardLineType, type: enemyAlliesType) {
+      this.power[type][line] = power;
+    },
+    setAlliesPower() {
+      this.alliesPower = this.power.allies.melee + this.power.allies.range + this.power.allies.siege;
+    },
+    setEnemyPower() {
+      this.enemyPower = this.power.enemy.melee + this.power.enemy.range + this.power.enemy.siege;
+    },
     clearWeathers() {
       this.board.weather = [];
     },
