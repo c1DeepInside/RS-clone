@@ -262,11 +262,30 @@ export default defineComponent({
     border-radius: 0 0 1.9vw 1.9vw;
   }
 }
+.description-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.18vw;
+  padding-left: 25%;
+  margin-top: 4%;
+  height: 3.3vw;
 
+  &-center {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.18vw;
+    margin-top: 4%;
+    height: 3.3vw;
+  }
+}
+.description-text {
+  height: 4vw;
+  display: flex;
+  align-items: flex-end;
+}
 .card-info__count-img-hero {
   width: 190%;
 }
-
 .card-info__count-power-hero {
   position: absolute;
   top: 18%;
@@ -275,34 +294,14 @@ export default defineComponent({
   color: white;
   font-size: 3vw;
 }
-
-.description-title {
-  text-align: center;
-  font-weight: 500;
-  font-size: 1.18vw;
-  padding-left: 25%;
-  margin-top: 6%;
-  margin-bottom: 14%;
-
-  &-center {
-    text-align: center;
-    font-weight: 500;
-    font-size: 1.18vw;
-    margin-top: 6%;
-    margin-bottom: 14%;
-  }
-}
-
 .description-text {
   padding: 1%;
   font-size: 1vw;
   text-align: center;
 }
-
 .game-card__count-img-hero {
   width: 200%;
 }
-
 .game-card__count-power-hero {
   position: absolute;
   top: 33%;
@@ -312,7 +311,6 @@ export default defineComponent({
   font-weight: 300;
   font-size: 1vw;
 }
-
 .game-card {
   display: flex;
   flex-direction: column;
