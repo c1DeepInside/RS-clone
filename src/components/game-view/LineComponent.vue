@@ -4,6 +4,7 @@ import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import { mapActions, mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -52,7 +53,7 @@ export default defineComponent({
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
     }),
-    isFogRainFrost(): boolean {
+    ifFogRainFrost(): boolean {
       let isActive = false;
       for (let i = 0; i < this.board.weather.length; i++) {
         isActive = this.board.weather[i].ability === this.weathers[this.attackType];
@@ -61,6 +62,30 @@ export default defineComponent({
         }
       }
       return isActive;
+    },
+    cards(): Card[] {
+      let line = JSON.parse(JSON.stringify(this.board[this.type][this.attackType]));
+      line = line.map((card: Card) => {
+        if (this.ifFogRainFrost && card.type !== 'hero') {
+          card.power = 1;
+        }
+        if (this.ifBoost && card.type !== 'hero') {
+          card.power! *= 2;
+        }
+        return card;
+      });
+      return line;
+    },
+    ifBoost(): boolean {
+      const isBoostCard = this.board[this.type][this.attackType].some((card) => {
+        return card.ability === 'horn';
+      });
+      return isBoostCard || this.board[`${this.type}Boost`][this.attackType].length > 0;
+    },
+    linePower(): number {
+      return this.cards.reduce((prev, next) => {
+        return prev + next.power!;
+      }, 0);
     },
     activeLine(): boolean {
       let ifSpy = this.selectedCard.ability === 'spy';
@@ -94,9 +119,10 @@ export default defineComponent({
       <img class="power__img" src="@/assets/images/power_wrap.png" alt="wrap" />
       <div class="power__dmg__wrap">
         <img class="power__dmg" :src="linePowerWraps[type]" alt="wrap" />
-        <p class="power__dmg__number">{{ Number() }}</p>
+        <p class="power__dmg__number">{{ Number(linePower) }}</p>
       </div>
     </div>
+
     <div
       :class="[
         activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
@@ -108,23 +134,25 @@ export default defineComponent({
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
+
     <div
       :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
       class="cards__wrap wrap_animation"
     >
-      <div class="card__wrap" v-for="(card, index) in board[type][attackType]" :key="index" :style="cardMargin">
+      <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
-    <div v-if="attackType === 'siege' && isFogRainFrost" class="weather__wrap">
+
+    <div v-if="attackType === 'siege' && ifFogRainFrost" class="weather__wrap">
       <img class="weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
       <img class="weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
-    <div v-if="attackType === 'range' && isFogRainFrost" class="weather__wrap">
+    <div v-if="attackType === 'range' && ifFogRainFrost" class="weather__wrap">
       <div class="weather_fog first_fog"></div>
       <div class="weather_fog second_fog"></div>
     </div>
-    <div v-if="attackType === 'melee' && isFogRainFrost" class="weather__wrap">
+    <div v-if="attackType === 'melee' && ifFogRainFrost" class="weather__wrap">
       <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
   </div>
