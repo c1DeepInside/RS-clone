@@ -73,7 +73,6 @@ export default defineComponent({
   },
   computed: {
     filterFractions() {
-      console.log(this.currentFraction);
       return this.cards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction);
     },
     filteredCards() {
