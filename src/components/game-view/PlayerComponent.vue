@@ -1,5 +1,7 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
 import { defineComponent } from 'vue';
+import { mapState } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -19,10 +21,6 @@ export default defineComponent({
       type: String,
       default: 'Нильфгаард',
     },
-    count: {
-      type: String,
-      default: '10',
-    },
     img: {
       type: String,
       default: '/src/assets/images/deck_shield_realms.png',
@@ -31,6 +29,12 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      enemyHand: 'enemyHand',
+    }),
   },
 });
 </script>
@@ -53,12 +57,12 @@ export default defineComponent({
   <template v-if="name === 'Player 1'">
     <div class="player__name">{{ name }}</div>
     <div class="player__deck-name">{{ deckName }}</div>
-    <div class="player__hand-count">{{ count }}</div>
+    <div class="player__hand-count">{{ enemyHand.length }}</div>
     <div class="player__gem player__gem-1 player__gem-true"></div>
     <div class="player__gem player__gem-2"></div>
   </template>
   <template v-else>
-    <div class="player__hand-count">{{ count }}</div>
+    <div class="player__hand-count">{{ hand.length }}</div>
     <div class="player__gem player__gem-1 player__gem-true"></div>
     <div class="player__gem player__gem-2"></div>
     <div class="player__name">{{ name }}</div>

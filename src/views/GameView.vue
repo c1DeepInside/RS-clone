@@ -104,12 +104,7 @@ export default defineComponent({
         </div>
 
         <div class="game__player game__player-1 player">
-          <PlayerComponent
-            name="Player 1"
-            deckName="Нильфгаард"
-            count="10"
-            img="/src/assets/images/deck_shield_realms.png"
-          />
+          <PlayerComponent name="Player 1" deckName="Нильфгаард" img="/src/assets/images/deck_shield_realms.png" />
         </div>
         <div
           class="game__weather"
@@ -131,7 +126,6 @@ export default defineComponent({
           <PlayerComponent
             name="Player 2"
             deckName="Королевства Севера"
-            count="10"
             img="/src/assets/images/deck_shield_realms.png"
             :isPass="isPass"
           />
