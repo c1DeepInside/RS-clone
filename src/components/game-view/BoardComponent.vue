@@ -5,7 +5,7 @@ import HandComponent from './HandComponent.vue';
 import { mapActions, mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
-import type { cardLineType } from '@/utilits/lineTypes';
+import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export default defineComponent({
   data() {
@@ -15,7 +15,10 @@ export default defineComponent({
         range: 'range',
         siege: 'siege',
       } as Record<cardLineType, string>,
-      isEnemy: true,
+      enemyAllies: {
+        enemy: 'enemy',
+        allies: 'allies',
+      } as Record<enemyAlliesType, string>,
     };
   },
   methods: {
@@ -52,16 +55,6 @@ export default defineComponent({
         }, 400);
       }
     },
-    isFogRainFrost(weather: string): boolean {
-      let isActive = false;
-      for (let i = 0; i < this.board.weather.length; i++) {
-        isActive = this.board.weather[i].ability === weather;
-        if (isActive) {
-          break;
-        }
-      }
-      return isActive;
-    },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
       setSelectedCard: 'setSelectedCard',
@@ -75,15 +68,6 @@ export default defineComponent({
     HandComponent,
   },
   computed: {
-    isRain(): boolean {
-      return this.isFogRainFrost('rain');
-    },
-    isFog(): boolean {
-      return this.isFogRainFrost('fog');
-    },
-    isFrost(): boolean {
-      return this.isFogRainFrost('frost');
-    },
     ...mapState(useGameStore, {
       hand: 'hand',
       board: 'board',
@@ -101,34 +85,22 @@ export default defineComponent({
         <LineComponent
           :class="`field__enemy__${attackType.siege}`"
           :id="`field__enemy__${attackType.siege}`"
-          :activeLine="selectedCard.fieldType.includes('siege') && selectedCard.ability === 'spy' && isShowSelectedCard"
-          :type="isEnemy"
-          :attackType="attackType.siege"
-          :cards="board.enemy.siege"
-          :boosts="board.enemyBoost.siege"
-          :isActiveWeather="isRain"
+          :type="(enemyAllies.enemy as enemyAlliesType)"
+          :attackType="(attackType.siege as cardLineType)"
           @click="putCard"
         />
         <LineComponent
           :class="`field__enemy__${attackType.range}`"
           :id="`field__enemy__${attackType.range}`"
-          :activeLine="selectedCard.fieldType.includes('range') && selectedCard.ability === 'spy' && isShowSelectedCard"
-          :type="isEnemy"
-          :attackType="attackType.range"
-          :cards="board.enemy.range"
-          :boosts="board.enemyBoost.range"
-          :isActiveWeather="isFog"
+          :type="(enemyAllies.enemy as enemyAlliesType)"
+          :attackType="(attackType.range as cardLineType)"
           @click="putCard"
         />
         <LineComponent
           :class="`field__enemy__${attackType.melee}`"
           :id="`field__enemy__${attackType.melee}`"
-          :activeLine="selectedCard.fieldType.includes('melee') && selectedCard.ability === 'spy' && isShowSelectedCard"
-          :type="isEnemy"
-          :attackType="attackType.melee"
-          :cards="board.enemy.melee"
-          :boosts="board.enemyBoost.melee"
-          :isActiveWeather="isFrost"
+          :type="(enemyAllies.enemy as enemyAlliesType)"
+          :attackType="(attackType.melee as cardLineType)"
           @click="putCard"
         />
       </div>
@@ -136,37 +108,22 @@ export default defineComponent({
         <LineComponent
           :class="`field__allies__${attackType.melee}`"
           :id="`field__allies__${attackType.melee}`"
-          :activeLine="selectedCard.fieldType.includes('melee') && selectedCard.ability !== 'spy' && isShowSelectedCard"
-          :activeBoost="selectedCard.fieldType.includes('boost') && isShowSelectedCard"
-          :type="!isEnemy"
-          :attackType="attackType.melee"
-          :cards="board.allies.melee"
-          :boosts="board.alliesBoost.melee"
-          :isActiveWeather="isFrost"
+          :type="(enemyAllies.allies as enemyAlliesType)"
+          :attackType="(attackType.melee as cardLineType)"
           @click="putCard"
         />
         <LineComponent
           :class="`field__allies__${attackType.range}`"
           :id="`field__allies__${attackType.range}`"
-          :activeLine="selectedCard.fieldType.includes('range') && selectedCard.ability !== 'spy' && isShowSelectedCard"
-          :activeBoost="selectedCard.fieldType.includes('boost') && isShowSelectedCard"
-          :type="!isEnemy"
-          :attackType="attackType.range"
-          :cards="board.allies.range"
-          :boosts="board.alliesBoost.range"
-          :isActiveWeather="isFog"
+          :type="(enemyAllies.allies as enemyAlliesType)"
+          :attackType="(attackType.range as cardLineType)"
           @click="putCard"
         />
         <LineComponent
           :class="`field__allies__${attackType.siege}`"
           :id="`field__allies__${attackType.siege}`"
-          :activeLine="selectedCard.fieldType.includes('siege') && selectedCard.ability !== 'spy' && isShowSelectedCard"
-          :activeBoost="selectedCard.fieldType.includes('boost') && isShowSelectedCard"
-          :type="!isEnemy"
-          :attackType="attackType.siege"
-          :cards="board.allies.siege"
-          :boosts="board.alliesBoost.siege"
-          :isActiveWeather="isRain"
+          :type="(enemyAllies.allies as enemyAlliesType)"
+          :attackType="(attackType.siege as cardLineType)"
           @click="putCard"
         />
       </div>

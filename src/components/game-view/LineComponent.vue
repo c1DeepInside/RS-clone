@@ -1,45 +1,88 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import type Card from '@/interfaces/card';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
+import { mapActions, mapState } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
   data() {
     return {
-      enemyWrap: 'src/assets/images/score_total_op.png',
-      alliesWrap: 'src/assets/images/score_total_me.png',
+      linePowerWraps: {
+        enemy: 'src/assets/images/score_total_op.png',
+        allies: 'src/assets/images/score_total_me.png',
+      } as Record<enemyAlliesType, string>,
+      weathers: {
+        siege: 'rain',
+        range: 'fog',
+        melee: 'frost',
+      } as Record<cardLineType, string>,
     };
   },
   props: {
-    isActiveWeather: {
-      type: Boolean,
-      default: false,
-    },
-    type: Boolean,
-    attackType: String,
-    activeBoost: Boolean,
-    activeLine: Boolean,
-    cards: {
-      type: Array as PropType<Card[]>,
+    type: {
+      type: String as PropType<enemyAlliesType>,
       default: () => {
-        return [];
+        return '';
       },
     },
-    boosts: {
-      type: Array as PropType<Card[]>,
+    attackType: {
+      type: String as PropType<cardLineType>,
       default: () => {
-        return [];
+        return '';
       },
     },
+  },
+  methods: {
+    ...mapActions(useGameStore, {
+      setIsShowSelected: 'setIsShowSelected',
+      setSelectedCard: 'setSelectedCard',
+      removeFromHand: 'removeFromHand',
+      addToLine: 'addToLine',
+      removeFromLine: 'removeFromLine',
+    }),
   },
   components: {
     CardInfoComponent,
   },
   computed: {
-    showDamage(): number {
-      return this.cards.reduce((prev, next) => {
-        return prev + next.power!;
-      }, 0);
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      board: 'board',
+      selectedCard: 'selectedCard',
+      isShowSelectedCard: 'isShowSelected',
+    }),
+    isFogRainFrost(): boolean {
+      let isActive = false;
+      for (let i = 0; i < this.board.weather.length; i++) {
+        isActive = this.board.weather[i].ability === this.weathers[this.attackType];
+        if (isActive) {
+          break;
+        }
+      }
+      return isActive;
+    },
+    activeLine(): boolean {
+      let ifSpy = this.selectedCard.ability === 'spy';
+      if (this.type === 'enemy') {
+        ifSpy = this.selectedCard.ability !== 'spy';
+      }
+      return this.selectedCard.fieldType.includes(this.attackType) && !ifSpy && this.isShowSelectedCard;
+    },
+    activeBoost(): boolean {
+      return this.selectedCard.fieldType.includes('boost') && this.isShowSelectedCard && this.type === 'allies';
+    },
+    cardMargin(): string {
+      return this.board[this.type][this.attackType].length > 8
+        ? `margin-left: -${
+            this.board[this.type][this.attackType].length /
+            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6))
+          }vw; left: ${
+            this.board[this.type][this.attackType].length /
+            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6)) /
+            2
+          }vw`
+        : '';
     },
   },
 });
@@ -50,18 +93,18 @@ export default defineComponent({
     <div class="power__wrap">
       <img class="power__img" src="@/assets/images/power_wrap.png" alt="wrap" />
       <div class="power__dmg__wrap">
-        <img class="power__dmg" :src="type ? enemyWrap : alliesWrap" alt="wrap" />
-        <p class="power__dmg__number">{{ Number(showDamage) }}</p>
+        <img class="power__dmg" :src="linePowerWraps[type]" alt="wrap" />
+        <p class="power__dmg__number">{{ Number() }}</p>
       </div>
     </div>
     <div
       :class="[
-        activeBoost && boosts.length < 1 ? 'active' : '',
+        activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
         `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
       ]"
       class="boosts__wrap wrap_animation"
     >
-      <div class="boost__wrap" v-for="(card, index) in boosts" :key="index">
+      <div class="boost__wrap" v-for="(card, index) in board[`${type}Boost`][attackType]" :key="index">
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
@@ -69,30 +112,19 @@ export default defineComponent({
       :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
       class="cards__wrap wrap_animation"
     >
-      <div
-        class="card__wrap"
-        v-for="(card, index) in cards"
-        :key="index"
-        :style="
-          cards.length > 8
-            ? `margin-left: -${cards.length / (7.2 + Math.pow(2.6, -cards.length + 12.6))}vw; left: ${
-                cards.length / (7.2 + Math.pow(2.6, -cards.length + 12.6)) / 2
-              }vw`
-            : ''
-        "
-      >
+      <div class="card__wrap" v-for="(card, index) in board[type][attackType]" :key="index" :style="cardMargin">
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
-    <div v-if="attackType === 'siege' && isActiveWeather" class="weather__wrap">
+    <div v-if="attackType === 'siege' && isFogRainFrost" class="weather__wrap">
       <img class="weather_rain" src="@/assets/images/rain1.gif" alt="rain" />
       <img class="weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
-    <div v-if="attackType === 'range' && isActiveWeather" class="weather__wrap">
+    <div v-if="attackType === 'range' && isFogRainFrost" class="weather__wrap">
       <div class="weather_fog first_fog"></div>
       <div class="weather_fog second_fog"></div>
     </div>
-    <div v-if="attackType === 'melee' && isActiveWeather" class="weather__wrap">
+    <div v-if="attackType === 'melee' && isFogRainFrost" class="weather__wrap">
       <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
   </div>
