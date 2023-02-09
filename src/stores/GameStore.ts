@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type Card from '@/interfaces/card';
+import type { cardLineType } from '@/utilits/lineTypes';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -193,12 +194,12 @@ export const useGameStore = defineStore('gameStore', {
         range: [] as Card[],
         melee: [] as Card[],
       },
-      boostEnemy: {
+      enemyBoost: {
         siege: [] as Card[],
         range: [] as Card[],
         melee: [] as Card[],
       },
-      boostAllies: {
+      alliesBoost: {
         siege: [] as Card[],
         range: [] as Card[],
         melee: [] as Card[],
@@ -247,41 +248,23 @@ export const useGameStore = defineStore('gameStore', {
     setSelectedCard(card: Card) {
       this.selectedCard = card;
     },
-    addToLine(line: string, isAllies?: boolean, isCards?: boolean) {
-      if (line === 'weather') this.board.weather.push(this.selectedCard);
+    addToWeather(card: Card) {
+      this.board.weather.push(card);
+    },
+    addToLine(card: Card, line: cardLineType, isAllies?: boolean, isCards?: boolean) {
+      const key = isAllies ? 'allies' : 'enemy';
       if (isCards) {
-        if (isAllies) {
-          if (line === 'siege') this.board.allies.siege.push(this.selectedCard);
-          if (line === 'range') this.board.allies.range.push(this.selectedCard);
-          if (line === 'melee') this.board.allies.melee.push(this.selectedCard);
-        } else {
-          if (line === 'siege') this.board.enemy.siege.push(this.selectedCard);
-          if (line === 'range') this.board.enemy.range.push(this.selectedCard);
-          if (line === 'melee') this.board.enemy.melee.push(this.selectedCard);
-        }
+        this.board[key][line].push(card);
       } else {
-        if (isAllies) {
-          if (line === 'siege') this.board.boostAllies.siege.push(this.selectedCard);
-          if (line === 'range') this.board.boostAllies.range.push(this.selectedCard);
-          if (line === 'melee') this.board.boostAllies.melee.push(this.selectedCard);
-        } else {
-          if (line === 'siege') this.board.boostEnemy.siege.push(this.selectedCard);
-          if (line === 'range') this.board.boostEnemy.range.push(this.selectedCard);
-          if (line === 'melee') this.board.boostEnemy.melee.push(this.selectedCard);
-        }
+        this.board[`${key}Boost`][line].push(card);
       }
     },
-    removeFromLine(card: Card, line: string, isAllies?: boolean) {
-      if (line === 'weather') this.board.weather.splice(this.board.weather.indexOf(card), 1);
-      if (isAllies) {
-        if (line === 'siege') this.board.allies.siege.splice(this.board.allies.siege.indexOf(card), 1);
-        if (line === 'range') this.board.allies.range.splice(this.board.allies.range.indexOf(card), 1);
-        if (line === 'melee') this.board.allies.melee.splice(this.board.allies.melee.indexOf(card), 1);
-      } else {
-        if (line === 'siege') this.board.enemy.siege.splice(this.board.enemy.siege.indexOf(card), 1);
-        if (line === 'range') this.board.enemy.range.splice(this.board.enemy.range.indexOf(card), 1);
-        if (line === 'melee') this.board.enemy.melee.splice(this.board.enemy.melee.indexOf(card), 1);
-      }
+    removeFromWeather(card: Card) {
+      this.board.weather.splice(this.board.weather.indexOf(card), 1);
+    },
+    removeFromLine(card: Card, line: cardLineType, isAllies?: boolean) {
+      const key = isAllies ? 'allies' : 'enemy';
+      this.board[key][line].push(card);
     },
   },
 });

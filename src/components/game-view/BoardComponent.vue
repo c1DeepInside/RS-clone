@@ -5,6 +5,7 @@ import HandComponent from './HandComponent.vue';
 import { mapActions, mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
+import type { cardLineType } from '@/utilits/lineTypes';
 
 export default defineComponent({
   data() {
@@ -13,7 +14,7 @@ export default defineComponent({
         melee: 'melee',
         range: 'range',
         siege: 'siege',
-      },
+      } as Record<cardLineType, string>,
       isEnemy: true,
     };
   },
@@ -47,7 +48,7 @@ export default defineComponent({
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
         setTimeout(() => {
-          this.addToLine(targetProp[2], !isSpy, !isBoost);
+          this.addToLine(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
         }, 400);
       }
     },
@@ -104,7 +105,7 @@ export default defineComponent({
           :type="isEnemy"
           :attackType="attackType.siege"
           :cards="board.enemy.siege"
-          :boosts="board.boostEnemy.siege"
+          :boosts="board.enemyBoost.siege"
           :isActiveWeather="isRain"
           @click="putCard"
         />
@@ -115,7 +116,7 @@ export default defineComponent({
           :type="isEnemy"
           :attackType="attackType.range"
           :cards="board.enemy.range"
-          :boosts="board.boostEnemy.range"
+          :boosts="board.enemyBoost.range"
           :isActiveWeather="isFog"
           @click="putCard"
         />
@@ -126,7 +127,7 @@ export default defineComponent({
           :type="isEnemy"
           :attackType="attackType.melee"
           :cards="board.enemy.melee"
-          :boosts="board.boostEnemy.melee"
+          :boosts="board.enemyBoost.melee"
           :isActiveWeather="isFrost"
           @click="putCard"
         />
@@ -140,7 +141,7 @@ export default defineComponent({
           :type="!isEnemy"
           :attackType="attackType.melee"
           :cards="board.allies.melee"
-          :boosts="board.boostAllies.melee"
+          :boosts="board.alliesBoost.melee"
           :isActiveWeather="isFrost"
           @click="putCard"
         />
@@ -152,7 +153,7 @@ export default defineComponent({
           :type="!isEnemy"
           :attackType="attackType.range"
           :cards="board.allies.range"
-          :boosts="board.boostAllies.range"
+          :boosts="board.alliesBoost.range"
           :isActiveWeather="isFog"
           @click="putCard"
         />
@@ -164,7 +165,7 @@ export default defineComponent({
           :type="!isEnemy"
           :attackType="attackType.siege"
           :cards="board.allies.siege"
-          :boosts="board.boostAllies.siege"
+          :boosts="board.alliesBoost.siege"
           :isActiveWeather="isRain"
           @click="putCard"
         />

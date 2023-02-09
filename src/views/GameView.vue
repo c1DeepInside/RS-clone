@@ -52,7 +52,7 @@ export default defineComponent({
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
         setTimeout(() => {
-          this.addToLine('weather');
+          this.addToWeather(this.selectedCard);
           if (this.selectedCard.ability === 'clear') {
             this.showSunAnimation();
             this.clearWeathers();
@@ -67,6 +67,7 @@ export default defineComponent({
       addToLine: 'addToLine',
       removeFromLine: 'removeFromLine',
       clearWeathers: 'clearWeathers',
+      addToWeather: 'addToWeather',
     }),
   },
   computed: {

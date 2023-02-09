@@ -62,7 +62,7 @@ export default defineComponent({
       class="boosts__wrap wrap_animation"
     >
       <div class="boost__wrap" v-for="(card, index) in boosts" :key="index">
-        <cardInfoComponent :card="card" :layoutType="0" class="card" />
+        <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
     <div
