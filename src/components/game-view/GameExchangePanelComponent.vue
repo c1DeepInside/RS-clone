@@ -14,9 +14,9 @@ export default defineComponent({
           type: 'usual',
           image: '/src/assets/images/realms_blue_stripes.jpg',
           description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
-          fractionId: 1,
+          fractionId: 0,
           ability: 'bond',
-          fieldType: ['melee'],
+          fieldType: ['melee', 'range'],
           power: 5,
           quantity: 3,
         },
@@ -68,6 +68,18 @@ export default defineComponent({
           power: null,
           quantity: 1,
         },
+        {
+          id: 6,
+          name: 'Следопыт из Дол Блатанны',
+          type: 'usual',
+          image: '/src/assets/images/scoiatael_dol_infantry_1.jpg',
+          description: 'Нюх у них как у гончих. Глаза, как у орла. А сердце изо льдаю',
+          fractionId: 1,
+          ability: 'agile',
+          fieldType: ['melee', 'range'],
+          power: 6,
+          quantity: 3,
+        },
       ] as Card[],
     };
   },
@@ -101,8 +113,8 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     gap: 5px;
-    height: 70px;
-    font-size: 26px;
+    height: 5vw;
+    font-size: 1.8vw;
     letter-spacing: -1px;
     background-color: $BLACK_COLOR_MAIN;
     color: $TAN_COLOR;

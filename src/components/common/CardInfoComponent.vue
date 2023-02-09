@@ -1,11 +1,12 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
+import { cardAbilitiesImg, cardFractionsImg, сardEquipmendImg } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
-  SIMPLE,
-  AVERAGE,
-  EXTENDED,
+  SIMPLE, //card for game
+  AVERAGE, //card for collecting a deck
+  EXTENDED, //info card
 }
 
 export default defineComponent({
@@ -14,12 +15,15 @@ export default defineComponent({
       parentWidth: 0,
       scaleFactor: 1,
       cardLayoutType: CardLayoutType,
+      abilitiesImg: cardAbilitiesImg,
+      equipmendImg: сardEquipmendImg,
+      fraction: cardFractionsImg,
     };
   },
   props: {
     isSelected: Boolean,
     layoutType: {
-      type: Object as PropType<CardLayoutType>,
+      type: Number as PropType<CardLayoutType>,
     },
     card: Object as PropType<Card>,
   },
@@ -33,6 +37,30 @@ export default defineComponent({
 
       this.parentWidth = card.parentElement?.clientWidth || 0;
       this.scaleFactor = this.parentWidth / card.clientWidth;
+    },
+    getEquipmendImage(card?: Card): string {
+      if (!card) {
+        return '';
+      }
+
+      if (card.fieldType.length === 1) {
+        const key = card.fieldType[0];
+
+        if (!(key in сardEquipmendImg)) {
+          return '';
+        }
+
+        // @ts-ignore
+        return сardEquipmendImg[key];
+      }
+
+      if (card.fieldType.length == 2) {
+        if (card.fieldType.includes('melee') && card.fieldType.includes('range')) {
+          return сardEquipmendImg['melee_range'];
+        }
+      }
+
+      return '';
     },
   },
   updated() {
@@ -54,11 +82,7 @@ export default defineComponent({
     :style="{ transform: `scale(${scaleFactor})` }"
   >
     <img class="card-info__back" :src="card?.image" />
-    <img
-      v-if="card?.fractionId !== null"
-      class="card-info__banner"
-      src="/src/assets/images/build/card_faction_banner_northern_realms.png"
-    />
+    <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
       <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -73,25 +97,21 @@ export default defineComponent({
     <img
       v-if="card?.type !== 'special' && card?.type !== 'leader'"
       class="card-info__equipment"
-      src="/src/assets/images/build/card_row_close.png"
+      :src="getEquipmendImage(card)"
     />
     <img
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="card-info__ability"
-      src="/src/assets/images/build/card_ability_bond.png"
+      :src="abilitiesImg[card?.ability!]"
     />
 
-    <img
-      v-if="card?.type === 'special'"
-      class="card-info__special"
-      src="/src/assets/images/build/card_weather_rain.png"
-    />
+    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div class="card-info__gradient"></div>
 
     <div class="card-info__description">
-      <h1 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h1>
-      <h1 v-else class="description-title-center">{{ card?.name }}</h1>
+      <h3 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h3>
+      <h3 v-else class="description-title-center">{{ card?.name }}</h3>
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>
       <div v-else class="card-info__quantity">
@@ -104,11 +124,7 @@ export default defineComponent({
   <div v-else ref="card" class="game-card">
     <img class="game-card__back" :src="card?.image" />
 
-    <img
-      v-if="card?.type === 'special'"
-      class="card-info__special"
-      src="/src/assets/images/build/card_weather_rain.png"
-    />
+    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
       <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -120,16 +136,12 @@ export default defineComponent({
       <p class="game-card__count-power">{{ card?.power }}</p>
     </div>
 
-    <img
-      v-if="card?.type !== 'special'"
-      class="game-card__equipment"
-      src="/src/assets/images/build/card_row_close.png"
-    />
+    <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
 
     <img
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="game-card__ability"
-      src="/src/assets/images/build/card_ability_bond.png"
+      :src="abilitiesImg[card?.ability!]"
     />
   </div>
 </template>
@@ -245,6 +257,7 @@ export default defineComponent({
   &__description {
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
+    color: black;
     height: 17%;
     border-radius: 0 0 1.9vw 1.9vw;
   }
@@ -264,10 +277,10 @@ export default defineComponent({
 }
 
 .description-title {
-  text-align: right;
+  text-align: center;
   font-weight: 500;
   font-size: 1.18vw;
-  padding-right: 5px;
+  padding-left: 25%;
   margin-top: 6%;
   margin-bottom: 14%;
 
@@ -297,14 +310,14 @@ export default defineComponent({
   transform: translate(-50%, -50%);
   color: white;
   font-weight: 300;
-  font-size: 2.2vw;
+  font-size: 1vw;
 }
 
 .game-card {
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: 7vw;
+  min-width: 3vw;
   transform-origin: 0 0;
 
   &__back {
@@ -327,7 +340,7 @@ export default defineComponent({
       top: 49%;
       left: 49%;
       transform: translate(-49%, -49%);
-      font-size: 2.2vw;
+      font-size: 1vw;
     }
   }
 

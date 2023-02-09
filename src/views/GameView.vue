@@ -1,12 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
-import CardComponent from '@/components/game-view/CardComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
+import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -14,8 +15,19 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      selectedItem: -1,
+      selectedCard: {
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      } as Card,
       timer: 0,
+      isShowCardView: false,
     };
   },
   methods: {
@@ -32,10 +44,10 @@ export default defineComponent({
     dontShowEndGame() {
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
-      console.log(this.timer);
     },
-    updateSelectedItem(value: number) {
-      this.selectedItem = value;
+    updateSelectedItem(value: Card, show: boolean) {
+      this.selectedCard = value;
+      this.isShowCardView = show;
     },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
@@ -44,11 +56,11 @@ export default defineComponent({
   components: {
     GameExchangePanelComponent,
     PlayerComponent,
-    CardComponent,
     BoardComponent,
     CardViewComponent,
     EndComponent,
     InformationBar,
+    MusicComponent,
   },
 });
 </script>
@@ -56,17 +68,20 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div :class="['click', { noclick: selectedItem === -1 }]" @click="selectedItem = -1"></div>
+    <div
+      :class="['click', { noclick: isShowCardView === false }]"
+      @click="isShowCardView = false"
+      ref="clickField"
+    ></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off">
-            <CardComponent />
-          </div>
+          <div class="game__leader-card card-off"></div>
           <div class="game__leader-icon">
             <div></div>
           </div>
         </div>
+
         <div class="game__player game__player-1 player">
           <PlayerComponent
             name="Player 1"
@@ -75,12 +90,11 @@ export default defineComponent({
             img="/src/assets/images/deck_shield_realms.png"
           />
         </div>
-        <div class="game__weather">
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-        </div>
+
+        <div class="game__weather"></div>
+
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
+
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
@@ -90,14 +104,14 @@ export default defineComponent({
             :isPass="isPass"
           />
         </div>
+
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card">
-            <CardComponent @click="selectedItem = 1" />
-          </div>
+          <div class="game__leader-card"></div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
         </div>
+
         <button
           @mousedown="showEndGame"
           @mouseup="dontShowEndGame"
@@ -107,50 +121,91 @@ export default defineComponent({
           Сдаться
         </button>
       </div>
+
       <div class="game__board board">
         <BoardComponent @update:selectedItem="updateSelectedItem" />
       </div>
+
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1">
-            <CardComponent />
-          </div>
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2">
-            <CardComponent />
-          </div>
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
-            <CardComponent />
             <div class="deck__counter">28</div>
           </div>
         </div>
       </div>
     </div>
-    <CardViewComponent :selectedItem="selectedItem" />
+    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
+    <MusicComponent class="music" />
+    <button
+      @mousedown="showEndGame"
+      @mouseup="dontShowEndGame"
+      @mouseout="dontShowEndGame"
+      :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
+    >
+      Сдаться
+    </button>
   </main>
 </template>
 
 <style lang="scss" scoped>
+.music {
+  position: absolute;
+  right: 15vw;
+  bottom: 1.6vw;
+}
+
+.game__give-up {
+  position: absolute;
+  right: 5.5vw;
+  bottom: 1.6vw;
+  width: 8vw;
+  padding: 0.5vw;
+  font-size: 1.1vw;
+  color: tan;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2%;
+    background-color: $GOLDEN_COLOR;
+    transform: scaleX(0);
+    transform-origin: 0% 0%;
+    transition: transform 4s ease-in-out;
+  }
+}
+
+.give-animation::after {
+  transform: scaleX(1);
+  transform-origin: 0% 50%;
+  height: 2%;
+}
+
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
   background-image: url('@/assets/images/board.png');
   background-size: 100% auto;
   background-repeat: no-repeat;
+  position: relative;
 }
 
 .click {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game {
@@ -258,7 +313,7 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
-    z-index: 1;
+    z-index: 2;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);
@@ -283,33 +338,6 @@ export default defineComponent({
     left: 41%;
     width: 27%;
     height: 4%;
-  }
-
-  &__give-up {
-    position: relative;
-    top: -8%;
-    left: 63%;
-    width: 23%;
-    height: 4%;
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2%;
-      background-color: $GOLDEN_COLOR;
-      transform: scaleX(0);
-      transform-origin: 0% 0%;
-      transition: transform 4s ease-in-out;
-    }
-  }
-
-  .give-animation::after {
-    transform: scaleX(1);
-    transform-origin: 0% 50%;
-    height: 2%;
   }
 }
 

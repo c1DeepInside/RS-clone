@@ -2,6 +2,7 @@
 import { defineComponent, type PropType } from 'vue';
 import type Card from '@/interfaces/card';
 import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import CardDescriptionComponent from '@/components/game-view/CardDescriptionComponent.vue';
 
 enum CardSize {
   large = 15,
@@ -25,6 +26,7 @@ export default defineComponent({
   },
   components: {
     CardInfoCopmponent,
+    CardDescriptionComponent,
   },
   methods: {
     getCardSize(idx: number): CardSize {
@@ -95,6 +97,13 @@ export default defineComponent({
         ></div>
       </div>
     </div>
+
+    <div class="description-card">
+      <CardDescriptionComponent
+        v-if="cards[selectedCardIdx]?.ability !== null || cards[selectedCardIdx]?.type !== 'usual'"
+        :card="cards[selectedCardIdx]"
+      />
+    </div>
   </div>
 </template>
 
@@ -127,6 +136,7 @@ export default defineComponent({
   &__cards-inner {
     display: flex;
     gap: 2vw;
+    position: relative;
     overflow: hidden;
     padding-top: 10px;
   }
@@ -139,7 +149,12 @@ export default defineComponent({
 }
 
 .dummy-card {
-  height: 400px;
+  height: 50%;
+}
+
+.description-card {
+  margin-top: -7%;
+  margin-left: 29%;
 }
 
 :deep(.card-info) {
