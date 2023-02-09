@@ -81,64 +81,64 @@ export default defineComponent({
     :class="{ selected: isSelected }"
     :style="{ transform: `scale(${scaleFactor})` }"
   >
-    <img class="card-info__back" :src="card?.image" />
-    <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
+    <img draggable="false" class="card-info__back" :src="card?.image" />
+    <img draggable="false" v-if="card?.fractionId !== null && card?.type !== 'leader'" class="card-info__banner" :src="fraction[card?.fractionId!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
-      <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
+      <img draggable="false" class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="card-info__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="card-info__count">
-      <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
+      <img draggable="false" class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
       <p class="card-info__count-power">{{ card?.power }}</p>
     </div>
 
-    <img
+    <img draggable="false"
       v-if="card?.type !== 'special' && card?.type !== 'leader'"
       class="card-info__equipment"
       :src="getEquipmendImage(card)"
     />
-    <img
+    <img draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="card-info__ability"
       :src="abilitiesImg[card?.ability!]"
     />
 
-    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img draggable="false" v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div class="card-info__gradient"></div>
 
     <div class="card-info__description">
-      <h3 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h3>
+      <h3 v-if="card?.fractionId !== null && card?.type !== 'leader'" class="description-title">{{ card?.name }}</h3>
       <h3 v-else class="description-title-center">{{ card?.name }}</h3>
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>
       <div v-else class="card-info__quantity">
-        <img class="quantity-img" src="/src/assets/images/build/preview_count.png" />
+        <img draggable="false" class="quantity-img" src="/src/assets/images/build/preview_count.png" />
         <span class="quantity-number">{{ card?.quantity }}</span>
       </div>
     </div>
   </div>
 
   <div v-else ref="card" class="game-card">
-    <img class="game-card__back" :src="card?.image" />
+    <img draggable="false" class="game-card__back" :src="card?.image" />
 
-    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img draggable="false" v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
-      <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
+      <img draggable="false" class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="game-card__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="game-card__count">
-      <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
+      <img draggable="false" class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
       <p class="game-card__count-power">{{ card?.power }}</p>
     </div>
 
-    <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
+    <img draggable="false" v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
 
-    <img
+    <img draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="game-card__ability"
       :src="abilitiesImg[card?.ability!]"
