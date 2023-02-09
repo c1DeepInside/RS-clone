@@ -181,6 +181,8 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 3,
       },
     ] as Card[],
+    selectLeader: {} as Card,
+    fraction: 0,
     board: {
       enemy: {
         siege: [] as Card[],
@@ -281,6 +283,15 @@ export const useGameStore = defineStore('gameStore', {
         if (line === 'range') this.board.enemy.range.splice(this.board.enemy.range.indexOf(card), 1);
         if (line === 'melee') this.board.enemy.melee.splice(this.board.enemy.melee.indexOf(card), 1);
       }
+    },
+    setHand(cards: Card[]) {
+      this.hand = cards;
+    },
+    setSelectedLeader(card: Card) {
+      this.selectLeader = card;
+    },
+    setFraction(value: number) {
+      this.fraction = value;
     },
   },
 });

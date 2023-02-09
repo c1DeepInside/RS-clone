@@ -2,6 +2,8 @@
 import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 import type Card from '@/interfaces/card';
+import { useGameStore } from '@/stores/GameStore';
+import { mapState, mapActions } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -16,15 +18,18 @@ export default defineComponent({
     },
     startGame() {
       const checkCards = this.deckInformation.find((item) => item.error === true);
+
       if (!checkCards) {
-        this.$emit(
-          'assembledDeck',
-          this.selectedCards.filter((item) => item.fractionId === null || item.fractionId === this.currentFraction)
-        );
-        this.$emit('assembledFraction', this.currentFraction);
-        this.$emit('assembledLeader', this.currentLeader);
+        this.setFraction(this.currentFraction);
+        this.setSelectedLeader(this.currentLeader);
+        this.setHand(this.selectedCards);
       }
     },
+    ...mapActions(useGameStore, {
+      setHand: 'setHand',
+      setSelectedLeader: 'setSelectedLeader',
+      setFraction: 'setFraction',
+    }),
   },
   computed: {
     deckInformation() {
@@ -83,6 +88,11 @@ export default defineComponent({
     filterLeaders() {
       return this.leadersCards.filter((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
     },
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      selectLeader: 'selectLeader',
+      fraction: 'fraction',
+    }),
   },
   components: {
     LeaderOfFraction,
@@ -90,6 +100,7 @@ export default defineComponent({
   props: {
     currentFraction: {
       type: Number,
+      required: true,
     },
     leadersCards: {
       type: Array as PropType<Card[]>,
