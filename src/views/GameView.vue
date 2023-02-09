@@ -153,14 +153,17 @@ export default defineComponent({
         <BoardComponent />
       </div>
 
+
       <div class="game__decks deck">
         <div class="deck__content">
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
             <div class="deck__counter">28</div>
           </div>
         </div>
         <div class="deck__content">
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
             <div class="deck__counter">28</div>

@@ -62,6 +62,7 @@ export default defineComponent({
 
       return '';
     },
+    },
   },
   updated() {
     // It's safe since width does not mutate so often and it won't trigger an infinity loop
@@ -82,6 +83,7 @@ export default defineComponent({
     :style="{ transform: `scale(${scaleFactor})` }"
   >
     <img class="card-info__back" :src="card?.image" />
+    <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
     <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
@@ -106,6 +108,7 @@ export default defineComponent({
     />
 
     <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div class="card-info__gradient"></div>
 
@@ -125,6 +128,7 @@ export default defineComponent({
     <img class="game-card__back" :src="card?.image" />
 
     <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
       <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
@@ -137,10 +141,12 @@ export default defineComponent({
     </div>
 
     <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
+    <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
 
     <img
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="game-card__ability"
+      :src="abilitiesImg[card?.ability!]"
       :src="abilitiesImg[card?.ability!]"
     />
   </div>

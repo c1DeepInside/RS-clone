@@ -14,6 +14,7 @@ export const cardAbilitiesImg: Record<CardAbility, string> = {
   fog: '/src/assets/images/build/card_weather_fog.png',
   frost: '/src/assets/images/build/card_weather_frost.png',
   clear: '/src/assets/images/build/card_weather_clear.png',
+  specScorch: '/src/assets/images/build/power_scorch.png',
 };
 
 export const cardFractionsImg: Record<number, string> = {
