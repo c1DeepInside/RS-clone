@@ -1,15 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import CardDescriptionComponent from './CardDescriptionComponent.vue';
-import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import { mapState, mapActions } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
   data() {
-    return {
-      isDescription: true,
-    };
+    return {};
   },
   computed: {
     ...mapState(useGameStore, {
@@ -28,9 +26,7 @@ export default defineComponent({
   },
   components: {
     CardInfoComponent,
-    cardInfoComponent,
     CardDescriptionComponent,
-    
   },
 });
 </script>
@@ -38,16 +34,15 @@ export default defineComponent({
 <template>
   <div :class="['card-view', { 'card-view-true': isShowSelectedCard }]">
     <div class="card__wrap">
-      <cardInfoComponent :card="selectedCard" :layoutType="2" />
+      <CardInfoComponent :card="selectedCard" :layoutType="2" />
     </div>
 
     <div class="description-card">
       <CardDescriptionComponent
-        v-if="(isDescription && selectedItem?.ability !== null) || selectedItem?.type !== 'usual'"
-        :card="selectedItem"
+        v-if="selectedCard?.ability !== null || selectedCard?.type !== 'usual'"
+        :card="selectedCard"
       />
     </div>
-    <CardDescriptionComponent v-if="isDescription" />
   </div>
 </template>
 
