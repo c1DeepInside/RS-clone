@@ -7,8 +7,10 @@ import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
-import type Card from '@/interfaces/card';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import { useGameStore } from '@/stores/GameStore';
+import { mapState, mapActions } from 'pinia';
+import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 
 export default defineComponent({
   data() {
@@ -16,199 +18,7 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      isFieldBlock: false,
-      selectedCard: {
-        name: 'Геральт из Ривии',
-        type: 'hero',
-        image: 'src/assets/images/neu_geralt.png',
-        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-        fractionId: null,
-        ability: null,
-        fieldType: ['melee'],
-        power: 15,
-        quantity: 1,
-      } as Card,
       timer: 0,
-      isShowCardView: false,
-      weatherCards: [] as Card[],
-      cards: [
-        {
-          id: 1,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 5,
-          name: 'Таинственный эльф',
-          type: 'hero',
-          image: 'src/assets/images/neu_avallach.png',
-          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
-          fractionId: null,
-          ability: 'spy',
-          fieldType: ['melee'],
-          power: '0',
-          quantity: 1,
-        },
-        {
-          id: 6,
-          name: 'Лекарь Бурой Хоругви',
-          type: 'usual',
-          image: 'src/assets/images/nor_banner_nurse.png',
-          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
-          fractionId: 0,
-          ability: 'medic',
-          fieldType: ['siege'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 7,
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 8,
-          name: 'Детмольд',
-          type: 'usual',
-          image: 'src/assets/images/nor_dethmold.png',
-          description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['range'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 9,
-          name: 'Талер',
-          type: 'usual',
-          image: 'src/assets/images/nor_thaler.png',
-          description: 'Я вам всем галаза на жопу натяну!',
-          fractionId: 0,
-          ability: 'spy',
-          fieldType: ['siege'],
-          power: 1,
-          quantity: 1,
-        },
-        {
-          id: 10,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 11,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          name: 'Мороз',
-          type: 'special',
-          image: 'src/assets/images/spc_frost.png',
-          description: 'Мечта хорошего командира... кошмар плохого.',
-          fractionId: null,
-          ability: 'frost',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Мгла',
-          type: 'special',
-          image: 'src/assets/images/spc_fog.png',
-          description: 'Вот туман-то... хоть глаз выколи.',
-          fractionId: null,
-          ability: 'fog',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_clearsky.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 12,
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-      ] as Card[],
     };
   },
   methods: {
@@ -226,19 +36,6 @@ export default defineComponent({
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
     },
-    closeSelectedItem(value: Card, show: boolean) {
-      this.isFieldBlock = show;
-      this.isShowCardView = show;
-      const index = this.cards.indexOf(value);
-      this.cards.splice(index, 1);
-    },
-    updateSelectedItem(value: Card, show: boolean) {
-      this.isFieldBlock = show;
-      setTimeout(() => {
-        this.selectedCard = value;
-        this.isShowCardView = show;
-      }, 240);
-    },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
     },
@@ -250,36 +47,35 @@ export default defineComponent({
       }, 2000);
     },
     putWeatherCard() {
-      if (this.isShowCardView) {
-        this.isFieldBlock = false;
-        this.isShowCardView = false;
-        this.cards = this.cards.filter((card) => card !== this.selectedCard);
-        this.cardAnimation(24, 12.5);
+      if (this.isShowSelectedCard) {
+        cardAnimation(this.$refs.animationWrap as HTMLElement, topPos.weather, leftPos.weather);
+        this.removeFromHand(this.selectedCard);
+        this.setIsShowSelected(false);
         setTimeout(() => {
-          this.weatherCards.push(this.selectedCard);
-          /* add cards to hang up */
+          this.addToLine('weather');
           if (this.selectedCard.ability === 'clear') {
             this.showSunAnimation();
-            this.weatherCards = [];
+            this.clearWeathers();
           }
         }, 400);
       }
     },
-    cardAnimation(top: number, left: number) {
-      const element = this.$refs.animationWrap as HTMLElement;
-      element.style.transition = '0.5s';
-      element.style.opacity = '0.8';
-      element.style.top = `${top}vw`;
-      element.style.left = `${left}vw`;
-      element.style.scale = '1';
-      setTimeout(() => {
-        element.style.transition = '0s';
-        element.style.opacity = '0';
-        element.style.top = '24vw';
-        element.style.left = '85vw';
-        element.style.scale = '3';
-      }, 400);
-    },
+    ...mapActions(useGameStore, {
+      setIsShowSelected: 'setIsShowSelected',
+      setSelectedCard: 'setSelectedCard',
+      removeFromHand: 'removeFromHand',
+      addToLine: 'addToLine',
+      removeFromLine: 'removeFromLine',
+      clearWeathers: 'clearWeathers',
+    }),
+  },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      board: 'board',
+      selectedCard: 'selectedCard',
+      isShowSelectedCard: 'isShowSelected',
+    }),
   },
   components: {
     GameExchangePanelComponent,
@@ -298,8 +94,8 @@ export default defineComponent({
   <GameExchangePanelComponent />
   <main class="page-game">
     <div
-      :class="['click', { noclick: isFieldBlock === false }]"
-      @click="(isShowCardView = false), (isFieldBlock = false)"
+      :class="['click', { noclick: isShowSelectedCard === false }]"
+      @click="setIsShowSelected(false)"
       ref="clickField"
     ></div>
     <div class="game">
@@ -321,14 +117,14 @@ export default defineComponent({
         </div>
         <div
           class="game__weather"
-          :class="selectedCard.fieldType.includes('weather') && isShowCardView ? 'active__weather' : ''"
+          :class="selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : ''"
           @click="putWeatherCard"
         >
           <div
             class="card__wrap"
-            v-for="(card, index) in weatherCards"
+            v-for="(card, index) in board.weather"
             :key="index"
-            :style="weatherCards.length > 2 ? `margin-left: -0.6vw; left: 0.3vw` : ''"
+            :style="board.weather.length > 2 ? `margin-left: -0.6vw; left: 0.3vw` : ''"
           >
             <CardInfoComponent :card="card" :layoutType="0" class="card" />
           </div>
@@ -354,13 +150,7 @@ export default defineComponent({
       </div>
 
       <div class="game__board board">
-        <BoardComponent
-          @update:selectedItem="updateSelectedItem"
-          @close:selectedItem="closeSelectedItem"
-          :isShowCardView="isShowCardView"
-          :cards="cards"
-          :weatherCards="weatherCards"
-        />
+        <BoardComponent />
       </div>
 
       <div class="game__decks deck">
@@ -381,7 +171,7 @@ export default defineComponent({
     <div class="animation__card__wrap" ref="animationWrap">
       <CardInfoComponent :card="selectedCard" :layoutType="0" />
     </div>
-    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
+    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />

@@ -193,26 +193,21 @@ export default defineComponent({
   }
   50% {
     background-position-x: 100%;
-    background-position-y: 50%;
   }
   100% {
     background-position-x: 0%;
-    background-position-y: 0%;
   }
 }
 
 @keyframes fogAnimation2 {
   0% {
     background-position-x: 100%;
-    background-position-y: 0%;
   }
   50% {
     background-position-x: 0%;
-    background-position-y: 50%;
   }
   100% {
     background-position-x: 100%;
-    background-position-y: 0%;
   }
 }
 

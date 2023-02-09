@@ -1,6 +1,6 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
-import { cardAbilitiesImg, cardFractionsImg, сardEquipmendImg } from '@/utilits/cardBuildImgs';
+import { cardAbilitiesImg, cardFractionsImg, cardEquipmendImg } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
@@ -16,7 +16,7 @@ export default defineComponent({
       scaleFactor: 1,
       cardLayoutType: CardLayoutType,
       abilitiesImg: cardAbilitiesImg,
-      equipmendImg: сardEquipmendImg,
+      equipmendImg: cardEquipmendImg,
       fraction: cardFractionsImg,
     };
   },
@@ -46,17 +46,17 @@ export default defineComponent({
       if (card.fieldType.length === 1) {
         const key = card.fieldType[0];
 
-        if (!(key in сardEquipmendImg)) {
+        if (!(key in cardEquipmendImg)) {
           return '';
         }
 
         // @ts-ignore
-        return сardEquipmendImg[key];
+        return cardEquipmendImg[key];
       }
 
       if (card.fieldType.length == 2) {
         if (card.fieldType.includes('melee') && card.fieldType.includes('range')) {
-          return сardEquipmendImg['melee_range'];
+          return cardEquipmendImg['melee_range'];
         }
       }
 

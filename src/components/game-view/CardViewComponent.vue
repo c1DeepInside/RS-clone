@@ -1,8 +1,9 @@
 <script lang="ts">
-import type Card from '@/interfaces/card';
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent } from 'vue';
 import CardDescriptionComponent from './CardDescriptionComponent.vue';
 import cardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import { mapState, mapActions } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
   data() {
@@ -10,27 +11,20 @@ export default defineComponent({
       isDescription: true,
     };
   },
-  props: {
-    selectedItem: {
-      type: Object as PropType<Card>,
-      default: () => {
-        return {
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        };
-      },
-    },
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      board: 'board',
+      selectedCard: 'selectedCard',
+      isShowSelectedCard: 'isShowSelected',
+    }),
+    ...mapActions(useGameStore, {
+      setIsShowSelected: 'setIsShowSelected',
+      setSelectedCard: 'setSelectedCard',
+      removeFromHand: 'removeFromHand',
+      addToLine: 'addToLine',
+      removeFromLine: 'removeFromLine',
+    }),
   },
   components: {
     cardInfoComponent,
@@ -40,9 +34,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div :class="['card-view', { 'card-view-true': isShow }]">
+  <div :class="['card-view', { 'card-view-true': isShowSelectedCard }]">
     <div class="card__wrap">
-      <cardInfoComponent :card="selectedItem" :layoutType="2" />
+      <cardInfoComponent :card="selectedCard" :layoutType="2" />
     </div>
     <CardDescriptionComponent v-if="isDescription" />
   </div>
