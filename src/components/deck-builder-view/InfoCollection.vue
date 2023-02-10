@@ -9,16 +9,21 @@ export default defineComponent({
   data() {
     return {
       error: false,
-      currentLeader: this.leadersCards[0] as Card,
+      currentLeader: {} as Card,
     };
   },
   methods: {
     changeSelectedLeader(data: Card) {
       this.currentLeader = data;
     },
+    changeCurrentLeader() {
+      this.currentLeader = this.leadersCards.find(
+        (item) => item.type === 'leader' && item.fractionId === this.currentFraction
+      ) as Card;
+    },
     startGame() {
       const checkCards = this.deckInformation.find((item) => item.error === true);
-
+      console.log(this.currentLeader);
       if (!checkCards) {
         this.setFraction(this.currentFraction);
         this.setSelectedLeader(this.currentLeader);
@@ -86,6 +91,7 @@ export default defineComponent({
       ];
     },
     filterLeaders() {
+      this.changeCurrentLeader();
       return this.leadersCards.filter((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
     },
     ...mapState(useGameStore, {
@@ -93,6 +99,9 @@ export default defineComponent({
       selectLeader: 'selectLeader',
       fraction: 'fraction',
     }),
+  },
+  created() {
+    this.changeCurrentLeader();
   },
   components: {
     LeaderOfFraction,
