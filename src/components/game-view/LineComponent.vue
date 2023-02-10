@@ -73,12 +73,24 @@ export default defineComponent({
           });
           card.power! *= bondCardsCount;
         }
+        if (this.moraleCount > 0 && card.type !== 'hero') {
+          card.power =
+            card.ability === 'morale' ? card.power! + (1 * this.moraleCount - 1) : card.power! + 1 * this.moraleCount;
+        }
         if (this.ifBoost && card.type !== 'hero') {
           card.power! *= 2;
         }
         return card;
       });
       return line;
+    },
+    moraleCount(): number {
+      return this.board[this.type][this.attackType].reduce((prev, next): number => {
+        if (next.ability === 'morale') {
+          return prev + 1;
+        }
+        return prev;
+      }, 0);
     },
     ifBoost(): boolean {
       const isBoostCard = this.board[this.type][this.attackType].some((card) => {
@@ -146,7 +158,13 @@ export default defineComponent({
       class="cards__wrap wrap_animation"
     >
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
-        <CardInfoComponent :card="card" :layoutType="0" class="card" :ifBuff="ifBoost" :ifDebuff="ifFogRainFrost" />
+        <CardInfoComponent
+          :card="card"
+          :layoutType="0"
+          class="card"
+          :ifBuff="card.power! > board[type][attackType][index].power!"
+          :ifDebuff="card.power! < board[type][attackType][index].power!"
+        />
       </div>
     </div>
 
