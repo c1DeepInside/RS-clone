@@ -64,6 +64,15 @@ export default defineComponent({
         if (this.ifFogRainFrost && card.type !== 'hero') {
           card.power = 1;
         }
+        if (card.ability === 'bond') {
+          let bondCardsCount = 0;
+          line.forEach((bondCard: Card) => {
+            if (bondCard.id === card.id) {
+              bondCardsCount++;
+            }
+          });
+          card.power! *= bondCardsCount;
+        }
         if (this.ifBoost && card.type !== 'hero') {
           card.power! *= 2;
         }
