@@ -265,6 +265,18 @@ export const useGameStore = defineStore('gameStore', {
         power: null,
         quantity: 3,
       },
+      {
+        id: 16,
+        name: 'Виллентретенмерт',
+        type: 'usual',
+        image: 'src/assets/images/neu_villen.png',
+        description: 'Дракон ушел от удара мягким, ловким, полным грации поворотом.',
+        fractionId: null,
+        ability: 'scorch',
+        fieldType: ['melee'],
+        power: 7,
+        quantity: 1,
+      },
     ] as Card[],
     power: {
       enemy: {
@@ -382,6 +394,9 @@ export const useGameStore = defineStore('gameStore', {
         if (card.power! >= maxPower && card.type === 'usual') {
           maxPower = card.power!;
         }
+      });
+      this.board[type][line] = this.board[type][line].filter((card, index) => {
+        return this.affectedBoard[type][line][index].power !== maxPower || card.type !== 'usual';
       });
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {

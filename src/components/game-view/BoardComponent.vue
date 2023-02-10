@@ -52,6 +52,9 @@ export default defineComponent({
         this.setIsShowSelected(false);
         setTimeout(() => {
           this.addToLine(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
+          if (this.selectedCard.ability === 'scorch') {
+            this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
+          }
         }, 400);
       }
     },
@@ -59,6 +62,7 @@ export default defineComponent({
       setIsShowSelected: 'setIsShowSelected',
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
+      putLineScorch: 'putLineScorch',
     }),
   },
   components: {
