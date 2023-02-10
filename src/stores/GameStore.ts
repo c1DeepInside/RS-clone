@@ -253,6 +253,18 @@ export const useGameStore = defineStore('gameStore', {
         power: 1,
         quantity: 1,
       },
+      {
+        id: 15,
+        name: 'Казнь',
+        type: 'special',
+        image: 'src/assets/images/spc_scorch.png',
+        description: 'Огненные столпы обращают в пепел. Остальные благовейно трепещут.',
+        fractionId: null,
+        ability: 'specScorch',
+        fieldType: ['weather'],
+        power: null,
+        quantity: 3,
+      },
     ] as Card[],
     power: {
       enemy: {
@@ -292,6 +304,18 @@ export const useGameStore = defineStore('gameStore', {
       },
       weather: [] as Card[],
     },
+    affectedBoard: {
+      enemy: {
+        siege: [] as Card[],
+        range: [] as Card[],
+        melee: [] as Card[],
+      },
+      allies: {
+        siege: [] as Card[],
+        range: [] as Card[],
+        melee: [] as Card[],
+      },
+    },
     selectedCard: {
       id: 1,
       name: 'Геральт из Ривии',
@@ -321,6 +345,48 @@ export const useGameStore = defineStore('gameStore', {
     },
   }),
   actions: {
+    putSpecScorch() {
+      const lineNames = [
+        ['allies', 'melee'],
+        ['allies', 'range'],
+        ['allies', 'siege'],
+        ['enemy', 'melee'],
+        ['enemy', 'range'],
+        ['enemy', 'siege'],
+      ];
+      let affectedCards: Card[] = [];
+      lineNames.forEach((lineName) => {
+        const type = lineName[0] as enemyAlliesType;
+        const line = lineName[1] as cardLineType;
+        affectedCards = [...affectedCards, ...this.affectedBoard[type][line]];
+      });
+      let maxPower = -1;
+      affectedCards.forEach((card: Card) => {
+        if (card.power! > maxPower && card.type === 'usual') {
+          maxPower = card.power!;
+        }
+      });
+      if (maxPower >= 0) {
+        lineNames.forEach((lineName) => {
+          const type = lineName[0] as enemyAlliesType;
+          const line = lineName[1] as cardLineType;
+          this.board[type][line] = this.board[type][line].filter((card, index) => {
+            return this.affectedBoard[type][line][index].power !== maxPower || card.type !== 'usual';
+          });
+        });
+      }
+    },
+    putLineScorch(line: cardLineType, type: enemyAlliesType) {
+      let maxPower = 10;
+      this.affectedBoard[type][line].forEach((card: Card) => {
+        if (card.power! >= maxPower && card.type === 'usual') {
+          maxPower = card.power!;
+        }
+      });
+    },
+    setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
+      this.affectedBoard[type][line] = cards;
+    },
     setPower(power: number, line: cardLineType, type: enemyAlliesType) {
       this.power[type][line] = power;
     },

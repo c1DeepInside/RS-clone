@@ -52,10 +52,14 @@ export default defineComponent({
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
         setTimeout(() => {
-          this.addToWeather(this.selectedCard);
-          if (this.selectedCard.ability === 'clear') {
-            this.showSunAnimation();
-            this.clearWeathers();
+          if (this.selectedCard.ability === 'specScorch') {
+            this.putSpecScorch();
+          } else {
+            this.addToWeather(this.selectedCard);
+            if (this.selectedCard.ability === 'clear') {
+              this.showSunAnimation();
+              this.clearWeathers();
+            }
           }
         }, 400);
       }
@@ -67,12 +71,14 @@ export default defineComponent({
       addToWeather: 'addToWeather',
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
+      putSpecScorch: 'putSpecScorch',
     }),
   },
   computed: {
     ...mapState(useGameStore, {
       hand: 'hand',
       board: 'board',
+      affectedBoard: 'affectedBoard',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       enemyPower: 'enemyPower',
@@ -360,7 +366,7 @@ export default defineComponent({
   }
 
   .active__weather {
-    z-index: 2;
+    z-index: 3;
     animation: pulseField 2s infinite;
 
     @keyframes pulseField {

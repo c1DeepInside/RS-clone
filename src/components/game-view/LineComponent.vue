@@ -37,6 +37,7 @@ export default defineComponent({
   methods: {
     ...mapActions(useGameStore, {
       setPower: 'setPower',
+      setAffectedBoard: 'setAffectedBoard',
     }),
   },
   components: {
@@ -47,6 +48,7 @@ export default defineComponent({
       board: 'board',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
+      affectedBoard: 'affectedBoard',
     }),
     ifFogRainFrost(): boolean {
       let isActive = false;
@@ -82,6 +84,7 @@ export default defineComponent({
         }
         return card;
       });
+      this.setAffectedBoard(line, this.attackType, this.type);
       return line;
     },
     moraleCount(): number {
@@ -193,7 +196,7 @@ export default defineComponent({
   width: 4.3vw;
 }
 .active {
-  z-index: 2;
+  z-index: 3;
   animation: pulseField 2s infinite;
 
   @keyframes pulseField {
