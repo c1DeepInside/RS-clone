@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type Card from '@/interfaces/card';
+import type { IntRange } from '@/utilits/types';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -413,6 +414,10 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 1,
       } as Card,
     },
+    lives: {
+      enemy: 1 as IntRange<0, 3>,
+      allies: 2 as IntRange<0, 3>,
+    }
   }),
   actions: {
     clearWeathers() {

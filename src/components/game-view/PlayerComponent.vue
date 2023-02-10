@@ -1,35 +1,47 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { useGameStore } from '@/stores/GameStore';
+import { fractions } from '@/utilits/cardBuildImgs';
+import type { IntRange } from '@/utilits/types';
+import { mapState } from 'pinia';
+import { defineComponent, type PropType } from 'vue';
+
+export enum PlayerType {
+  enemy = 'enemy',
+  ally = 'allies',
+}
 
 export default defineComponent({
   data() {
     return {
       imageAvatar:
-        this.name === 'Player 1'
+        this.playerType === PlayerType.enemy
           ? 'src/assets/images/player_avatar_enemy.png'
           : 'src/assets/images/player_avatar_geralt.png',
+      fractionsEmblemImg: fractions,
     };
   },
   props: {
-    name: {
-      type: String,
-      default: 'Player',
+    playerType: {
+      type: String as PropType<PlayerType>,
+      default: () => PlayerType.ally,
     },
-    deckName: {
-      type: String,
-      default: 'Нильфгаард',
+  },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      leader: 'leader',
+      enemyNickName: 'enemyNickName',
+      alliesNickName: 'alliesNickName',
+      lives: 'lives',
+    }),
+  },
+  methods: {
+    getFraction() {
+      const idx = this.leader[this.playerType].fractionId! as IntRange<0, 4>;
+      return fractions[idx];
     },
-    count: {
-      type: String,
-      default: '10',
-    },
-    img: {
-      type: String,
-      default: '/src/assets/images/deck_shield_realms.png',
-    },
-    isPass: {
-      type: Boolean,
-      default: false,
+    getNickName() {
+      return this.playerType === 'enemy' ? this.enemyNickName :  this.alliesNickName;
     },
   },
 });
@@ -45,30 +57,25 @@ export default defineComponent({
     <div>
       <div
         :style="{
-          backgroundImage: `url(${img})`,
+          backgroundImage: `url(${getFraction().img})`,
         }"
       ></div>
     </div>
   </div>
-  <template v-if="name === 'Player 1'">
-    <div class="player__name">{{ name }}</div>
-    <div class="player__deck-name">{{ deckName }}</div>
-    <div class="player__hand-count">{{ count }}</div>
-    <div class="player__gem player__gem-1 player__gem-true"></div>
-    <div class="player__gem player__gem-2"></div>
-  </template>
-  <template v-else>
-    <div class="player__hand-count">{{ count }}</div>
-    <div class="player__gem player__gem-1 player__gem-true"></div>
-    <div class="player__gem player__gem-2"></div>
-    <div class="player__name">{{ name }}</div>
-    <div class="player__deck-name">{{ deckName }}</div>
-  </template>
+    <div class="player__name">{{ getNickName() }}</div>
+    <div class="player__deck-name">{{ getFraction().name }}</div>
+    <div class="player__hand-count">{{ hand.length }}</div>
+    <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
+    <div v-else class="player__gem player__gem-1"></div>
+
+    <div v-if="lives[playerType] === 2" class="player__gem player__gem-2 player__gem-true"></div>
+    <div v-else class="player__gem player__gem-2"></div>
+  
   <div class="player__score player__score-more">
     <span>0</span>
     <div></div>
   </div>
-  <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
+  <!-- <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div> -->
 </template>
 
 <style lang="scss" scoped>
@@ -103,7 +110,6 @@ export default defineComponent({
         height: 30%;
         left: 4.5%;
         top: 4.5%;
-        background-image: url('@/assets/images/player_faction_northern.png');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;

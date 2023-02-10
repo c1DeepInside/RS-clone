@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
+import PlayerComponent, { PlayerType } from '@/components/game-view/PlayerComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
@@ -18,18 +18,20 @@ import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 export default defineComponent({
   data() {
     return {
-      isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
       timer: 0,
       showDiscard: false,
       whoseDiscard: '',
       deckBack: fractionsDeckImg,
+      playerType: PlayerType,
     };
   },
   methods: {
     showPass() {
-      this.isPass = !this.isPass;
+      if (this.lives.allies > 0) {
+        this.lives.allies -= 1;
+      }
     },
     showEndGame() {
       this.isGiveUpAnimation = true;
@@ -95,6 +97,7 @@ export default defineComponent({
       discard: 'discard',
       leader: 'leader',
       deck: 'deck',
+      lives: 'lives',
     }),
   },
   components: {
@@ -132,12 +135,7 @@ export default defineComponent({
         </div>
 
         <div class="game__player game__player-1 player">
-          <PlayerComponent
-            name="Player 1"
-            deckName="Нильфгаард"
-            count="10"
-            img="/src/assets/images/deck_shield_realms.png"
-          />
+          <PlayerComponent :player-type="playerType.enemy" />
         </div>
         <div
           class="game__weather"
@@ -156,13 +154,7 @@ export default defineComponent({
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
 
         <div class="game__player game__player-2 player game__player-active">
-          <PlayerComponent
-            name="Player 2"
-            deckName="Королевства Севера"
-            count="10"
-            img="/src/assets/images/deck_shield_realms.png"
-            :isPass="isPass"
-          />
+          <PlayerComponent :player-type="playerType.ally" />
         </div>
 
         <div class="game__leader game__leader-2">

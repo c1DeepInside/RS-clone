@@ -31,6 +31,25 @@ export const fractionsDeckImg: Record<number, string> = {
   2: '/src/assets/images/back-deck/deck_back_scoiatael.jpg',
 };
 
+export const fractions = {
+  1: {
+    img: '/src/assets/images/faction-emblems/nilfgaard_emblem.png',
+    name: 'Нильфгаард',
+  },
+  3: {
+    img: '/src/assets/images/faction-emblems/monsters_emblem.png',
+    name: 'Чудовища',
+  },
+  0: {
+    img: '/src/assets/images/faction-emblems/northern_emblem.png',
+    name: 'Королевство Севера',
+  },
+  2: {
+    img: '/src/assets/images/faction-emblems/scoiatael_emblem.png',
+    name: 'Скоя\'таэли',
+  },
+};
+
 export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range';
 
 export const cardEquipmendImg: Record<CardEquipmendType, string> = {
