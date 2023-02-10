@@ -38,6 +38,9 @@ export default defineComponent({
     getNickName() {
       return this.playerType === 'enemy' ? this.enemyNickName :  this.alliesNickName;
     },
+    getNumbersCards() {
+      return this.playerType === 'enemy' ? this.enemyHand.length : this.hand.length;
+    },
     ...mapActions(useGameStore, {
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
@@ -52,6 +55,7 @@ export default defineComponent({
       lives: 'lives',
       getAlliesPower: 'alliesPower',
       getEnemyPower: 'enemyPower',
+      enemyHand: 'enemyHand',
     }),
     alliesPower(): number {
       this.setAlliesPower();
@@ -82,7 +86,7 @@ export default defineComponent({
   </div>
     <div class="player__name">{{ getNickName() }}</div>
     <div class="player__deck-name">{{ getFraction().name }}</div>
-    <div class="player__hand-count">{{ hand.length }}</div>
+    <div class="player__hand-count">{{ getNumbersCards() }}</div>
     <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
     <div v-else class="player__gem player__gem-1"></div>
 
