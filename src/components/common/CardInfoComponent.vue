@@ -50,7 +50,6 @@ export default defineComponent({
           return '';
         }
 
-        // @ts-ignore
         return cardEquipmendImg[key];
       }
 
