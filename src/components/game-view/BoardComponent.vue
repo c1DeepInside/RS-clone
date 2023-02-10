@@ -52,6 +52,7 @@ export default defineComponent({
         this.setIsShowSelected(false);
         setTimeout(() => {
           this.addToLine(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
+          this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost)
         }, 400);
       }
     },
@@ -59,6 +60,7 @@ export default defineComponent({
       setIsShowSelected: 'setIsShowSelected',
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
+      musterAbility: 'musterAbility',
     }),
   },
   components: {
