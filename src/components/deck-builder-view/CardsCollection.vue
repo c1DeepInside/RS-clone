@@ -83,8 +83,13 @@ export default defineComponent({
         );
       } else if (this.currFilter === 'hero' || this.currFilter === 'special') {
         return this.filterFractions.filter((card) => card.type === this.currFilter);
+      } else if (this.currFilter === 'weather') {
+        return this.filterFractions.filter((card) => card.fieldType.some((type) => type === this.currFilter));
       }
-      return this.filterFractions.filter((card) => card.fieldType.some((type) => type === this.currFilter));
+      return this.filterFractions.filter(
+        (card) =>
+          card.fieldType.some((type) => type === this.currFilter) && (card.type === 'usual' || card.type === 'hero')
+      );
     },
   },
   components: {
