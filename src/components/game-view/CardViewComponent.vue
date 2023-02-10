@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import CardDescriptionComponent from './CardDescriptionComponent.vue';
+import CardDescriptionComponent from '../common/CardDescriptionComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import { mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';

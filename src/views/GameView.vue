@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PlayerComponent from '@/components/game-view/PlayerComponent.vue';
+import PlayerComponent, { PlayerType } from '@/components/game-view/PlayerComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
 import InformationBar from '@/components/game-view/InformationBar.vue';
@@ -8,22 +8,30 @@ import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import SliderComponent from '@/components/common/SliderComponent.vue';
 import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
+import type Card from '@/interfaces/card';
+import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 
 export default defineComponent({
   data() {
     return {
-      isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
       timer: 0,
+      showDiscard: false,
+      whoseDiscard: '',
+      deckBack: fractionsDeckImg,
+      playerType: PlayerType,
     };
   },
   methods: {
     showPass() {
-      this.isPass = !this.isPass;
+      if (this.lives.allies > 0) {
+        this.lives.allies -= 1;
+      }
     },
     showEndGame() {
       this.isGiveUpAnimation = true;
@@ -67,7 +75,19 @@ export default defineComponent({
       addToWeather: 'addToWeather',
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
+      setSelectedCard: 'setSelectedCard',
     }),
+    getLastDiscardCard(fieldType: string): Card {
+      if (fieldType === 'enemy') {
+        const idx = this.discard.enemy.length - 1;
+        return this.discard.enemy[idx];
+      }
+      const idx = this.discard.allies.length - 1;
+      return this.discard.allies[idx];
+    },
+    getDiscard() {
+      return this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies;
+    },
   },
   computed: {
     ...mapState(useGameStore, {
@@ -76,6 +96,10 @@ export default defineComponent({
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       enemyPower: 'enemyPower',
+      discard: 'discard',
+      leader: 'leader',
+      deck: 'deck',
+      lives: 'lives',
     }),
   },
   components: {
@@ -87,6 +111,7 @@ export default defineComponent({
     InformationBar,
     MusicComponent,
     CardInfoComponent,
+    SliderComponent,
   },
 });
 </script>
@@ -97,14 +122,17 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off"></div>
+          <div class="game__leader-card card-off">
+            <img class="game__leader-image" :src="leader.enemy.image" draggable="false" />
+          </div>
+
           <div class="game__leader-icon">
             <div></div>
           </div>
         </div>
 
         <div class="game__player game__player-1 player">
-          <PlayerComponent name="Player 1" deckName="Нильфгаард" img="/src/assets/images/deck_shield_realms.png" />
+          <PlayerComponent :player-type="playerType.enemy" />
         </div>
         <div
           class="game__weather"
@@ -123,16 +151,14 @@ export default defineComponent({
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
 
         <div class="game__player game__player-2 player game__player-active">
-          <PlayerComponent
-            name="Player 2"
-            deckName="Королевства Севера"
-            img="/src/assets/images/deck_shield_realms.png"
-            :isPass="isPass"
-          />
+          <PlayerComponent :player-type="playerType.ally" :isPass="true" />
         </div>
 
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card"></div>
+          <div @click="setSelectedCard(leader.allies), setIsShowSelected(true)" class="game__leader-card">
+            <img class="game__leader-image" :src="leader.allies.image" draggable="false" />
+          </div>
+
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
@@ -145,24 +171,44 @@ export default defineComponent({
 
       <div class="game__decks deck">
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-1"></div>
-          <div class="deck__cemetery deck__cemetery-1"></div>
+          <!-- enemy discard last card -->
+          <div class="deck__cemetery deck__cemetery-1">
+            <div @click="(showDiscard = true), (whoseDiscard = 'enemy')" class="card-wrapper">
+              <CardInfoComponent :card="getLastDiscardCard('enemy')" :layout-type="0" />
+            </div>
+          </div>
+
           <div class="deck__player deck__player-1">
-            <div class="deck__counter">28</div>
+            <img class="deck__background" :src="deckBack[leader.enemy.fractionId!]" draggable="false" />
+            <div class="deck__counter">{{ deck.enemy.length }}</div>
           </div>
         </div>
+        <!-- allies discard last card -->
         <div class="deck__content">
-          <div class="deck__cemetery deck__cemetery-2"></div>
-          <div class="deck__cemetery deck__cemetery-2"></div>
+          <div class="deck__cemetery deck__cemetery-2">
+            <div @click="(showDiscard = true), (whoseDiscard = 'allies')" class="card-wrapper">
+              <CardInfoComponent :card="getLastDiscardCard('allies')" :layout-type="0" />
+            </div>
+          </div>
+
           <div class="deck__player deck__player-2">
-            <div class="deck__counter">28</div>
+            <img class="deck__background" :src="deckBack[leader.allies.fractionId!]" draggable="false" />
+            <div class="deck__counter">{{ deck.allies.length }}</div>
           </div>
         </div>
       </div>
+      <!-- discard slider -->
+      <div v-if="showDiscard" class="discard">
+        <div class="discard__close" @click="showDiscard = false"></div>
+
+        <SliderComponent :cards="getDiscard()" />
+      </div>
     </div>
+
     <div class="animation__card__wrap" ref="animationWrap">
       <CardInfoComponent :card="selectedCard" :layoutType="0" />
     </div>
+
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
@@ -182,6 +228,23 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.discard {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  background-color: rgba(58, 41, 25, 0.575);
+
+  &__close {
+    height: 20%;
+    width: 100%;
+  }
+}
+.card-wrapper {
+  width: 5.4vw;
+}
 .sun__animation {
   width: 50vw;
 }
@@ -278,6 +341,11 @@ export default defineComponent({
 
   &__decks {
     width: 20.5%;
+  }
+
+  &__leader-image {
+    width: 100%;
+    height: 99%;
   }
 
   &__leader {
@@ -444,6 +512,11 @@ export default defineComponent({
     &:last-child {
       margin-bottom: 27%;
     }
+  }
+
+  &__background {
+    width: 86%;
+    height: auto;
   }
 
   &__cemetery,
