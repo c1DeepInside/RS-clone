@@ -21,8 +21,6 @@ export default defineComponent({
       isGiveUpAnimation: false,
       isEnd: false,
       timer: 0,
-      showDiscard: false,
-      whoseDiscard: '',
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
     };
@@ -76,6 +74,9 @@ export default defineComponent({
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
       setSelectedCard: 'setSelectedCard',
+      getDiscard: 'getDiscard',
+      setShowDiscard: 'setShowDiscard',
+      setWhoseDiscard: 'setWhoseDiscard',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -84,9 +85,6 @@ export default defineComponent({
       }
       const idx = this.discard.allies.length - 1;
       return this.discard.allies[idx];
-    },
-    getDiscard() {
-      return this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies;
     },
   },
   computed: {
@@ -100,6 +98,8 @@ export default defineComponent({
       leader: 'leader',
       deck: 'deck',
       lives: 'lives',
+      showDiscard: 'showDiscard',
+      whoseDiscard: 'whoseDiscard',
     }),
   },
   components: {
@@ -173,7 +173,7 @@ export default defineComponent({
         <div class="deck__content">
           <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
-            <div @click="(showDiscard = true), (whoseDiscard = 'enemy')" class="card-wrapper">
+            <div @click="(setShowDiscard()), (setWhoseDiscard('enemy'))" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('enemy')" :layout-type="0" />
             </div>
           </div>
@@ -186,7 +186,7 @@ export default defineComponent({
         <!-- allies discard last card -->
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-2">
-            <div @click="(showDiscard = true), (whoseDiscard = 'allies')" class="card-wrapper">
+            <div @click="(setShowDiscard()), (setWhoseDiscard('allies'))" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('allies')" :layout-type="0" />
             </div>
           </div>
@@ -199,9 +199,9 @@ export default defineComponent({
       </div>
       <!-- discard slider -->
       <div v-if="showDiscard" class="discard">
-        <div class="discard__close" @click="showDiscard = false"></div>
+        <div class="discard__close" @click="setShowDiscard()"></div>
 
-        <SliderComponent :cards="getDiscard()" />
+        <SliderComponent :cards="getDiscard(whoseDiscard)" />
       </div>
     </div>
 

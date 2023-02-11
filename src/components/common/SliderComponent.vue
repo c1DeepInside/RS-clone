@@ -3,12 +3,22 @@ import { defineComponent, type PropType } from 'vue';
 import type Card from '@/interfaces/card';
 import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
 import CardDescriptionComponent from '@/components/common/CardDescriptionComponent.vue';
+import { mapState, mapActions } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
+import type { cardLineType } from '@/utilits/lineTypes';
 
 enum CardSize {
   large = 15,
   medium = 13,
   small = 11,
 }
+
+// enum SliderType {
+//   discard = 'discard',
+//   exchange = 'exchange',
+//   leaders = 'leaders',
+//   view = 'view',
+// }
 
 export default defineComponent({
   data() {
@@ -47,6 +57,21 @@ export default defineComponent({
 
       return CardSize.small;
     },
+    ...mapActions(useGameStore, {
+      setShowDiscard: 'setShowDiscard',
+      addToLine: 'addToLine',
+      setSelectedCard: 'setSelectedCard',
+    }),
+    raiseCardFromDiscard(cardId: number) {
+      if (cardId === this.selectedCardIdx) {
+        const key = this.whoseDiscard === 'allies' ? true : false;
+
+        this.setShowDiscard();
+        this.setSelectedCard(this.cards[cardId]);
+        const fieldType = this.cards[cardId].fieldType.join() as cardLineType;
+        this.addToLine(this.cards[cardId], fieldType, key, true)
+      }
+    },
   },
   computed: {
     offset(): number {
@@ -64,6 +89,12 @@ export default defineComponent({
 
       return `${l + m * 2 + s * 2 + (gap * cardsNum - 1)}vw`;
     },
+    ...mapState(useGameStore, {
+      selectedCard: 'selectedCard',
+      discard: 'discard',
+      showDiscard: 'showDiscard',
+      whoseDiscard: 'whoseDiscard',
+    }),
   },
 });
 </script>
@@ -84,7 +115,7 @@ export default defineComponent({
           :card="card"
           :layout-type="cardLayoutType.EXTENDED"
           :is-selected="idx - 2 === selectedCardIdx"
-          @click="selectedCardIdx = idx - 2"
+          @click="selectedCardIdx = idx - 2, raiseCardFromDiscard(selectedCardIdx)"
           v-if="card"
         />
 
