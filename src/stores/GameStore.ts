@@ -150,6 +150,17 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 3,
       },
       {
+        name: 'Мороз',
+        type: 'special',
+        image: 'src/assets/images/spc_frost.png',
+        description: 'Мечта хорошего командира... кошмар плохого.',
+        fractionId: null,
+        ability: 'frost',
+        fieldType: ['weather'],
+        power: null,
+        quantity: 3,
+      },
+      {
         name: 'Мгла',
         type: 'special',
         image: 'src/assets/images/spc_fog.png',
@@ -472,6 +483,51 @@ export const useGameStore = defineStore('gameStore', {
           power: 5,
           quantity: 1,
         },
+        {
+          id: 9,
+          name: 'Талер',
+          type: 'usual',
+          image: 'src/assets/images/nor_thaler.png',
+          description: 'Я вам всем галаза на жопу натяну!',
+          fractionId: 0,
+          ability: 'spy',
+          fieldType: ['siege'],
+          power: 1,
+          quantity: 1,
+        },
+        {
+          name: 'Мороз',
+          type: 'special',
+          image: 'src/assets/images/spc_frost.png',
+          description: 'Мечта хорошего командира... кошмар плохого.',
+          fractionId: null,
+          ability: 'frost',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Мгла',
+          type: 'special',
+          image: 'src/assets/images/spc_fog.png',
+          description: 'Вот туман-то... хоть глаз выколи.',
+          fractionId: null,
+          ability: 'fog',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
       ] as Card[],
     },
     deck: {
@@ -748,7 +804,10 @@ export const useGameStore = defineStore('gameStore', {
       this.selectedCard = card;
     },
     addToWeather(card: Card) {
-      this.board.weather.push(card);
+      const isHereWeather = this.board.weather.some((weatherCard: Card) => weatherCard.ability === card.ability);
+      if (!isHereWeather) {
+        this.board.weather.push(card);
+      }
     },
     addToLine(card: Card, line: cardLineType, isAllies?: boolean, isCards?: boolean) {
       const key = isAllies ? 'allies' : 'enemy';
