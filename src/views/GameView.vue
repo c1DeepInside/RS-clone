@@ -85,24 +85,27 @@ export default defineComponent({
       }
     },
     putLeaderCard() {
-      if (this.selectedCard.name === 'Фольтест Предводитель Севера') {
-        this.showSunAnimation();
-        this.clearWeathers();
-      }
-      if (this.selectedCard.name === 'Фольтест Железный Владыка') {
-        this.putLineScorch('siege', 'enemy');
-      }
-      if (this.selectedCard.name === 'Францеска Финдабаир Королева Дол Блатанны') {
-        this.putLineScorch('range', 'enemy');
-      }
-      if (this.selectedCard.name === 'Фольтест Завоеватель') {
-        this.putLineBoost('siege', 'allies');
-      }
-      if (this.selectedCard.name === 'Францеска Финдабаир Прекраснейшая') {
-        this.putLineBoost('range', 'allies');
-      }
-      if (this.selectedCard.name === 'Эредин Бреакк Глас Командир Дикой Охоты') {
-        this.putLineBoost('melee', 'allies');
+      switch (this.selectedCard.name) {
+        case 'Фольтест Предводитель Севера':
+          this.showSunAnimation();
+          this.clearWeathers();
+          break;
+        case 'Фольтест Железный Владыка':
+          this.putLineScorch('siege', 'enemy');
+          break;
+        case 'Францеска Финдабаир Королева Дол Блатанны':
+          this.putLineScorch('range', 'enemy');
+          break;
+        case 'Фольтест Завоеватель':
+          this.putLineBoost('siege', 'allies');
+          break;
+        case 'Францеска Финдабаир Прекраснейшая':
+          this.putLineBoost('range', 'allies');
+          break;
+        case 'Эредин Бреакк Глас Командир Дикой Охоты':
+          this.putLineBoost('melee', 'allies');
+          break;
+        default:
       }
       this.leader.allies.quantity = 0;
     },
@@ -225,7 +228,7 @@ export default defineComponent({
           <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
             <div
-              v-if="discard['enemy'].length  !== 0"
+              v-if="discard['enemy'].length !== 0"
               @click="setShowDiscard(), setWhoseDiscard('enemy')"
               class="card-wrapper"
             >
