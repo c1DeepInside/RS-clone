@@ -62,7 +62,7 @@ export default defineComponent({
       } else {
         this.selectedCardIdx = idx;
       }
-    }
+    },
   },
   computed: {
     offset(): number {
@@ -137,19 +137,6 @@ export default defineComponent({
   z-index: 20;
   background-color: rgba(58, 41, 25, 0.486);
 
-  &__title {
-    margin-top: 8%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    height: 70px;
-    font-size: 26px;
-    letter-spacing: -1px;
-    background-color: $BLACK_COLOR_MAIN;
-    color: $TAN_COLOR;
-  }
-
   &__cards {
     margin: 0 auto;
     margin-top: 5px;
@@ -167,6 +154,7 @@ export default defineComponent({
 .card-wrapper {
   flex-shrink: 0;
   position: relative;
+  height: 29vw;
   transition: margin-left linear 0.2s;
   height: 29vw;
 }

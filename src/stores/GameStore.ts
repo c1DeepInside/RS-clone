@@ -795,7 +795,7 @@ export const useGameStore = defineStore('gameStore', {
       return discard;
     },
     deleteFromDiscard(card: Card) {
-      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
 
       for (let i = 0; i < discard.length; i++) {
         if (discard[i].id === card.id) {

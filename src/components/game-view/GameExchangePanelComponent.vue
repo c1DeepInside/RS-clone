@@ -150,13 +150,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 .choice-panel {
   position: absolute;
-  height: 100vh;
-  width: 100vw;
+  height: 117vh;
+  width: 100%;
   z-index: 40;
   background-color: rgba(58, 41, 25, 0.486);
 
   &__title {
-    margin-top: 5%;
+    margin-top: 7vw;
     display: flex;
     align-items: center;
     justify-content: center;
