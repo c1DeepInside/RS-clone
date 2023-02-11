@@ -89,68 +89,87 @@ export default defineComponent({
     :class="{ selected: isSelected }"
     :style="{ transform: `scale(${scaleFactor})` }"
   >
-    <img class="card-info__back" :src="card?.image" />
-    <img v-if="card?.fractionId !== null" class="card-info__banner" :src="fraction[card?.fractionId!]" />
+    <img draggable="false" class="card-info__back" :src="card?.image" />
+    <img
+      draggable="false"
+      v-if="card?.fractionId !== null && card?.type !== 'leader'"
+      class="card-info__banner"
+      :src="fraction[card?.fractionId!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="card-info__count-hero">
-      <img class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
+      <img draggable="false" class="card-info__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="card-info__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="card-info__count">
-      <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="card-info__count-power">
-        {{ card?.power }}
-      </p>
+      <img draggable="false" class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
+      <p class="card-info__count-power">{{ card?.power }}</p>
     </div>
 
     <img
+      draggable="false"
       v-if="card?.type !== 'special' && card?.type !== 'leader'"
       class="card-info__equipment"
       :src="getEquipmendImage(card)"
     />
     <img
+      draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="card-info__ability"
       :src="abilitiesImg[card?.ability!]"
     />
 
-    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img
+      draggable="false"
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
     <div class="card-info__gradient"></div>
 
     <div class="card-info__description">
-      <h3 v-if="card?.fractionId !== null" class="description-title">{{ card?.name }}</h3>
+      <h3 v-if="card?.fractionId !== null && card?.type !== 'leader'" class="description-title">{{ card?.name }}</h3>
       <h3 v-else class="description-title-center">{{ card?.name }}</h3>
 
       <p v-if="layoutType !== cardLayoutType.AVERAGE" class="description-text">{{ card?.description }}</p>
       <div v-else class="card-info__quantity">
-        <img class="quantity-img" src="/src/assets/images/build/preview_count.png" />
+        <img draggable="false" class="quantity-img" src="/src/assets/images/build/preview_count.png" />
         <span class="quantity-number">{{ card?.quantity }}</span>
       </div>
     </div>
   </div>
 
   <div v-else ref="card" class="game-card">
-    <img class="game-card__back" :src="card?.image" />
+    <img draggable="false" class="game-card__back" :src="card?.image" />
 
-    <img v-if="card?.type === 'special'" class="card-info__special" :src="abilitiesImg[card?.ability!]" />
+    <img
+      draggable="false"
+      v-if="card?.type === 'special'"
+      class="card-info__special"
+      :src="abilitiesImg[card?.ability!]"
+    />
 
     <div v-if="card?.power !== null && card?.type === 'hero'" class="game-card__count-hero">
-      <img class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
+      <img draggable="false" class="game-card__count-img-hero" src="/src/assets/images/build/power_hero.png" />
       <p class="game-card__count-power-hero">{{ card?.power }}</p>
     </div>
 
     <div v-else-if="card?.power !== null" class="game-card__count">
-      <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="game-card__count-power" :class="[ifBuff ? 'card-buff' : '', ifDebuff ? 'card-debuff' : '']">
-        {{ card?.power }}
-      </p>
+      <img draggable="false" class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
+      <p class="game-card__count-power">{{ card?.power }}</p>
     </div>
 
-    <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
+    <img
+      draggable="false"
+      v-if="card?.type !== 'special'"
+      class="game-card__equipment"
+      :src="getEquipmendImage(card)"
+    />
 
     <img
+      draggable="false"
       v-if="card?.ability !== null && card?.type !== 'special'"
       class="game-card__ability"
       :src="abilitiesImg[card?.ability!]"
@@ -274,11 +293,30 @@ export default defineComponent({
     border-radius: 0 0 1.9vw 1.9vw;
   }
 }
+.description-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.18vw;
+  padding-left: 25%;
+  margin-top: 4%;
+  height: 3.3vw;
 
+  &-center {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.18vw;
+    margin-top: 4%;
+    height: 3.3vw;
+  }
+}
+.description-text {
+  height: 4vw;
+  display: flex;
+  align-items: flex-end;
+}
 .card-info__count-img-hero {
   width: 190%;
 }
-
 .card-info__count-power-hero {
   position: absolute;
   top: 18%;
@@ -287,34 +325,14 @@ export default defineComponent({
   color: white;
   font-size: 3vw;
 }
-
-.description-title {
-  text-align: center;
-  font-weight: 500;
-  font-size: 1.18vw;
-  padding-left: 25%;
-  margin-top: 6%;
-  margin-bottom: 14%;
-
-  &-center {
-    text-align: center;
-    font-weight: 500;
-    font-size: 1.18vw;
-    margin-top: 6%;
-    margin-bottom: 14%;
-  }
-}
-
 .description-text {
   padding: 1%;
   font-size: 1vw;
   text-align: center;
 }
-
 .game-card__count-img-hero {
   width: 200%;
 }
-
 .game-card__count-power-hero {
   position: absolute;
   top: 33%;
@@ -324,7 +342,6 @@ export default defineComponent({
   font-weight: 300;
   font-size: 1vw;
 }
-
 .game-card {
   display: flex;
   flex-direction: column;

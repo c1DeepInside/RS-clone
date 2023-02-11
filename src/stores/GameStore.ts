@@ -1,34 +1,35 @@
 import { defineStore } from 'pinia';
 import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
+import type { IntRange } from '@/utilits/types';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [
-      {
-        id: 1,
-        name: 'Геральт из Ривии',
-        type: 'hero',
-        image: 'src/assets/images/neu_geralt.png',
-        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-        fractionId: null,
-        ability: null,
-        fieldType: ['melee'],
-        power: 15,
-        quantity: 1,
-      },
-      {
-        id: 2,
-        name: 'Цирилла',
-        type: 'hero',
-        image: 'src/assets/images/neutral_ciri.jpg',
-        description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-        fractionId: null,
-        ability: null,
-        fieldType: ['melee'],
-        power: 15,
-        quantity: 1,
-      },
+      // {
+      //   id: 1,
+      //   name: 'Геральт из Ривии',
+      //   type: 'hero',
+      //   image: 'src/assets/images/neu_geralt.png',
+      //   description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+      //   fractionId: null,
+      //   ability: null,
+      //   fieldType: ['melee'],
+      //   power: 15,
+      //   quantity: 1,
+      // },
+      // {
+      //   id: 2,
+      //   name: 'Цирилла',
+      //   type: 'hero',
+      //   image: 'src/assets/images/neutral_ciri.jpg',
+      //   description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+      //   fractionId: null,
+      //   ability: null,
+      //   fieldType: ['melee'],
+      //   power: 15,
+      //   quantity: 1,
+      // },
       {
         id: 3,
         name: 'Осадная башня',
@@ -41,29 +42,41 @@ export const useGameStore = defineStore('gameStore', {
         power: 6,
         quantity: 1,
       },
-      {
-        id: 5,
-        name: 'Таинственный эльф',
-        type: 'hero',
-        image: 'src/assets/images/neu_avallach.png',
-        description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
-        fractionId: null,
-        ability: 'spy',
-        fieldType: ['melee'],
-        power: '0',
-        quantity: 1,
-      },
+      // {
+      //   id: 5,
+      //   name: 'Таинственный эльф',
+      //   type: 'hero',
+      //   image: 'src/assets/images/neu_avallach.png',
+      //   description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+      //   fractionId: null,
+      //   ability: 'spy',
+      //   fieldType: ['melee'],
+      //   power: '0',
+      //   quantity: 1,
+      // },
       {
         id: 6,
         name: 'Лекарь Бурой Хоругви',
         type: 'usual',
         image: 'src/assets/images/nor_banner_nurse.png',
         description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
-        fractionId: 0,
+        fractionId: 3,
         ability: 'medic',
         fieldType: ['siege'],
         power: 5,
         quantity: 1,
+      },
+      {
+        id: 15,
+        name: 'Поддержка гавенкаров',
+        type: 'usual',
+        image: 'src/assets/images/sco_havekar_support_1.png',
+        description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+        fractionId: 2,
+        ability: 'muster',
+        fieldType: ['melee'],
+        power: 5,
+        quantity: 1
       },
       {
         id: 7,
@@ -367,15 +380,237 @@ export const useGameStore = defineStore('gameStore', {
       quantity: 1,
     } as Card,
     isShowSelected: false,
+    showDiscard: false,
+    whoseDiscard: 'allies',
     enemyNickName: 'kekov',
     alliesNickName: 'lulzov',
-    hangUp: {
-      enemy: [] as Card[],
-      allies: [] as Card[],
+    discard: {
+      enemy: [
+        {
+          id: 1,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+      ] as Card[],
+      allies: [
+        {
+          id: 4,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 2,
+          name: 'Ясное небо',
+          type: 'special',
+          image: 'src/assets/images/spc_clearsky.png',
+          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
+          fractionId: null,
+          ability: 'clear',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 12,
+          name: 'Командирский рог',
+          type: 'special',
+          image: 'src/assets/images/spc_horn.png',
+          description: 'Плюс один к морали, минус три к слуху.',
+          fractionId: null,
+          ability: 'horn',
+          fieldType: ['boost'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 2,
+          name: 'Цирилла',
+          type: 'hero',
+          image: 'src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: 'Осадная башня',
+          type: 'usual',
+          image: 'src/assets/images/nor_siege_tower.png',
+          description: 'Башня на колесах... Чего только люди не удумают!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['siege'],
+          power: 6,
+          quantity: 1,
+        },
+        {
+          id: 15,
+          name: 'Поддержка гавенкаров',
+          type: 'usual',
+          image: 'src/assets/images/sco_havekar_support_2.png',
+          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+          fractionId: 2,
+          ability: 'muster',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 1
+        },
+      ] as Card[],
     },
     deck: {
-      enemy: [] as Card[],
-      allies: [] as Card[],
+      enemy: [
+        {
+          id: 1,
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: 'Цирилла',
+          type: 'hero',
+          image: 'src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: 'Осадная башня',
+          type: 'usual',
+          image: 'src/assets/images/nor_siege_tower.png',
+          description: 'Башня на колесах... Чего только люди не удумают!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['siege'],
+          power: 6,
+          quantity: 1,
+        },
+      ] as Card[],
+      allies: [
+        {
+          id: 1,
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: 'Цирилла',
+          type: 'hero',
+          image: 'src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: 'Осадная башня',
+          type: 'usual',
+          image: 'src/assets/images/nor_siege_tower.png',
+          description: 'Башня на колесах... Чего только люди не удумают!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['siege'],
+          power: 6,
+          quantity: 1,
+        },
+        {
+          id: 1,
+          name: 'Геральт из Ривии',
+          type: 'hero',
+          image: 'src/assets/images/neu_geralt.png',
+          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: 'Цирилла',
+          type: 'hero',
+          image: 'src/assets/images/neutral_ciri.jpg',
+          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          fractionId: null,
+          ability: null,
+          fieldType: ['melee'],
+          power: 15,
+          quantity: 1,
+        },
+        {
+          id: 3,
+          name: 'Осадная башня',
+          type: 'usual',
+          image: 'src/assets/images/nor_siege_tower.png',
+          description: 'Башня на колесах... Чего только люди не удумают!',
+          fractionId: 0,
+          ability: null,
+          fieldType: ['siege'],
+          power: 6,
+          quantity: 1,
+        },
+        {
+          id: 15,
+          name: 'Поддержка гавенкаров',
+          type: 'usual',
+          image: 'src/assets/images/sco_havekar_support_2.png',
+          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+          fractionId: 2,
+          ability: 'muster',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 1
+        },
+        {
+          id: 16,
+          name: 'Поддержка гавенкаров',
+          type: 'usual',
+          image: 'src/assets/images/sco_havekar_support_3.png',
+          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+          fractionId: 2,
+          ability: 'muster',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 1
+        },
+      ] as Card[],
     },
     leader: {
       enemy: {
@@ -403,6 +638,10 @@ export const useGameStore = defineStore('gameStore', {
         image: 'src/assets/images/realms_foltest_gold.jpg',
       } as Card,
     },
+    lives: {
+      enemy: 1 as IntRange<0, 3>,
+      allies: 2 as IntRange<0, 3>,
+    }
   }),
   actions: {
     putSpecScorch() {
@@ -479,10 +718,27 @@ export const useGameStore = defineStore('gameStore', {
     clearWeathers() {
       this.board.weather = [];
     },
+    addToHand(cards: Card[]) {
+      this.hand = [...this.hand, ...cards];
+    },
+    addToEnemyHand(cards: Card[]) {
+      this.enemyHand = [...this.enemyHand, ...cards];
+    },
     removeFromHand(card: Card) {
       const index = this.hand.indexOf(card);
       if (index >= 0) {
         this.hand.splice(index, 1);
+      }
+    },
+    removeFromDeck( isAllies: boolean, cards: Card[]) {
+      const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
+
+      for (let i = 0; i < deck.length; i++) {
+        for (let j = 0; j < cards.length; j++) {
+           if (deck[i].id === cards[j].id) {
+              deck.splice(i, 1);
+           }
+        }
       }
     },
     setIsShowSelected(isShow: boolean) {
@@ -498,6 +754,8 @@ export const useGameStore = defineStore('gameStore', {
       const key = isAllies ? 'allies' : 'enemy';
       if (isCards) {
         this.board[key][line].push(card);
+        this.spyAbility(card, key);
+        this.getDiscard(key);
       } else {
         this.board[`${key}Boost`][line].push(card);
       }
@@ -509,5 +767,38 @@ export const useGameStore = defineStore('gameStore', {
       const key = isAllies ? 'allies' : 'enemy';
       this.board[key][line].push(card);
     },
+    spyAbility(card: Card, type: enemyAlliesType) {
+      if (card.ability === 'spy') {
+        const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
+        const newCardsHand = this.deck.allies.splice(-2, 2);
+        type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
+      }
+    },
+    musterAbility(card: Card, line: cardLineType, isAllies: boolean, isCards: boolean) {
+      if (card.ability === 'muster') {
+        const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
+        const newCardsHand = deck.filter((item) => item.name.split(':')[0] === card.name.split(':')[0]);
+        this.removeFromDeck(isAllies, newCardsHand);
+
+        newCardsHand.forEach((item) => {
+          this.addToLine(item, line, isAllies, isCards)
+        });
+      }
+    },
+    getDiscard(whoseDiscard: string) {
+      const discard = whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+      const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
+      if (this.selectedCard.ability === 'medic') {
+        this.showDiscard = true;
+        return discardMedic;
+      }
+      return discard;
+    },
+    setShowDiscard() {
+      this.showDiscard = !this.showDiscard;
+    },
+    setWhoseDiscard(type: enemyAlliesType) {
+      this.whoseDiscard = type;
+    }
   },
 });

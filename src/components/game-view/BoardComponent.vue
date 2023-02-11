@@ -55,6 +55,7 @@ export default defineComponent({
           if (this.selectedCard.ability === 'scorch') {
             this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
           }
+          this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost)
         }, 400);
       }
     },
@@ -63,6 +64,7 @@ export default defineComponent({
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
       putLineScorch: 'putLineScorch',
+      musterAbility: 'musterAbility',
     }),
   },
   components: {
