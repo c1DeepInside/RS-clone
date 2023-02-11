@@ -63,6 +63,11 @@ export default defineComponent({
       }
       const checkCards = this.deckInformation.find((item) => item.error === true);
 
+      console.log(this.currentLeader);
+      console.log(this.currentLeaderNorth);
+      console.log(this.currentLeaderNilfgaard);
+      console.log(this.currentLeaderScoiatel);
+      console.log(this.currentLeaderMonsters);
       if (!checkCards) {
         this.setFraction(this.currentFraction);
         this.setSelectedLeader(this.currentLeader);
@@ -132,6 +137,13 @@ export default defineComponent({
     filterLeaders() {
       return this.leadersCards.filter((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
     },
+    fractionLeader() {
+      this.changeCurrentLeader();
+      if (Object.keys(this.currentLeader).length === 0) {
+        return this.leadersCards.find((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
+      }
+      return this.currentLeader;
+    },
     ...mapState(useGameStore, {
       hand: 'hand',
       selectLeader: 'selectLeader',
@@ -162,7 +174,7 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction @selectedLeader="changeFractionLeader" :leadersCards="filterLeaders" />
+      <LeaderOfFraction @selectedLeader="changeFractionLeader" :leader="fractionLeader" :leadersCards="filterLeaders" />
     </div>
     <div class="deck__info">
       <div v-for:="deckInfo in deckInformation">

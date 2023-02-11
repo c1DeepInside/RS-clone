@@ -9,7 +9,6 @@ export default defineComponent({
     return {
       ifModal: false,
       cardLayoutType: CardLayoutType,
-      leader: this.leadersCards[0] as Card,
     };
   },
   emits: {
@@ -26,32 +25,20 @@ export default defineComponent({
         this.ifModal = false;
       }
     },
-    currentLeader() {
-      this.leader = this.leadersCards[0];
-    },
     changeLeader(data: Card) {
       document.body.style.overflow = '';
       this.ifModal = false;
-      this.leader = data;
-      this.$emit('selectedLeader', this.leader);
+      this.$emit('selectedLeader', data);
     },
-  },
-  watch: {
-    leadersCards: {
-      handler() {
-        this.currentLeader();
-      },
-      deep: true,
-    },
-  },
-  created() {
-    this.currentLeader();
   },
   components: {
     CardInfoCopmponent,
     SliderComponent,
   },
   props: {
+    leader: {
+      type: Object as PropType<Card>,
+    },
     leadersCards: {
       type: Array as PropType<Card[]>,
       required: true,
