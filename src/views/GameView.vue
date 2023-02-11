@@ -34,7 +34,7 @@ export default defineComponent({
         this.setShowDiscard();
         this.setSelectedCard(card);
         const fieldType = card.fieldType.join() as cardLineType;
-        this.deleteFromDiscard(card);
+        this.deleteFromDiscard(card, 'allies');
         this.addToLine(card, fieldType, key, true);
       }
     },
@@ -105,9 +105,33 @@ export default defineComponent({
         case 'Эредин Бреакк Глас Командир Дикой Охоты':
           this.putLineBoost('melee', 'allies');
           break;
+        case 'Фольтест Король Темерии':
+          this.getWeatherFromDeck('fog');
+          break;
+        case 'Эмгыр вар Эмрейс Йож из Эрленвальда':
+          this.getWeatherFromDeck('rain');
+          break;
+        case 'Францеска Финдабаир Истинная эльфка':
+          this.getWeatherFromDeck('frost');
+          break;
         default:
       }
       this.leader.allies.quantity = 0;
+    },
+    getWeatherFromDeck(weather: string) {
+      let weatherIndex = -1;
+      if (
+        this.deck.allies.some((card: Card, index) => {
+          weatherIndex = index;
+          return card.ability === weather;
+        }) === false
+      ) {
+        weatherIndex = -1;
+      }
+      if (weatherIndex >= 0) {
+        this.addToWeather(this.deck.allies[weatherIndex]);
+        this.removeFromDeck('allies', this.deck.allies[weatherIndex]);
+      }
     },
     setLeader(card: Card) {
       this.setSelectedCard(card);
@@ -129,6 +153,7 @@ export default defineComponent({
       setWhoseDiscard: 'setWhoseDiscard',
       deleteFromDiscard: 'deleteFromDiscard',
       addToLine: 'addToLine',
+      removeFromDeck: 'removeFromDeck',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {

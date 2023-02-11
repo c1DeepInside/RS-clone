@@ -412,18 +412,6 @@ export const useGameStore = defineStore('gameStore', {
       ] as Card[],
       allies: [
         {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
           id: 2,
           name: 'Ясное небо',
           type: 'special',
@@ -495,39 +483,6 @@ export const useGameStore = defineStore('gameStore', {
           power: 1,
           quantity: 1,
         },
-        {
-          name: 'Мороз',
-          type: 'special',
-          image: 'src/assets/images/spc_frost.png',
-          description: 'Мечта хорошего командира... кошмар плохого.',
-          fractionId: null,
-          ability: 'frost',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Мгла',
-          type: 'special',
-          image: 'src/assets/images/spc_fog.png',
-          description: 'Вот туман-то... хоть глаз выколи.',
-          fractionId: null,
-          ability: 'fog',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
       ] as Card[],
     },
     deck: {
@@ -570,6 +525,54 @@ export const useGameStore = defineStore('gameStore', {
         },
       ] as Card[],
       allies: [
+        {
+          id: 29,
+          name: 'Мороз',
+          type: 'special',
+          image: 'src/assets/images/spc_frost.png',
+          description: 'Мечта хорошего командира... кошмар плохого.',
+          fractionId: null,
+          ability: 'frost',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 28,
+          name: 'Мгла',
+          type: 'special',
+          image: 'src/assets/images/spc_fog.png',
+          description: 'Вот туман-то... хоть глаз выколи.',
+          fractionId: null,
+          ability: 'fog',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 100,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 100,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
         {
           id: 1,
           name: 'Геральт из Ривии',
@@ -683,7 +686,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
       allies: {
         id: 28,
-        name: 'Эредин Бреакк Глас Командир Дикой Охоты',
+        name: 'Францеска Финдабаир Истинная эльфка',
         type: 'leader',
         fieldType: [],
         power: null,
@@ -786,16 +789,9 @@ export const useGameStore = defineStore('gameStore', {
         this.hand.splice(index, 1);
       }
     },
-    removeFromDeck(isAllies: boolean, cards: Card[]) {
-      const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
-
-      for (let i = 0; i < deck.length; i++) {
-        for (let j = 0; j < cards.length; j++) {
-          if (deck[i].id === cards[j].id) {
-            deck.splice(i, 1);
-          }
-        }
-      }
+    removeFromDeck(type: enemyAlliesType, card: Card) {
+      const index = this.deck[type].indexOf(card);
+      this.deck[type].splice(index, 1);
     },
     setIsShowSelected(isShow: boolean) {
       this.isShowSelected = isShow;
@@ -837,9 +833,8 @@ export const useGameStore = defineStore('gameStore', {
       if (card.ability === 'muster') {
         const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
         const newCardsHand = deck.filter((item) => item.name.split(':')[0] === card.name.split(':')[0]);
-        this.removeFromDeck(isAllies, newCardsHand);
-
         newCardsHand.forEach((item) => {
+          this.removeFromDeck('allies', card);
           this.addToLine(item, line, isAllies, isCards);
         });
       }
@@ -853,14 +848,9 @@ export const useGameStore = defineStore('gameStore', {
       }
       return discard;
     },
-    deleteFromDiscard(card: Card) {
-      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
-
-      for (let i = 0; i < discard.length; i++) {
-        if (discard[i].id === card.id) {
-          discard.splice(i, 1);
-        }
-      }
+    deleteFromDiscard(card: Card, type: enemyAlliesType) {
+      const index = this.discard[type].indexOf(card);
+      this.discard[type].splice(index, 1);
     },
     setShowDiscard() {
       this.showDiscard = !this.showDiscard;
