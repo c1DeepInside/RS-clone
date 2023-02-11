@@ -295,8 +295,34 @@ export const useGameStore = defineStore('gameStore', {
     enemyHand: [] as Card[],
     board: {
       enemy: {
-        siege: [] as Card[],
-        range: [] as Card[],
+        siege: [
+          {
+            id: 13,
+            name: 'Боец Синих Полосок',
+            type: 'usual',
+            image: 'src/assets/images/nor_blue_stripes.png',
+            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+            fractionId: 0,
+            ability: 'bond',
+            fieldType: ['melee'],
+            power: 4,
+            quantity: 1,
+          },
+        ] as Card[],
+        range: [
+          {
+            id: 13,
+            name: 'Боец Синих Полосок',
+            type: 'usual',
+            image: 'src/assets/images/nor_blue_stripes.png',
+            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+            fractionId: 0,
+            ability: 'bond',
+            fieldType: ['melee'],
+            power: 8,
+            quantity: 1,
+          },
+        ] as Card[],
         melee: [] as Card[],
       },
       allies: {
@@ -352,8 +378,30 @@ export const useGameStore = defineStore('gameStore', {
       allies: [] as Card[],
     },
     leader: {
-      enemy: {} as Card,
-      allies: {} as Card,
+      enemy: {
+        id: 1,
+        name: 'Фольтест Предводитель Севера',
+        type: 'leader',
+        fieldType: [],
+        power: null,
+        quantity: 1,
+        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        ability: null,
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_gold.jpg',
+      } as Card,
+      allies: {
+        id: 28,
+        name: 'Эредин Бреакк Глас Командир Дикой Охоты',
+        type: 'leader',
+        fieldType: [],
+        power: null,
+        quantity: 1,
+        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        ability: null,
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_gold.jpg',
+      } as Card,
     },
   }),
   actions: {
@@ -399,6 +447,23 @@ export const useGameStore = defineStore('gameStore', {
         return this.affectedBoard[type][line][index].power !== maxPower || card.type !== 'usual';
       });
     },
+    putLineBoost(line: cardLineType, type: enemyAlliesType) {
+      if (this.board[`${type}Boost`][line].length < 1) {
+        const card: Card = {
+          id: 322228,
+          name: 'Командирский рог',
+          type: 'special',
+          image: 'src/assets/images/spc_horn.png',
+          description: 'Плюс один к морали, минус три к слуху.',
+          fractionId: null,
+          ability: 'horn',
+          fieldType: ['boost'],
+          power: null,
+          quantity: 1,
+        };
+        this.board[`${type}Boost`][line].push(card);
+      }
+    },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
     },
@@ -416,7 +481,9 @@ export const useGameStore = defineStore('gameStore', {
     },
     removeFromHand(card: Card) {
       const index = this.hand.indexOf(card);
-      this.hand.splice(index, 1);
+      if (index >= 0) {
+        this.hand.splice(index, 1);
+      }
     },
     setIsShowSelected(isShow: boolean) {
       this.isShowSelected = isShow;

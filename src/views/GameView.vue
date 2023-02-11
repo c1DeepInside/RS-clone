@@ -11,6 +11,7 @@ import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
+import type Card from '@/interfaces/card';
 
 export default defineComponent({
   data() {
@@ -52,7 +53,9 @@ export default defineComponent({
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
         setTimeout(() => {
-          if (this.selectedCard.ability === 'specScorch') {
+          if (this.selectedCard.type === 'leader') {
+            this.putLeaderCard();
+          } else if (this.selectedCard.ability === 'specScorch') {
             this.putSpecScorch();
           } else {
             this.addToWeather(this.selectedCard);
@@ -64,6 +67,32 @@ export default defineComponent({
         }, 400);
       }
     },
+    putLeaderCard() {
+      if (this.selectedCard.name === 'Фольтест Предводитель Севера') {
+        this.showSunAnimation();
+        this.clearWeathers();
+      }
+      if (this.selectedCard.name === 'Фольтест Железный Владыка') {
+        this.putLineScorch('siege', 'enemy');
+      }
+      if (this.selectedCard.name === 'Францеска Финдабаир Королева Дол Блатанны') {
+        this.putLineScorch('range', 'enemy');
+      }
+      if (this.selectedCard.name === 'Фольтест Завоеватель') {
+        this.putLineBoost('siege', 'allies');
+      }
+      if (this.selectedCard.name === 'Францеска Финдабаир Прекраснейшая') {
+        this.putLineBoost('range', 'allies');
+      }
+      if (this.selectedCard.name === 'Эредин Бреакк Глас Командир Дикой Охоты') {
+        this.putLineBoost('melee', 'allies');
+      }
+      this.leader.allies.quantity = 0;
+    },
+    setLeader(card: Card) {
+      this.setSelectedCard(card);
+      this.setIsShowSelected(true);
+    },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
       removeFromHand: 'removeFromHand',
@@ -72,6 +101,9 @@ export default defineComponent({
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
       putSpecScorch: 'putSpecScorch',
+      setSelectedCard: 'setSelectedCard',
+      putLineScorch: 'putLineScorch',
+      putLineBoost: 'putLineBoost',
     }),
   },
   computed: {
@@ -82,6 +114,7 @@ export default defineComponent({
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       enemyPower: 'enemyPower',
+      leader: 'leader',
     }),
   },
   components: {
@@ -103,7 +136,9 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off"></div>
+          <div class="game__leader-card" :class="leader.enemy.quantity <= 0 ? 'card-off' : ''">
+            <CardInfoComponent :card="leader.enemy" :layoutType="0" class="card" />
+          </div>
           <div class="game__leader-icon">
             <div></div>
           </div>
@@ -114,7 +149,10 @@ export default defineComponent({
         </div>
         <div
           class="game__weather"
-          :class="selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : ''"
+          :class="[
+            selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : '',
+            selectedCard.type === 'leader' && isShowSelectedCard ? 'active__weather' : '',
+          ]"
           @click="putWeatherCard"
         >
           <div
@@ -138,7 +176,9 @@ export default defineComponent({
         </div>
 
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card"></div>
+          <div class="game__leader-card" :class="leader.allies.quantity <= 0 ? 'card-off' : ''">
+            <CardInfoComponent :card="leader.allies" :layoutType="0" class="card" @click="setLeader(leader.allies)" />
+          </div>
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
@@ -427,7 +467,7 @@ export default defineComponent({
 
 .card-off {
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.5;
 }
 
 .deck {
