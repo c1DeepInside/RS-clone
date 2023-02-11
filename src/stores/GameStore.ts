@@ -392,6 +392,7 @@ export const useGameStore = defineStore('gameStore', {
     } as Card,
     isShowSelected: false,
     showDiscard: false,
+    showHand: false,
     whoseDiscard: 'allies',
     enemyNickName: 'kekov',
     alliesNickName: 'lulzov',
@@ -686,7 +687,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
       allies: {
         id: 28,
-        name: 'Францеска Финдабаир Истинная эльфка',
+        name: 'Эредин Бреакк Глас Владыка Тир на Лиа',
         type: 'leader',
         fieldType: [],
         power: null,
@@ -791,10 +792,15 @@ export const useGameStore = defineStore('gameStore', {
     },
     removeFromDeck(type: enemyAlliesType, card: Card) {
       const index = this.deck[type].indexOf(card);
-      this.deck[type].splice(index, 1);
+      if (index >= 0) {
+        this.deck[type].splice(index, 1);
+      }
     },
     setIsShowSelected(isShow: boolean) {
       this.isShowSelected = isShow;
+    },
+    setShowHand(isShow: boolean) {
+      this.showHand = isShow;
     },
     setSelectedCard(card: Card) {
       this.selectedCard = card;
@@ -816,7 +822,10 @@ export const useGameStore = defineStore('gameStore', {
       }
     },
     removeFromWeather(card: Card) {
-      this.board.weather.splice(this.board.weather.indexOf(card), 1);
+      const index = this.board.weather.indexOf(card);
+      if (index >= 0) {
+        this.board.weather.splice(index, 1);
+      }
     },
     removeFromLine(card: Card, line: cardLineType, isAllies?: boolean) {
       const key = isAllies ? 'allies' : 'enemy';
@@ -848,9 +857,14 @@ export const useGameStore = defineStore('gameStore', {
       }
       return discard;
     },
-    deleteFromDiscard(card: Card, type: enemyAlliesType) {
+    addToDiscard(card: Card, type: enemyAlliesType) {
+      this.discard[type].push(card);
+    },
+    removeFromDiscard(card: Card, type: enemyAlliesType) {
       const index = this.discard[type].indexOf(card);
-      this.discard[type].splice(index, 1);
+      if (index >= 0) {
+        this.discard[type].splice(index, 1);
+      }
     },
     setShowDiscard() {
       this.showDiscard = !this.showDiscard;

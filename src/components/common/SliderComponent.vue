@@ -54,7 +54,7 @@ export default defineComponent({
       setShowDiscard: 'setShowDiscard',
       addToLine: 'addToLine',
       setSelectedCard: 'setSelectedCard',
-      deleteFromDiscard: 'deleteFromDiscard',
+      removeFromDiscard: 'removeFromDiscard',
     }),
     onCardClick(idx: number) {
       if (idx === this.selectedCardIdx) {

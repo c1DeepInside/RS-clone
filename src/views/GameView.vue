@@ -24,6 +24,8 @@ export default defineComponent({
       timer: 0,
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
+      handChangeCount: 0,
+      isShowDeck: false,
     };
   },
   methods: {
@@ -34,9 +36,25 @@ export default defineComponent({
         this.setShowDiscard();
         this.setSelectedCard(card);
         const fieldType = card.fieldType.join() as cardLineType;
-        this.deleteFromDiscard(card, 'allies');
+        this.removeFromDiscard(card, 'allies');
         this.addToLine(card, fieldType, key, true);
       }
+    },
+    onHandToDiscard(card: Card) {
+      this.removeFromHand(card);
+      this.addToDiscard(card, 'allies');
+      if (this.handChangeCount >= 1) {
+        this.setShowHand(false);
+        this.handChangeCount = 0;
+        this.isShowDeck = true;
+      } else {
+        this.handChangeCount += 1;
+      }
+    },
+    onDeckToHand(card: Card) {
+      this.removeFromDeck('allies', card);
+      this.addToHand([card]);
+      this.isShowDeck = false;
     },
     showPass() {
       if (this.lives.allies > 0) {
@@ -114,9 +132,15 @@ export default defineComponent({
         case 'Францеска Финдабаир Истинная эльфка':
           this.getWeatherFromDeck('frost');
           break;
+        case 'Эредин Бреакк Глас Владыка Тир на Лиа':
+          this.exchangeLeaderAbility();
+          break;
         default:
       }
       this.leader.allies.quantity = 0;
+    },
+    exchangeLeaderAbility() {
+      this.setShowHand(true);
     },
     getWeatherFromDeck(weather: string) {
       let weatherIndex = -1;
@@ -151,9 +175,12 @@ export default defineComponent({
       getDiscard: 'getDiscard',
       setShowDiscard: 'setShowDiscard',
       setWhoseDiscard: 'setWhoseDiscard',
-      deleteFromDiscard: 'deleteFromDiscard',
+      removeFromDiscard: 'removeFromDiscard',
       addToLine: 'addToLine',
       removeFromDeck: 'removeFromDeck',
+      setShowHand: 'setShowHand',
+      addToDiscard: 'addToDiscard',
+      addToHand: 'addToHand',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -178,6 +205,7 @@ export default defineComponent({
       lives: 'lives',
       showDiscard: 'showDiscard',
       whoseDiscard: 'whoseDiscard',
+      showHand: 'showHand',
     }),
   },
   components: {
@@ -290,6 +318,12 @@ export default defineComponent({
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>
+      <div v-if="showHand" class="hand">
+        <SliderComponent @card-selected="onHandToDiscard" :cards="hand" />
+      </div>
+      <div v-if="isShowDeck" class="hand">
+        <SliderComponent @card-selected="onDeckToHand" :cards="deck.allies" />
+      </div>
     </div>
 
     <div class="animation__card__wrap" ref="animationWrap">
@@ -332,6 +366,17 @@ export default defineComponent({
     top: 4vw;
     right: 6vw;
   }
+}
+
+.hand{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  padding-top: 8vw;
+  background-color: rgba(58, 41, 25, 0.699);
 }
 .card-wrapper {
   width: 5.4vw;
