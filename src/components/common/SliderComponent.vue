@@ -13,13 +13,6 @@ enum CardSize {
   small = 11,
 }
 
-// enum SliderType {
-//   discard = 'discard',
-//   exchange = 'exchange',
-//   leaders = 'leaders',
-//   view = 'view',
-// }
-
 export default defineComponent({
   data() {
     return {
@@ -34,6 +27,7 @@ export default defineComponent({
       default: () => [],
     },
   },
+  emits: ['cardSelected'],
   components: {
     CardInfoCopmponent,
     CardDescriptionComponent,
@@ -43,15 +37,15 @@ export default defineComponent({
       const cards = [null, null, ...this.cards];
       const selectedCard = this.cards[this.selectedCardIdx];
 
-      if (cards[idx]?.id === selectedCard?.id) {
+      if (cards[idx] === selectedCard) {
         return CardSize.large;
       }
 
-      if (cards[idx - 1]?.id === selectedCard?.id) {
+      if (cards[idx - 1] === selectedCard) {
         return CardSize.medium;
       }
 
-      if (cards[idx + 1]?.id === selectedCard?.id) {
+      if (cards[idx + 1] === selectedCard) {
         return CardSize.medium;
       }
 
@@ -61,17 +55,26 @@ export default defineComponent({
       setShowDiscard: 'setShowDiscard',
       addToLine: 'addToLine',
       setSelectedCard: 'setSelectedCard',
+      deleteFromDiscard: 'deleteFromDiscard',
     }),
     raiseCardFromDiscard(cardId: number) {
-      if (cardId === this.selectedCardIdx) {
+      if (cardId === this.selectedCardIdx && this.selectedCard.ability === 'medic') {
         const key = this.whoseDiscard === 'allies' ? true : false;
 
         this.setShowDiscard();
         this.setSelectedCard(this.cards[cardId]);
         const fieldType = this.cards[cardId].fieldType.join() as cardLineType;
-        this.addToLine(this.cards[cardId], fieldType, key, true)
+        this.deleteFromDiscard(this.cards[cardId]);
+        this.addToLine(this.cards[cardId], fieldType, key, true);
       }
     },
+    onCardClick(idx: number) {
+      if (idx === this.selectedCardIdx) {
+        this.$emit('cardSelected', this.cards[this.selectedCardIdx]);
+      } else {
+        this.selectedCardIdx = idx
+      }
+    }
   },
   computed: {
     offset(): number {
@@ -115,7 +118,7 @@ export default defineComponent({
           :card="card"
           :layout-type="cardLayoutType.EXTENDED"
           :is-selected="idx - 2 === selectedCardIdx"
-          @click="selectedCardIdx = idx - 2, raiseCardFromDiscard(selectedCardIdx)"
+          @click="onCardClick(idx - 2)"
           v-if="card"
         />
 

@@ -564,7 +564,7 @@ export const useGameStore = defineStore('gameStore', {
     spyAbility(card: Card, type: enemyAlliesType) {
       if (card.ability === 'spy') {
         const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
-        const newCardsHand = this.deck.allies.splice(-2, 2);
+        const newCardsHand = deck.splice(-2, 2);
         type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
       }
     },
@@ -587,6 +587,15 @@ export const useGameStore = defineStore('gameStore', {
         return discardMedic;
       }
       return discard;
+    },
+    deleteFromDiscard(card: Card) {
+      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+
+      for (let i = 0; i < discard.length; i++) {
+        if (discard[i].id === card.id) {
+          discard.splice(i, 1);
+        }
+      }
     },
     setShowDiscard() {
       this.showDiscard = !this.showDiscard;
