@@ -28,7 +28,7 @@ export default defineComponent({
   },
   methods: {
     onCardSelected(card: Card) {
-      console.log(card)
+      console.log(card);
       if (this.selectedCard.ability === 'medic') {
         const key = this.whoseDiscard === 'allies' ? true : false;
 
@@ -188,7 +188,11 @@ export default defineComponent({
         <div class="deck__content">
           <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
-            <div @click="(setShowDiscard()), (setWhoseDiscard('enemy'))" class="card-wrapper">
+            <div
+              v-if="discard['enemy'].length  !== 0"
+              @click="setShowDiscard(), setWhoseDiscard('enemy')"
+              class="card-wrapper"
+            >
               <CardInfoComponent :card="getLastDiscardCard('enemy')" :layout-type="0" />
             </div>
           </div>
@@ -201,7 +205,11 @@ export default defineComponent({
         <!-- allies discard last card -->
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-2">
-            <div @click="(setShowDiscard()), (setWhoseDiscard('allies'))" class="card-wrapper">
+            <div
+              v-if="discard['allies'].length !== 0"
+              @click="setShowDiscard(), setWhoseDiscard('allies')"
+              class="card-wrapper"
+            >
               <CardInfoComponent :card="getLastDiscardCard('allies')" :layout-type="0" />
             </div>
           </div>
@@ -214,7 +222,7 @@ export default defineComponent({
       </div>
       <!-- discard slider -->
       <div v-if="showDiscard" class="discard">
-        <div class="discard__close" @click="setShowDiscard()"></div>
+        <div v-if="selectedCard.ability !== 'medic'" class="discard__close" @click="setShowDiscard()">x</div>
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>
@@ -244,17 +252,21 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .discard {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 20;
-  background-color: rgba(58, 41, 25, 0.575);
+  padding-top: 8vw;
+  background-color: rgba(58, 41, 25, 0.699);
 
   &__close {
-    height: 20%;
-    width: 100%;
+    position: absolute;
+    color: white;
+    font-size: 4vw;
+    top: 4vw;
+    right: 6vw;
   }
 }
 .card-wrapper {

@@ -46,7 +46,7 @@ export const fractions = {
   },
   2: {
     img: '/src/assets/images/faction-emblems/scoiatael_emblem.png',
-    name: 'Скоя\'таэли',
+    name: "Скоя'таэли",
   },
 };
 

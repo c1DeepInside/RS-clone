@@ -76,7 +76,7 @@ export const useGameStore = defineStore('gameStore', {
         ability: 'muster',
         fieldType: ['melee'],
         power: 5,
-        quantity: 1
+        quantity: 1,
       },
       {
         id: 7,
@@ -138,18 +138,18 @@ export const useGameStore = defineStore('gameStore', {
       //   power: null,
       //   quantity: 3,
       // },
-      // {
-      //   id: 9,
-      //   name: 'Ливень',
-      //   type: 'special',
-      //   image: 'src/assets/images/spc_rain.png',
-      //   description: 'В этом карю даже дождь смердит мочой.',
-      //   fractionId: null,
-      //   ability: 'rain',
-      //   fieldType: ['weather'],
-      //   power: null,
-      //   quantity: 3,
-      // },
+      {
+        id: 9,
+        name: 'Ливень',
+        type: 'special',
+        image: 'src/assets/images/spc_rain.png',
+        description: 'В этом карю даже дождь смердит мочой.',
+        fractionId: null,
+        ability: 'rain',
+        fieldType: ['weather'],
+        power: null,
+        quantity: 3,
+      },
       // {
       //   id: 9,
       //   name: 'Ясное небо',
@@ -258,78 +258,90 @@ export const useGameStore = defineStore('gameStore', {
         },
       ] as Card[],
       allies: [
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_clearsky.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 12,
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 15,
-          name: 'Поддержка гавенкаров',
-          type: 'usual',
-          image: 'src/assets/images/sco_havekar_support_2.png',
-          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
-          fractionId: 2,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 5,
-          quantity: 1
-        },
+        // {
+        //   id: 4,
+        //   name: 'Ливень',
+        //   type: 'special',
+        //   image: 'src/assets/images/spc_rain.png',
+        //   description: 'В этом карю даже дождь смердит мочой.',
+        //   fractionId: null,
+        //   ability: 'rain',
+        //   fieldType: ['weather'],
+        //   power: null,
+        //   quantity: 3,
+        // },
+        // {
+        //   id: 2,
+        //   name: 'Лекарь Бурой Хоругви',
+        //   type: 'usual',
+        //   image: 'src/assets/images/nor_banner_nurse.png',
+        //   description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
+        //   fractionId: 3,
+        //   ability: 'medic',
+        //   fieldType: ['siege'],
+        //   power: 5,
+        //   quantity: 1,
+        // },
+        // {
+        //   id: 2,
+        //   name: 'Ясное небо',
+        //   type: 'special',
+        //   image: 'src/assets/images/spc_clearsky.png',
+        //   description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
+        //   fractionId: null,
+        //   ability: 'clear',
+        //   fieldType: ['weather'],
+        //   power: null,
+        //   quantity: 3,
+        // },
+        // {
+        //   id: 12,
+        //   name: 'Командирский рог',
+        //   type: 'special',
+        //   image: 'src/assets/images/spc_horn.png',
+        //   description: 'Плюс один к морали, минус три к слуху.',
+        //   fractionId: null,
+        //   ability: 'horn',
+        //   fieldType: ['boost'],
+        //   power: null,
+        //   quantity: 3,
+        // },
+        // {
+        //   id: 2,
+        //   name: 'Цирилла',
+        //   type: 'hero',
+        //   image: 'src/assets/images/neutral_ciri.jpg',
+        //   description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+        //   fractionId: null,
+        //   ability: null,
+        //   fieldType: ['melee'],
+        //   power: 15,
+        //   quantity: 1,
+        // },
+        // {
+        //   id: 3,
+        //   name: 'Осадная башня',
+        //   type: 'usual',
+        //   image: 'src/assets/images/nor_siege_tower.png',
+        //   description: 'Башня на колесах... Чего только люди не удумают!',
+        //   fractionId: 0,
+        //   ability: null,
+        //   fieldType: ['siege'],
+        //   power: 6,
+        //   quantity: 1,
+        // },
+        // {
+        //   id: 15,
+        //   name: 'Поддержка гавенкаров',
+        //   type: 'usual',
+        //   image: 'src/assets/images/sco_havekar_support_2.png',
+        //   description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+        //   fractionId: 2,
+        //   ability: 'muster',
+        //   fieldType: ['melee'],
+        //   power: 5,
+        //   quantity: 1
+        // },
       ] as Card[],
     },
     deck: {
@@ -454,7 +466,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'muster',
           fieldType: ['melee'],
           power: 5,
-          quantity: 1
+          quantity: 1,
         },
         {
           id: 16,
@@ -466,7 +478,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'muster',
           fieldType: ['melee'],
           power: 5,
-          quantity: 1
+          quantity: 1,
         },
       ] as Card[],
     },
@@ -499,7 +511,7 @@ export const useGameStore = defineStore('gameStore', {
     lives: {
       enemy: 1 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
-    }
+    },
   }),
   actions: {
     setPower(power: number, line: cardLineType, type: enemyAlliesType) {
@@ -524,14 +536,14 @@ export const useGameStore = defineStore('gameStore', {
       const index = this.hand.indexOf(card);
       this.hand.splice(index, 1);
     },
-    removeFromDeck( isAllies: boolean, cards: Card[]) {
+    removeFromDeck(isAllies: boolean, cards: Card[]) {
       const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
 
       for (let i = 0; i < deck.length; i++) {
         for (let j = 0; j < cards.length; j++) {
-           if (deck[i].id === cards[j].id) {
-              deck.splice(i, 1);
-           }
+          if (deck[i].id === cards[j].id) {
+            deck.splice(i, 1);
+          }
         }
       }
     },
@@ -575,12 +587,12 @@ export const useGameStore = defineStore('gameStore', {
         this.removeFromDeck(isAllies, newCardsHand);
 
         newCardsHand.forEach((item) => {
-          this.addToLine(item, line, isAllies, isCards)
+          this.addToLine(item, line, isAllies, isCards);
         });
       }
     },
     getDiscard(whoseDiscard: string) {
-      const discard = whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+      const discard = whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
       if (this.selectedCard.ability === 'medic') {
         this.showDiscard = true;
@@ -589,7 +601,7 @@ export const useGameStore = defineStore('gameStore', {
       return discard;
     },
     deleteFromDiscard(card: Card) {
-      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
 
       for (let i = 0; i < discard.length; i++) {
         if (discard[i].id === card.id) {
@@ -602,6 +614,6 @@ export const useGameStore = defineStore('gameStore', {
     },
     setWhoseDiscard(type: enemyAlliesType) {
       this.whoseDiscard = type;
-    }
+    },
   },
 });

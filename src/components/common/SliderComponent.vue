@@ -61,9 +61,9 @@ export default defineComponent({
       if (idx === this.selectedCardIdx) {
         this.$emit('cardSelected', this.cards[this.selectedCardIdx]);
       } else {
-        this.selectedCardIdx = idx
+        this.selectedCardIdx = idx;
       }
-    }
+    },
   },
   computed: {
     offset(): number {
@@ -138,19 +138,6 @@ export default defineComponent({
   z-index: 20;
   background-color: rgba(58, 41, 25, 0.486);
 
-  &__title {
-    margin-top: 8%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    height: 70px;
-    font-size: 26px;
-    letter-spacing: -1px;
-    background-color: $BLACK_COLOR_MAIN;
-    color: $TAN_COLOR;
-  }
-
   &__cards {
     margin: 0 auto;
     margin-top: 5px;
@@ -161,13 +148,14 @@ export default defineComponent({
     gap: 2vw;
     position: relative;
     overflow: hidden;
-    padding-top: 10px;
+    padding-top: 1vw;
   }
 }
 
 .card-wrapper {
   flex-shrink: 0;
   position: relative;
+  height: 29vw;
   transition: margin-left linear 0.2s;
 }
 
@@ -176,8 +164,8 @@ export default defineComponent({
 }
 
 .description-card {
-  margin-top: -7%;
-  margin-left: 29%;
+  margin-top: 1vw;
+  margin-left: 20.5vw;
 }
 
 :deep(.card-info) {
