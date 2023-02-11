@@ -57,17 +57,6 @@ export default defineComponent({
       setSelectedCard: 'setSelectedCard',
       deleteFromDiscard: 'deleteFromDiscard',
     }),
-    raiseCardFromDiscard(cardId: number) {
-      if (cardId === this.selectedCardIdx && this.selectedCard.ability === 'medic') {
-        const key = this.whoseDiscard === 'allies' ? true : false;
-
-        this.setShowDiscard();
-        this.setSelectedCard(this.cards[cardId]);
-        const fieldType = this.cards[cardId].fieldType.join() as cardLineType;
-        this.deleteFromDiscard(this.cards[cardId]);
-        this.addToLine(this.cards[cardId], fieldType, key, true);
-      }
-    },
     onCardClick(idx: number) {
       if (idx === this.selectedCardIdx) {
         this.$emit('cardSelected', this.cards[this.selectedCardIdx]);
