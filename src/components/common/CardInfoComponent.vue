@@ -158,7 +158,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="game-card__count">
       <img draggable="false" class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="game-card__count-power">{{ card?.power }}</p>
+      <p class="game-card__count-power" :class="[ifBuff ? 'card-buff' : '', ifDebuff ? 'card-debuff' : '']">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img

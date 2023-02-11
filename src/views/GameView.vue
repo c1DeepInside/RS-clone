@@ -210,7 +210,7 @@ export default defineComponent({
         <div class="deck__content">
           <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
-            <div @click="(setShowDiscard()), (setWhoseDiscard('enemy'))" class="card-wrapper">
+            <div @click="setShowDiscard(), setWhoseDiscard('enemy')" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('enemy')" :layout-type="0" />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default defineComponent({
         <!-- allies discard last card -->
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-2">
-            <div @click="(setShowDiscard()), (setWhoseDiscard('allies'))" class="card-wrapper">
+            <div @click="setShowDiscard(), setWhoseDiscard('allies')" class="card-wrapper">
               <CardInfoComponent :card="getLastDiscardCard('allies')" :layout-type="0" />
             </div>
           </div>

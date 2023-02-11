@@ -69,7 +69,7 @@ export default defineComponent({
         this.setShowDiscard();
         this.setSelectedCard(this.cards[cardId]);
         const fieldType = this.cards[cardId].fieldType.join() as cardLineType;
-        this.addToLine(this.cards[cardId], fieldType, key, true)
+        this.addToLine(this.cards[cardId], fieldType, key, true);
       }
     },
   },
@@ -115,7 +115,7 @@ export default defineComponent({
           :card="card"
           :layout-type="cardLayoutType.EXTENDED"
           :is-selected="idx - 2 === selectedCardIdx"
-          @click="selectedCardIdx = idx - 2, raiseCardFromDiscard(selectedCardIdx)"
+          @click="(selectedCardIdx = idx - 2), raiseCardFromDiscard(selectedCardIdx)"
           v-if="card"
         />
 

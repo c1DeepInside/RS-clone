@@ -76,7 +76,7 @@ export const useGameStore = defineStore('gameStore', {
         ability: 'muster',
         fieldType: ['melee'],
         power: 5,
-        quantity: 1
+        quantity: 1,
       },
       {
         id: 7,
@@ -470,7 +470,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'muster',
           fieldType: ['melee'],
           power: 5,
-          quantity: 1
+          quantity: 1,
         },
       ] as Card[],
     },
@@ -596,7 +596,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'muster',
           fieldType: ['melee'],
           power: 5,
-          quantity: 1
+          quantity: 1,
         },
         {
           id: 16,
@@ -608,7 +608,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'muster',
           fieldType: ['melee'],
           power: 5,
-          quantity: 1
+          quantity: 1,
         },
       ] as Card[],
     },
@@ -641,7 +641,7 @@ export const useGameStore = defineStore('gameStore', {
     lives: {
       enemy: 1 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
-    }
+    },
   }),
   actions: {
     putSpecScorch() {
@@ -730,14 +730,14 @@ export const useGameStore = defineStore('gameStore', {
         this.hand.splice(index, 1);
       }
     },
-    removeFromDeck( isAllies: boolean, cards: Card[]) {
+    removeFromDeck(isAllies: boolean, cards: Card[]) {
       const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
 
       for (let i = 0; i < deck.length; i++) {
         for (let j = 0; j < cards.length; j++) {
-           if (deck[i].id === cards[j].id) {
-              deck.splice(i, 1);
-           }
+          if (deck[i].id === cards[j].id) {
+            deck.splice(i, 1);
+          }
         }
       }
     },
@@ -769,7 +769,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     spyAbility(card: Card, type: enemyAlliesType) {
       if (card.ability === 'spy') {
-        const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
+        // const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
         const newCardsHand = this.deck.allies.splice(-2, 2);
         type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
       }
@@ -781,12 +781,12 @@ export const useGameStore = defineStore('gameStore', {
         this.removeFromDeck(isAllies, newCardsHand);
 
         newCardsHand.forEach((item) => {
-          this.addToLine(item, line, isAllies, isCards)
+          this.addToLine(item, line, isAllies, isCards);
         });
       }
     },
     getDiscard(whoseDiscard: string) {
-      const discard = whoseDiscard === 'enemy' ? this.discard.enemy : this.discard.allies as Card[];
+      const discard = whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
       if (this.selectedCard.ability === 'medic') {
         this.showDiscard = true;
@@ -799,6 +799,6 @@ export const useGameStore = defineStore('gameStore', {
     },
     setWhoseDiscard(type: enemyAlliesType) {
       this.whoseDiscard = type;
-    }
+    },
   },
 });

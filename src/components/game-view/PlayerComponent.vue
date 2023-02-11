@@ -36,7 +36,7 @@ export default defineComponent({
       return fractions[idx];
     },
     getNickName() {
-      return this.playerType === 'enemy' ? this.enemyNickName :  this.alliesNickName;
+      return this.playerType === 'enemy' ? this.enemyNickName : this.alliesNickName;
     },
     getNumbersCards() {
       return this.playerType === 'enemy' ? this.enemyHand.length : this.hand.length;
@@ -84,15 +84,15 @@ export default defineComponent({
       ></div>
     </div>
   </div>
-    <div class="player__name">{{ getNickName() }}</div>
-    <div class="player__deck-name">{{ getFraction().name }}</div>
-    <div class="player__hand-count">{{ getNumbersCards() }}</div>
-    <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
-    <div v-else class="player__gem player__gem-1"></div>
+  <div class="player__name">{{ getNickName() }}</div>
+  <div class="player__deck-name">{{ getFraction().name }}</div>
+  <div class="player__hand-count">{{ getNumbersCards() }}</div>
+  <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
+  <div v-else class="player__gem player__gem-1"></div>
 
-    <div v-if="lives[playerType] === 2" class="player__gem player__gem-2 player__gem-true"></div>
-    <div v-else class="player__gem player__gem-2"></div>
-  
+  <div v-if="lives[playerType] === 2" class="player__gem player__gem-2 player__gem-true"></div>
+  <div v-else class="player__gem player__gem-2"></div>
+
   <div class="player__score player__score-more">
     <span>{{ playerType === 'enemy' ? Number(enemyPower) : Number(alliesPower) }}</span>
     <div></div>
