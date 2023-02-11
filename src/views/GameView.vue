@@ -14,6 +14,7 @@ import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
+import type { cardLineType } from '@/utilits/lineTypes';
 
 export default defineComponent({
   data() {
@@ -26,6 +27,18 @@ export default defineComponent({
     };
   },
   methods: {
+    onCardSelected(card: Card) {
+      console.log(card)
+      if (this.selectedCard.ability === 'medic') {
+        const key = this.whoseDiscard === 'allies' ? true : false;
+
+        this.setShowDiscard();
+        this.setSelectedCard(card);
+        const fieldType = card.fieldType.join() as cardLineType;
+        this.deleteFromDiscard(card);
+        this.addToLine(card, fieldType, key, true);
+      }
+    },
     showPass() {
       if (this.lives.allies > 0) {
         this.lives.allies -= 1;
@@ -112,6 +125,8 @@ export default defineComponent({
       getDiscard: 'getDiscard',
       setShowDiscard: 'setShowDiscard',
       setWhoseDiscard: 'setWhoseDiscard',
+      deleteFromDiscard: 'deleteFromDiscard',
+      addToLine: 'addToLine',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -238,7 +253,7 @@ export default defineComponent({
       <div v-if="showDiscard" class="discard">
         <div class="discard__close" @click="setShowDiscard()"></div>
 
-        <SliderComponent :cards="getDiscard(whoseDiscard)" />
+        <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>
     </div>
 
