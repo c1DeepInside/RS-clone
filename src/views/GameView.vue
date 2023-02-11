@@ -15,6 +15,7 @@ import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType } from '@/utilits/lineTypes';
+import { getRandom } from '@/utilits/getRandom';
 
 export default defineComponent({
   data() {
@@ -26,6 +27,7 @@ export default defineComponent({
       playerType: PlayerType,
       handChangeCount: 0,
       isShowDeck: false,
+      isShowEnemyDeck: false,
     };
   },
   methods: {
@@ -135,6 +137,9 @@ export default defineComponent({
         case 'Эредин Бреакк Глас Владыка Тир на Лиа':
           this.exchangeLeaderAbility();
           break;
+        case 'Эмгыр вар Эмрейс Император Нильфграада':
+          this.isShowEnemyDeck = true;
+          break;
         default:
       }
       this.leader.allies.quantity = 0;
@@ -206,6 +211,7 @@ export default defineComponent({
       showDiscard: 'showDiscard',
       whoseDiscard: 'whoseDiscard',
       showHand: 'showHand',
+      getEnemyHand: 'getEnemyHand',
     }),
   },
   components: {
@@ -324,6 +330,11 @@ export default defineComponent({
       <div v-if="isShowDeck" class="hand">
         <SliderComponent @card-selected="onDeckToHand" :cards="deck.allies" />
       </div>
+      <div v-if="isShowEnemyDeck" class="discard">
+        <div class="discard__close" @click="isShowEnemyDeck = false">x</div>
+
+        <SliderComponent :cards="getEnemyHand" />
+      </div>
     </div>
 
     <div class="animation__card__wrap" ref="animationWrap">
@@ -368,7 +379,7 @@ export default defineComponent({
   }
 }
 
-.hand{
+.hand {
   position: absolute;
   top: 0;
   left: 0;

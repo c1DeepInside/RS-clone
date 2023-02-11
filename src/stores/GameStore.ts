@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
+import { getRandom } from '@/utilits/getRandom';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -316,7 +317,68 @@ export const useGameStore = defineStore('gameStore', {
     },
     alliesPower: 0,
     enemyPower: 0,
-    enemyHand: [] as Card[],
+    enemyHand: [
+      {
+        id: 13,
+        name: 'Боец Синих Полосок',
+        type: 'usual',
+        image: 'src/assets/images/nor_blue_stripes.png',
+        description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+        fractionId: 0,
+        ability: 'bond',
+        fieldType: ['melee'],
+        power: 4,
+        quantity: 1,
+      },
+      {
+        id: 13,
+        name: 'Боец Синих Полосок',
+        type: 'usual',
+        image: 'src/assets/images/nor_blue_stripes.png',
+        description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+        fractionId: 0,
+        ability: 'bond',
+        fieldType: ['melee'],
+        power: 4,
+        quantity: 1,
+      },
+      {
+        id: 13,
+        name: 'Боец Синих Полосок',
+        type: 'usual',
+        image: 'src/assets/images/nor_blue_stripes.png',
+        description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+        fractionId: 0,
+        ability: 'bond',
+        fieldType: ['melee'],
+        power: 4,
+        quantity: 1,
+      },
+      {
+        id: 1,
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      },
+      {
+        id: 3,
+        name: 'Осадная башня',
+        type: 'usual',
+        image: 'src/assets/images/nor_siege_tower.png',
+        description: 'Башня на колесах... Чего только люди не удумают!',
+        fractionId: 0,
+        ability: null,
+        fieldType: ['siege'],
+        power: 6,
+        quantity: 1,
+      },
+    ] as Card[],
     board: {
       enemy: {
         siege: [
@@ -687,7 +749,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
       allies: {
         id: 28,
-        name: 'Эредин Бреакк Глас Владыка Тир на Лиа',
+        name: 'Эмгыр вар Эмрейс Император Нильфграада',
         type: 'leader',
         fieldType: [],
         power: null,
@@ -703,6 +765,12 @@ export const useGameStore = defineStore('gameStore', {
       allies: 2 as IntRange<0, 3>,
     },
   }),
+  getters: {
+    getEnemyHand(): Card[] {
+      const cardIndexes = getRandom(this.enemyHand.length, 3);
+      return this.enemyHand.filter((card, index) => cardIndexes.includes(index));
+    },
+  },
   actions: {
     putSpecScorch() {
       const lineNames = [
