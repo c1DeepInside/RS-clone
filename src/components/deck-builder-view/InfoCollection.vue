@@ -63,11 +63,6 @@ export default defineComponent({
       }
       const checkCards = this.deckInformation.find((item) => item.error === true);
 
-      console.log(this.currentLeader);
-      console.log(this.currentLeaderNorth);
-      console.log(this.currentLeaderNilfgaard);
-      console.log(this.currentLeaderScoiatel);
-      console.log(this.currentLeaderMonsters);
       if (!checkCards) {
         this.setFraction(this.currentFraction);
         this.setSelectedLeader(this.currentLeader);
