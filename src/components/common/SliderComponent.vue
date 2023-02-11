@@ -5,7 +5,6 @@ import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfo
 import CardDescriptionComponent from '@/components/common/CardDescriptionComponent.vue';
 import { mapState, mapActions } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
-import type { cardLineType } from '@/utilits/lineTypes';
 
 enum CardSize {
   large = 15,
@@ -61,7 +60,7 @@ export default defineComponent({
       if (idx === this.selectedCardIdx) {
         this.$emit('cardSelected', this.cards[this.selectedCardIdx]);
       } else {
-        this.selectedCardIdx = idx
+        this.selectedCardIdx = idx;
       }
     }
   },
@@ -132,7 +131,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .choice-panel {
-  position: fixed;
+  position: absolute;
   height: 100%;
   width: 100%;
   z-index: 20;
@@ -161,7 +160,7 @@ export default defineComponent({
     gap: 2vw;
     position: relative;
     overflow: hidden;
-    padding-top: 10px;
+    padding-top: 1vw;
   }
 }
 
@@ -169,6 +168,7 @@ export default defineComponent({
   flex-shrink: 0;
   position: relative;
   transition: margin-left linear 0.2s;
+  height: 29vw;
 }
 
 .dummy-card {
@@ -176,8 +176,8 @@ export default defineComponent({
 }
 
 .description-card {
-  margin-top: -7%;
-  margin-left: 29%;
+  margin-top: 1vw;
+  margin-left: 20.5vw;
 }
 
 :deep(.card-info) {

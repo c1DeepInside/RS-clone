@@ -28,7 +28,6 @@ export default defineComponent({
   },
   methods: {
     onCardSelected(card: Card) {
-      console.log(card)
       if (this.selectedCard.ability === 'medic') {
         const key = this.whoseDiscard === 'allies' ? true : false;
 

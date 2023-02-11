@@ -149,9 +149,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .choice-panel {
-  position: fixed;
-  height: 100%;
-  width: 100%;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
   z-index: 40;
   background-color: rgba(58, 41, 25, 0.486);
 
