@@ -14,7 +14,7 @@ import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
-import type { cardLineType } from '@/utilits/lineTypes';
+import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export default defineComponent({
   data() {
@@ -28,15 +28,19 @@ export default defineComponent({
   },
   methods: {
     onCardSelected(card: Card) {
-      console.log(card);
       if (this.selectedCard.ability === 'medic') {
         const key = this.whoseDiscard === 'allies' ? true : false;
 
-        this.setShowDiscard();
-        this.setSelectedCard(card);
+        if (this.discard[this.whoseDiscard as enemyAlliesType].length !== 0) {
+          this.setShowDiscard();
+          this.setSelectedCard(card);
+          this.removeFromDiscard(card);
+          this.getDiscard(this.whoseDiscard);
+        }
+
+        const isSpy = card.ability !== 'spy';
         const fieldType = card.fieldType.join() as cardLineType;
-        this.deleteFromDiscard(card);
-        this.addToLine(card, fieldType, key, true);
+        this.addToLine(card, fieldType, isSpy, true);
       }
     },
     showPass() {
@@ -90,7 +94,7 @@ export default defineComponent({
       getDiscard: 'getDiscard',
       setShowDiscard: 'setShowDiscard',
       setWhoseDiscard: 'setWhoseDiscard',
-      deleteFromDiscard: 'deleteFromDiscard',
+      removeFromDiscard: 'removeFromDiscard',
       addToLine: 'addToLine',
     }),
     getLastDiscardCard(fieldType: string): Card {

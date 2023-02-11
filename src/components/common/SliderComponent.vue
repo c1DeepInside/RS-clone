@@ -55,7 +55,7 @@ export default defineComponent({
       setShowDiscard: 'setShowDiscard',
       addToLine: 'addToLine',
       setSelectedCard: 'setSelectedCard',
-      deleteFromDiscard: 'deleteFromDiscard',
+      removeFromDiscard: 'removeFromDiscard',
     }),
     onCardClick(idx: number) {
       if (idx === this.selectedCardIdx) {
@@ -155,7 +155,7 @@ export default defineComponent({
 .card-wrapper {
   flex-shrink: 0;
   position: relative;
-  height: 29vw;
+  height: 30vw;
   transition: margin-left linear 0.2s;
 }
 
@@ -164,7 +164,7 @@ export default defineComponent({
 }
 
 .description-card {
-  margin-top: 1vw;
+  margin-top: 0.5vw;
   margin-left: 20.5vw;
 }
 
