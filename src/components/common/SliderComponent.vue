@@ -91,7 +91,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="choice-panel__cards" :style="{ maxWidth: panelSize }">
+  <div v-if="cards.length > 0" class="choice-panel__cards" :style="{ maxWidth: panelSize }">
     <div class="choice-panel__cards-inner">
       <div
         class="card-wrapper"

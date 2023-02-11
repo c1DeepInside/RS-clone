@@ -15,7 +15,6 @@ import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType } from '@/utilits/lineTypes';
-import { getRandom } from '@/utilits/getRandom';
 
 export default defineComponent({
   data() {

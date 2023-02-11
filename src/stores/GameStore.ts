@@ -919,7 +919,7 @@ export const useGameStore = defineStore('gameStore', {
     getDiscard(whoseDiscard: string) {
       const discard = whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
-      if (this.selectedCard.ability === 'medic') {
+      if (this.selectedCard.ability === 'medic' && discard.length > 0) {
         this.showDiscard = true;
         return discardMedic;
       }
