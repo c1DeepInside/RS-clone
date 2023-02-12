@@ -38,7 +38,23 @@ export default defineComponent({
     ...mapActions(useGameStore, {
       setPower: 'setPower',
       setAffectedBoard: 'setAffectedBoard',
+      removeFromLine: 'removeFromLine',
+      setSelectedCard: 'setSelectedCard',
+      addToLine: 'addToLine',
+      setIsShowSelected: 'setIsShowSelected',
+      addToHand: 'addToHand',
+      removeFromHand: 'removeFromHand',
     }),
+    setDecoy(card: Card, cardId: number) {
+      if (this.selectedCard.ability === 'decoy' && card.type === 'usual') {
+        this.removeFromLine(cardId, this.attackType, true);
+        this.addToLine(this.selectedCard, this.attackType, true, true);
+        this.removeFromHand(this.selectedCard);
+        this.addToHand([card]);
+        this.setSelectedCard(card);
+        this.setIsShowSelected(false);
+      }
+    }
   },
   components: {
     CardInfoComponent,
@@ -46,6 +62,7 @@ export default defineComponent({
   computed: {
     ...mapState(useGameStore, {
       board: 'board',
+      hand: 'hand',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       affectedBoard: 'affectedBoard',
@@ -162,6 +179,7 @@ export default defineComponent({
     >
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
         <CardInfoComponent
+          @click="setDecoy(card, index)"
           :card="card"
           :layoutType="0"
           class="card"

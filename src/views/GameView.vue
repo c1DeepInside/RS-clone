@@ -14,7 +14,7 @@ import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
-import type { cardLineType } from '@/utilits/lineTypes';
+import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export default defineComponent({
   data() {
@@ -34,11 +34,17 @@ export default defineComponent({
       if (this.selectedCard.ability === 'medic') {
         const key = this.whoseDiscard === 'allies' ? true : false;
 
-        this.setShowDiscard();
-        this.setSelectedCard(card);
+        if (this.discard[this.whoseDiscard as enemyAlliesType].length !== 0) {
+          this.setShowDiscard();
+          this.setSelectedCard(card);
+          this.removeFromDiscard(card, 'allies');
+          this.getDiscard(this.whoseDiscard);
+        }
+
+        const isSpy = card.ability !== 'spy';
         const fieldType = card.fieldType.join() as cardLineType;
-        this.removeFromDiscard(card, 'allies');
-        this.addToLine(card, fieldType, key, true);
+        this.addToLine(card, fieldType, isSpy, true);
+        this.setMedic(false);
       }
     },
     onHandToDiscard(card: Card) {
@@ -185,6 +191,7 @@ export default defineComponent({
       setShowHand: 'setShowHand',
       addToDiscard: 'addToDiscard',
       addToHand: 'addToHand',
+      setMedic: 'setMedic',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -211,6 +218,7 @@ export default defineComponent({
       whoseDiscard: 'whoseDiscard',
       showHand: 'showHand',
       getEnemyHand: 'getEnemyHand',
+      isMedic: 'isMedic',
     }),
   },
   components: {
@@ -319,7 +327,7 @@ export default defineComponent({
       </div>
       <!-- discard slider -->
       <div v-if="showDiscard" class="discard">
-        <div v-if="selectedCard.ability !== 'medic'" class="discard__close" @click="setShowDiscard()">x</div>
+        <div v-if="!isMedic" class="discard__close" @click="setShowDiscard()">x</div>
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>
