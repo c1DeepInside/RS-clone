@@ -457,7 +457,20 @@ export const useGameStore = defineStore('gameStore', {
             quantity: 1,
           },
         ] as Card[],
-        melee: [] as Card[],
+        melee: [
+          {
+            id: 13,
+            name: 'Боец Синих Полосок',
+            type: 'usual',
+            image: 'src/assets/images/nor_blue_stripes.png',
+            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
+            fractionId: 0,
+            ability: 'bond',
+            fieldType: ['melee'],
+            power: 10,
+            quantity: 1,
+          },
+        ] as Card[],
       },
       allies: {
         siege: [] as Card[],
@@ -864,6 +877,9 @@ export const useGameStore = defineStore('gameStore', {
           const type = lineName[0] as enemyAlliesType;
           const line = lineName[1] as cardLineType;
           this.board[type][line] = this.board[type][line].filter((card, index) => {
+            if (this.affectedBoard[type][line][index].power === maxPower && card.type === 'usual') {
+              this.discard[type] = [...this.discard[type], card];
+            }
             return this.affectedBoard[type][line][index].power !== maxPower || card.type !== 'usual';
           });
         });
@@ -877,6 +893,9 @@ export const useGameStore = defineStore('gameStore', {
         }
       });
       this.board[type][line] = this.board[type][line].filter((card, index) => {
+        if (this.affectedBoard[type][line][index].power === maxPower && card.type === 'usual') {
+          this.discard[type] = [...this.discard[type], card];
+        }
         return this.affectedBoard[type][line][index].power !== maxPower || card.type !== 'usual';
       });
     },
@@ -910,6 +929,7 @@ export const useGameStore = defineStore('gameStore', {
       this.enemyPower = this.power.enemy.melee + this.power.enemy.range + this.power.enemy.siege;
     },
     clearWeathers() {
+      this.discard.allies = [...this.discard.allies, ...this.board.weather];
       this.board.weather = [];
     },
     addToHand(cards: Card[]) {

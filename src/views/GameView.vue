@@ -116,6 +116,7 @@ export default defineComponent({
             this.putLeaderCard();
           } else if (this.selectedCard.ability === 'specScorch') {
             this.putSpecScorch();
+            this.addToDiscard(this.selectedCard, 'allies');
           } else {
             this.addToWeather(this.selectedCard);
             if (this.selectedCard.ability === 'clear') {
