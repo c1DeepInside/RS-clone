@@ -95,7 +95,12 @@ export default defineComponent({
 
   <div class="player__score player__score-more">
     <span>{{ playerType === 'enemy' ? Number(enemyPower) : Number(alliesPower) }}</span>
-    <div></div>
+    <div
+      v-if="
+        (playerType === 'enemy' && Number(enemyPower) > Number(alliesPower)) ||
+        (playerType === 'allies' && Number(enemyPower) < Number(alliesPower))
+      "
+    ></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
 </template>
