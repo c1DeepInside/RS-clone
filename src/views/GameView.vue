@@ -41,6 +41,7 @@ export default defineComponent({
         const isSpy = card.ability !== 'spy';
         const fieldType = card.fieldType.join() as cardLineType;
         this.addToLine(card, fieldType, isSpy, true);
+        this.setMedic(false);
       }
     },
     showPass() {
@@ -96,6 +97,7 @@ export default defineComponent({
       setWhoseDiscard: 'setWhoseDiscard',
       removeFromDiscard: 'removeFromDiscard',
       addToLine: 'addToLine',
+      setMedic: 'setMedic',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -119,6 +121,7 @@ export default defineComponent({
       lives: 'lives',
       showDiscard: 'showDiscard',
       whoseDiscard: 'whoseDiscard',
+      isMedic: 'isMedic',
     }),
   },
   components: {
@@ -226,7 +229,7 @@ export default defineComponent({
       </div>
       <!-- discard slider -->
       <div v-if="showDiscard" class="discard">
-        <div v-if="selectedCard.ability !== 'medic'" class="discard__close" @click="setShowDiscard()">x</div>
+        <div v-if="!isMedic" class="discard__close" @click="setShowDiscard()">x</div>
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>

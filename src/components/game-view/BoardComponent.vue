@@ -38,7 +38,8 @@ export default defineComponent({
       );
     },
     putCard(event: Event) {
-      if (this.isShowSelectedCard) {
+      if (this.isShowSelectedCard && this.selectedCard.ability !== 'decoy') {
+        this.setMedic(true);
         const target = event.currentTarget as HTMLElement;
         const targetProp = target.id.split('__');
         const isBoost = this.selectedCard.fieldType.includes('boost');
@@ -61,6 +62,7 @@ export default defineComponent({
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
       musterAbility: 'musterAbility',
+      setMedic: 'setMedic',
     }),
   },
   components: {

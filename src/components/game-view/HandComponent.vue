@@ -9,7 +9,7 @@
       <div
         class="card__wrap"
         v-for="(item, index) in hand"
-        :key="index"
+        :key="`${item.id}-${index}`"
         @click="startAnimate($event)"
         :style="cardMargin"
       >

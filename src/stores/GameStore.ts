@@ -6,30 +6,30 @@ import type { IntRange } from '@/utilits/types';
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [
-      // {
-      //   id: 1,
-      //   name: 'Геральт из Ривии',
-      //   type: 'hero',
-      //   image: 'src/assets/images/neu_geralt.png',
-      //   description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-      //   fractionId: null,
-      //   ability: null,
-      //   fieldType: ['melee'],
-      //   power: 15,
-      //   quantity: 1,
-      // },
-      // {
-      //   id: 2,
-      //   name: 'Цирилла',
-      //   type: 'hero',
-      //   image: 'src/assets/images/neutral_ciri.jpg',
-      //   description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-      //   fractionId: null,
-      //   ability: null,
-      //   fieldType: ['melee'],
-      //   power: 15,
-      //   quantity: 1,
-      // },
+      {
+        id: 1,
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      },
+      {
+        id: 2,
+        name: 'Цирилла',
+        type: 'hero',
+        image: 'src/assets/images/neutral_ciri.jpg',
+        description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 1,
+      },
       {
         id: 3,
         name: 'Осадная башня',
@@ -67,7 +67,7 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 1,
       },
       {
-        id: 15,
+        id: 14,
         name: 'Поддержка гавенкаров',
         type: 'usual',
         image: 'src/assets/images/sco_havekar_support_1.png',
@@ -139,7 +139,7 @@ export const useGameStore = defineStore('gameStore', {
       //   quantity: 3,
       // },
       {
-        id: 9,
+        id: 10,
         name: 'Ливень',
         type: 'special',
         image: 'src/assets/images/spc_rain.png',
@@ -149,6 +149,18 @@ export const useGameStore = defineStore('gameStore', {
         fieldType: ['weather'],
         power: null,
         quantity: 3,
+      },
+      {
+        id: 78,
+        name: 'Чучело',
+        type: 'special',
+        image: 'src/assets/images/special_decoy.jpg',
+        description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
+        fractionId: null,
+        ability: 'decoy',
+        fieldType: ['melee', 'range', 'siege'],
+        power: null,
+        quantity: 3
       },
       // {
       //   id: 9,
@@ -239,6 +251,7 @@ export const useGameStore = defineStore('gameStore', {
     } as Card,
     isShowSelected: false,
     showDiscard: false,
+    isMedic: false,
     whoseDiscard: 'allies',
     enemyNickName: 'kekov',
     alliesNickName: 'lulzov',
@@ -361,18 +374,18 @@ export const useGameStore = defineStore('gameStore', {
         },
       ] as Card[],
       allies: [
-        {
-          id: 1,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
+        // {
+        //   id: 1,
+        //   name: 'Геральт из Ривии',
+        //   type: 'hero',
+        //   image: 'src/assets/images/neu_geralt.png',
+        //   description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
+        //   fractionId: null,
+        //   ability: null,
+        //   fieldType: ['melee'],
+        //   power: 15,
+        //   quantity: 1,
+        // },
         {
           id: 2,
           name: 'Цирилла',
@@ -410,16 +423,16 @@ export const useGameStore = defineStore('gameStore', {
           quantity: 1,
         },
         {
-          id: 2,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
+          id: 78,
+          name: 'Чучело',
+          type: 'special',
+          image: 'special_decoy.png',
+          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
           fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
+          ability: 'decoy',
+          fieldType: ['melee', 'range', 'siege'],
+          power: null,
+          quantity: 3
         },
         {
           id: 3,
@@ -511,18 +524,24 @@ export const useGameStore = defineStore('gameStore', {
     },
     removeFromHand(card: Card) {
       const index = this.hand.indexOf(card);
-      this.hand.splice(index, 1);
+      if (index >= 0) {
+        this.hand.splice(index, 1);
+      }
     },
-    removeFromDeck(isAllies: boolean, cards: Card[]) {
+    removeFromDeck(isAllies: boolean, card: Card) {
       const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
 
-      for (let i = 0; i < cards.length; i++) {
-        for (let j = 0; j < deck.length; j++) {
-          if (cards[i].id === deck[j].id) {
-            deck.splice(i, 1);
-          }
-        }
-      }
+      let idx = deck.indexOf(card);
+      deck.splice(idx, 1)
+    },
+    removeFromWeather(card: Card) {
+      this.board.weather.splice(this.board.weather.indexOf(card), 1);
+    },
+    removeFromLine(cardId: number, line: cardLineType, isAllies?: boolean) {
+      const key = isAllies ? 'allies' : 'enemy';
+      const board = this.board[key][line];
+
+      board.splice(cardId, 1);
     },
     setIsShowSelected(isShow: boolean) {
       this.isShowSelected = isShow;
@@ -543,13 +562,6 @@ export const useGameStore = defineStore('gameStore', {
         this.board[`${key}Boost`][line].push(card);
       }
     },
-    removeFromWeather(card: Card) {
-      this.board.weather.splice(this.board.weather.indexOf(card), 1);
-    },
-    removeFromLine(card: Card, line: cardLineType, isAllies?: boolean) {
-      const key = isAllies ? 'allies' : 'enemy';
-      this.board[key][line].push(card);
-    },
     spyAbility(card: Card, type: enemyAlliesType) {
       if (card.ability === 'spy') {
         const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
@@ -561,18 +573,19 @@ export const useGameStore = defineStore('gameStore', {
       if (card.ability === 'muster') {
         const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
         const newCardsHand = deck.filter((item) => item.name.split(':')[0] === card.name.split(':')[0]);
-        this.removeFromDeck(isAllies, newCardsHand);
 
         newCardsHand.forEach((item) => {
           this.addToLine(item, line, isAllies, isCards);
+          this.removeFromDeck(isAllies, item);
         });
       }
     },
     getDiscard(whoseDiscard: string) {
       const discard = whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
-      if (this.selectedCard.ability === 'medic' && discard.length !== 0) {
+      if (this.selectedCard.ability === 'medic' && discard.length !== 0 && this.isMedic) {
         this.showDiscard = true;
+        // this.isMedic = true;
         return discardMedic;
       }
       return discard;
@@ -593,5 +606,8 @@ export const useGameStore = defineStore('gameStore', {
     setWhoseDiscard(type: enemyAlliesType) {
       this.whoseDiscard = type;
     },
+    setMedic(value: boolean) {
+      this.isMedic = value;
+    }
   },
 });
