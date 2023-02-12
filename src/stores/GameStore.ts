@@ -758,18 +758,6 @@ export const useGameStore = defineStore('gameStore', {
           quantity: 1,
         },
         {
-          id: 78,
-          name: 'Чучело',
-          type: 'special',
-          image: 'special_decoy.png',
-          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
-          fractionId: null,
-          ability: 'decoy',
-          fieldType: ['melee', 'range', 'siege'],
-          power: null,
-          quantity: 3,
-        },
-        {
           id: 3,
           name: 'Осадная башня',
           type: 'usual',
@@ -1023,6 +1011,14 @@ export const useGameStore = defineStore('gameStore', {
     },
     setMedic(value: boolean) {
       this.isMedic = value;
+    },
+    exchangeCard(card: Card) {
+      const handIndex = this.hand.indexOf(card);
+      this.removeFromHand(card);
+      const index = getRandom(this.deck.allies.length, 1);
+      this.hand = [...this.hand.slice(0, handIndex), this.deck.allies[index[0]], ...this.hand.slice(handIndex)];
+      this.deck.allies.splice(index[0], 1);
+      this.deck.allies.push(card);
     },
   },
 });
