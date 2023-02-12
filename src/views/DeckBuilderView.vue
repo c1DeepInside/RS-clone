@@ -383,49 +383,37 @@ export default defineComponent({
           break;
       }
     },
-    changeCollectionCards(data: Card) {
-      const index = this.collectionCards.indexOf(data);
-      if (this.collectionCards[index].quantity === 1) {
-        const existingCardIndex = this.deckCards.findIndex((item) => item.id === data.id);
-        if (existingCardIndex !== -1) {
-          this.deckCards[existingCardIndex].quantity++;
-        } else {
-          this.deckCards.push(data);
-        }
-        this.collectionCards.splice(index, 1);
+    addCard(data: Card) {
+      let deckCard = this.deckCards.find((item) => item.id === data.id);
+      if (deckCard) {
+        deckCard.quantity += 1;
       } else {
-        this.collectionCards[index].quantity--;
-        const existingCardIndex = this.deckCards.findIndex((item) => item.id === data.id);
-        if (existingCardIndex !== -1) {
-          this.deckCards[existingCardIndex].quantity++;
-        } else {
-          const cardCopy = { ...data };
-          cardCopy.quantity = 1;
-          this.deckCards.push(cardCopy);
-        }
+        this.deckCards.push({ ...data, quantity: 1 });
       }
     },
-    changeDeckCards(data: Card) {
+    deleteCard(data: Card) {
       const index = this.deckCards.indexOf(data);
-      if (this.deckCards[index].quantity === 1) {
-        const existingCardIndex = this.collectionCards.findIndex((item) => item.id === data.id);
-        if (existingCardIndex !== -1) {
-          this.collectionCards[existingCardIndex].quantity++;
-        } else {
-          this.collectionCards.push(data);
-        }
+      if (data.quantity === 1) {
         this.deckCards.splice(index, 1);
       } else {
-        this.deckCards[index].quantity--;
-        const existingCardIndex = this.collectionCards.findIndex((item) => item.id === data.id);
-        if (existingCardIndex !== -1) {
-          this.collectionCards[existingCardIndex].quantity++;
-        } else {
-          const cardCopy = { ...data };
-          cardCopy.quantity = 1;
-          this.collectionCards.push(cardCopy);
-        }
+        data.quantity--;
       }
+    },
+  },
+  computed: {
+    changeCollectionsCards() {
+      return this.collectionCards
+        .map((item) => {
+          let deckCard = this.deckCards.find((el) => el.id === item.id);
+          if (deckCard) {
+            return {
+              ...item,
+              quantity: item.quantity - deckCard.quantity,
+            };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0);
     },
   },
   created() {
@@ -455,14 +443,14 @@ export default defineComponent({
       <div class="builder">
         <CardCollection
           @filterChanged="changeFilterCollection"
-          @selectedCard="changeCollectionCards"
+          @selectedCard="addCard"
           :currentFraction="currentFraction"
-          :gwentCards="collectionCards"
+          :gwentCards="changeCollectionsCards"
         />
         <InfoCollection :currentFraction="currentFraction" :leadersCards="collectionCards" :selectedCards="deckCards" />
         <CardCollection
           @filterChanged="changeFilterDeck"
-          @selectedCard="changeDeckCards"
+          @selectedCard="deleteCard"
           :currentFraction="currentFraction"
           :gwentCards="deckCards"
         />
