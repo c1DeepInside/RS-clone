@@ -302,7 +302,7 @@ export const useGameStore = defineStore('gameStore', {
         power: 7,
         quantity: 1,
       },
-        {
+      {
         id: 78,
         name: 'Чучело',
         type: 'special',
@@ -312,7 +312,7 @@ export const useGameStore = defineStore('gameStore', {
         ability: 'decoy',
         fieldType: ['melee', 'range', 'siege'],
         power: null,
-        quantity: 3
+        quantity: 3,
       },
       // {
       //   id: 9,
@@ -767,7 +767,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'decoy',
           fieldType: ['melee', 'range', 'siege'],
           power: null,
-          quantity: 3
+          quantity: 3,
         },
         {
           id: 3,
@@ -822,7 +822,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
       allies: {
         id: 28,
-        name: 'Эмгыр вар Эмрейс Император Нильфграада',
+        name: 'Эредин Бреакк Глас Король Aen Elle',
         type: 'leader',
         fieldType: [],
         power: null,
@@ -842,6 +842,11 @@ export const useGameStore = defineStore('gameStore', {
     getEnemyHand(): Card[] {
       const cardIndexes = getRandom(this.enemyHand.length, 3);
       return this.enemyHand.filter((card, index) => cardIndexes.includes(index));
+    },
+    getWeatherDeck(): Card[] {
+      return this.deck.allies.filter(
+        (card) => card.ability === 'fog' || card.ability === 'frost' || card.ability === 'rain'
+      );
     },
   },
   actions: {
@@ -1018,6 +1023,6 @@ export const useGameStore = defineStore('gameStore', {
     },
     setMedic(value: boolean) {
       this.isMedic = value;
-    }
+    },
   },
 });

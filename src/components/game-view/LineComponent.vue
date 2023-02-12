@@ -54,7 +54,7 @@ export default defineComponent({
         this.setSelectedCard(card);
         this.setIsShowSelected(false);
       }
-    }
+    },
   },
   components: {
     CardInfoComponent,

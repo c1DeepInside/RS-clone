@@ -27,13 +27,12 @@ export default defineComponent({
       handChangeCount: 0,
       isShowDeck: false,
       isShowEnemyDeck: false,
+      isShowWeatherDeck: false,
     };
   },
   methods: {
     onCardSelected(card: Card) {
       if (this.selectedCard.ability === 'medic') {
-        const key = this.whoseDiscard === 'allies' ? true : false;
-
         if (this.discard[this.whoseDiscard as enemyAlliesType].length !== 0) {
           this.setShowDiscard();
           this.setSelectedCard(card);
@@ -57,6 +56,11 @@ export default defineComponent({
       } else {
         this.handChangeCount += 1;
       }
+    },
+    onWeatherDeck(card: Card) {
+      this.addToWeather(card);
+      this.removeFromDeck('allies', card);
+      this.isShowWeatherDeck = false;
     },
     onDeckToHand(card: Card) {
       this.removeFromDeck('allies', card);
@@ -145,6 +149,9 @@ export default defineComponent({
         case 'Эмгыр вар Эмрейс Император Нильфграада':
           this.isShowEnemyDeck = true;
           break;
+        case 'Эредин Бреакк Глас Король Aen Elle':
+          this.isShowWeatherDeck = true;
+          break;
         default:
       }
       this.leader.allies.quantity = 0;
@@ -219,6 +226,7 @@ export default defineComponent({
       showHand: 'showHand',
       getEnemyHand: 'getEnemyHand',
       isMedic: 'isMedic',
+      getWeatherDeck: 'getWeatherDeck',
     }),
   },
   components: {
@@ -241,7 +249,7 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card" :class="leader.enemy.quantity <= 0 ? 'card-off' : ''">
+          <div class="game__leader-card card-off">
             <CardInfoComponent :card="leader.enemy" :layoutType="0" class="card" />
           </div>
           <div class="game__leader-icon">
@@ -337,6 +345,9 @@ export default defineComponent({
       <div v-if="isShowDeck" class="hand">
         <SliderComponent @card-selected="onDeckToHand" :cards="deck.allies" />
       </div>
+      <div v-if="isShowWeatherDeck && getWeatherDeck.length > 0" class="hand">
+        <SliderComponent @card-selected="onWeatherDeck" :cards="getWeatherDeck" />
+      </div>
       <div v-if="isShowEnemyDeck" class="discard">
         <div class="discard__close" @click="isShowEnemyDeck = false">x</div>
 
@@ -383,6 +394,10 @@ export default defineComponent({
     font-size: 4vw;
     top: 4vw;
     right: 6vw;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 

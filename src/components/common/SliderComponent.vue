@@ -156,7 +156,6 @@ export default defineComponent({
   position: relative;
   height: 30vw;
   transition: margin-left linear 0.2s;
-  height: 29vw;
 }
 
 .dummy-card {
