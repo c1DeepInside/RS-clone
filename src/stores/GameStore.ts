@@ -822,7 +822,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
       allies: {
         id: 28,
-        name: 'Эредин Бреакк Глас Король Aen Elle',
+        name: 'Эредин Бреакк Глас Убийца Оберона',
         type: 'leader',
         fieldType: [],
         power: null,

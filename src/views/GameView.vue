@@ -28,6 +28,8 @@ export default defineComponent({
       isShowDeck: false,
       isShowEnemyDeck: false,
       isShowWeatherDeck: false,
+      isShowAlliesDiscard: false,
+      isShowEnemyDiscard: false,
     };
   },
   methods: {
@@ -56,6 +58,17 @@ export default defineComponent({
       } else {
         this.handChangeCount += 1;
       }
+    },
+    onDiscardToHand(card: Card) {
+      if (this.isShowAlliesDiscard) {
+        this.isShowAlliesDiscard = false;
+        this.removeFromDiscard(card, 'allies');
+      }
+      if (this.isShowEnemyDiscard) {
+        this.isShowEnemyDiscard = false;
+        this.removeFromDiscard(card, 'enemy');
+      }
+      this.addToHand([card]);
     },
     onWeatherDeck(card: Card) {
       this.addToWeather(card);
@@ -151,6 +164,12 @@ export default defineComponent({
           break;
         case 'Эредин Бреакк Глас Король Aen Elle':
           this.isShowWeatherDeck = true;
+          break;
+        case 'Эредин Бреакк Глас Убийца Оберона':
+          this.isShowAlliesDiscard = true;
+          break;
+        case 'Эмгыр вар Эмрейс Властелин Юга':
+          this.isShowEnemyDiscard = true;
           break;
         default:
       }
@@ -334,22 +353,31 @@ export default defineComponent({
         </div>
       </div>
       <!-- discard slider -->
-      <div v-if="showDiscard" class="discard">
-        <div v-if="!isMedic" class="discard__close" @click="setShowDiscard()">x</div>
+      <div v-if="showDiscard" class="show_cards_close">
+        <div v-if="!isMedic" class="close" @click="setShowDiscard()">x</div>
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
       </div>
-      <div v-if="showHand" class="hand">
+      <div v-if="showHand" class="show_cards">
         <SliderComponent @card-selected="onHandToDiscard" :cards="hand" />
       </div>
-      <div v-if="isShowDeck" class="hand">
+      <div v-if="isShowDeck" class="show_cards">
         <SliderComponent @card-selected="onDeckToHand" :cards="deck.allies" />
       </div>
-      <div v-if="isShowWeatherDeck && getWeatherDeck.length > 0" class="hand">
+      <div v-if="isShowWeatherDeck && getWeatherDeck.length > 0" class="show_cards">
         <SliderComponent @card-selected="onWeatherDeck" :cards="getWeatherDeck" />
       </div>
-      <div v-if="isShowEnemyDeck" class="discard">
-        <div class="discard__close" @click="isShowEnemyDeck = false">x</div>
+      <div
+        v-if="(isShowAlliesDiscard && discard.allies.length > 0) || (isShowEnemyDiscard && discard.enemy.length > 0)"
+        class="show_cards"
+      >
+        <SliderComponent
+          @card-selected="onDiscardToHand"
+          :cards="isShowAlliesDiscard ? discard.allies : isShowEnemyDiscard ? discard.enemy : []"
+        />
+      </div>
+      <div v-if="isShowEnemyDeck" class="show_cards_close">
+        <div class="close" @click="isShowEnemyDeck = false">x</div>
 
         <SliderComponent :cards="getEnemyHand" />
       </div>
@@ -378,7 +406,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.discard {
+.show_cards_close {
   position: absolute;
   top: 0;
   left: 0;
@@ -388,7 +416,7 @@ export default defineComponent({
   padding-top: 8vw;
   background-color: rgba(58, 41, 25, 0.699);
 
-  &__close {
+  .close {
     position: absolute;
     color: white;
     font-size: 4vw;
@@ -401,7 +429,7 @@ export default defineComponent({
   }
 }
 
-.hand {
+.show_cards {
   position: absolute;
   top: 0;
   left: 0;
