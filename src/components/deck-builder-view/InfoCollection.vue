@@ -1,43 +1,166 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
+import type Card from '@/interfaces/card';
+import { useGameStore } from '@/stores/GameStore';
+import { mapState, mapActions } from 'pinia';
 
 export default defineComponent({
   data() {
     return {
-      deckInfos: [
+      error: false,
+      currentLeader: {} as Card,
+      currentLeaderNorth: {} as Card,
+      currentLeaderNilfgaard: {} as Card,
+      currentLeaderScoiatel: {} as Card,
+      currentLeaderMonsters: {} as Card,
+    };
+  },
+  methods: {
+    changeFractionLeader(data: Card) {
+      switch (this.currentFraction) {
+        case 0:
+          this.currentLeader = data;
+          this.currentLeaderNorth = data;
+          break;
+        case 1:
+          this.currentLeader = data;
+          this.currentLeaderNilfgaard = data;
+          break;
+        case 2:
+          this.currentLeader = data;
+          this.currentLeaderScoiatel = data;
+          break;
+        case 3:
+          this.currentLeader = data;
+          this.currentLeaderMonsters = data;
+          break;
+      }
+    },
+    changeCurrentLeader() {
+      switch (this.currentFraction) {
+        case 0:
+          this.currentLeader = this.currentLeaderNorth;
+          break;
+        case 1:
+          this.currentLeader = this.currentLeaderNilfgaard;
+          break;
+        case 2:
+          this.currentLeader = this.currentLeaderScoiatel;
+          break;
+        case 3:
+          this.currentLeader = this.currentLeaderMonsters;
+          break;
+      }
+    },
+    startGame() {
+      this.changeCurrentLeader();
+      if (Object.keys(this.currentLeader).length === 0) {
+        this.currentLeader = this.leadersCards.find(
+          (item) => item.type === 'leader' && item.fractionId === this.currentFraction
+        ) as Card;
+        this.changeFractionLeader(this.currentLeader);
+      }
+      const checkCards = this.deckInformation.find((item) => item.error === true);
+
+      if (!checkCards) {
+        this.setFraction(this.currentFraction);
+        this.setSelectedLeader(this.currentLeader);
+        this.setHand(this.selectedCards);
+      }
+    },
+    ...mapActions(useGameStore, {
+      setHand: 'setHand',
+      setSelectedLeader: 'setSelectedLeader',
+      setFraction: 'setFraction',
+    }),
+  },
+  computed: {
+    deckInformation() {
+      return [
         {
           text: 'Карты в колоде',
           img: 'src/assets/images/filter/board_cards.png',
-          count: 28,
+          count: this.selectedCards.reduce((acc, item) => {
+            return acc + item.quantity;
+          }, 0),
         },
         {
           text: 'Карты отрядов',
           img: 'src/assets/images/filter/melee_tan.png',
           maxCount: 22,
-          count: 14,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'usual' || item.type === 'hero' ? acc + item.quantity : acc;
+          }, 0),
+          error:
+            this.selectedCards.reduce((acc, item) => {
+              return item.type === 'usual' || item.type === 'hero' ? acc + item.quantity : acc;
+            }, 0) < 22
+              ? true
+              : false,
         },
         {
           text: 'Специальные карты',
           img: 'src/assets/images/filter/sky_tan.png',
           maxCount: 10,
-          count: 8,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'special' ? acc + item.quantity : acc;
+          }, 0),
+          error:
+            this.selectedCards.reduce((acc, item) => {
+              return item.type === 'special' ? acc + item.quantity : acc;
+            }, 0) > 10
+              ? true
+              : false,
         },
         {
           text: 'Общая сила карт отрядов',
           img: 'src/assets/images/filter/melee_ranged.png',
-          count: 160,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.power ? acc + item.power * item.quantity : acc;
+          }, 0),
         },
         {
           text: 'Герои',
           img: 'src/assets/images/filter/hero_tan.png',
-          count: 8,
+          count: this.selectedCards.reduce((acc, item) => {
+            return item.type === 'hero' ? acc + item.quantity : acc;
+          }, 0),
         },
-      ],
-    };
+      ];
+    },
+    filterLeaders() {
+      return this.leadersCards.filter((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
+    },
+    fractionLeader() {
+      this.changeCurrentLeader();
+      if (Object.keys(this.currentLeader).length === 0) {
+        return this.leadersCards.find((item) => item.type === 'leader' && item.fractionId === this.currentFraction);
+      }
+      return this.currentLeader;
+    },
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      selectLeader: 'selectLeader',
+      fraction: 'fraction',
+    }),
   },
   components: {
     LeaderOfFraction,
+  },
+  props: {
+    currentFraction: {
+      type: Number,
+      required: true,
+    },
+    leadersCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
+    },
+    selectedCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
+    },
   },
 });
 </script>
@@ -46,18 +169,20 @@ export default defineComponent({
   <div class="info">
     <div class="leader">
       <p class="leader__text">Лидер</p>
-      <LeaderOfFraction></LeaderOfFraction>
+      <LeaderOfFraction @selectedLeader="changeFractionLeader" :leader="fractionLeader" :leadersCards="filterLeaders" />
     </div>
     <div class="deck__info">
-      <div v-for:="deckInfo in deckInfos">
+      <div v-for:="deckInfo in deckInformation">
         <p class="deck__text">{{ deckInfo.text }}</p>
         <div class="deck__numbers">
           <img class="deck__img" :src="deckInfo.img" draggable="false" />
-          <p>{{ deckInfo.maxCount ? `${deckInfo.count}/${deckInfo.maxCount}` : deckInfo.count }}</p>
+          <p :class="{ error: deckInfo.error }">
+            {{ deckInfo.maxCount ? `${deckInfo.count}/${deckInfo.maxCount}` : deckInfo.count }}
+          </p>
         </div>
       </div>
     </div>
-    <button class="start__game">Начать игру</button>
+    <button class="start__game" @click="startGame">Начать игру</button>
   </div>
 </template>
 
@@ -77,6 +202,7 @@ export default defineComponent({
   align-items: center;
   margin-top: 25%;
   gap: 1vw;
+  height: 37%;
 
   &__text {
     font-size: 1.2vw;
@@ -105,6 +231,10 @@ export default defineComponent({
     gap: 0.5vw;
     justify-content: center;
     align-items: center;
+
+    .error {
+      color: red;
+    }
   }
 
   &__text {

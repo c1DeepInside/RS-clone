@@ -58,7 +58,6 @@ export default defineComponent({
           return '';
         }
 
-        // @ts-ignore
         return cardEquipmendImg[key];
       }
 
@@ -288,6 +287,7 @@ export default defineComponent({
   }
 
   &__description {
+    color: $BLACK_COLOR;
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
     color: black;

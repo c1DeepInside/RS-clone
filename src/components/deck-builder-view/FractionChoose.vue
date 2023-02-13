@@ -50,12 +50,17 @@ export default defineComponent({
       } as Record<Filters, string>,
     };
   },
+  emits: {
+    currentFraction: null,
+  },
   methods: {
     decrementIdx() {
       this.currentId = (this.currentId - 1 + this.fractions.length) % this.fractions.length;
+      this.$emit('currentFraction', this.currentId);
     },
     incrementIdx() {
       this.currentId = (this.currentId + 1) % this.fractions.length;
+      this.$emit('currentFraction', this.currentId);
     },
   },
   computed: {
