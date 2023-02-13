@@ -79,6 +79,18 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 1,
       },
       {
+        id: 19,
+        name: 'Поддержка гавенкаров',
+        type: 'usual',
+        image: 'src/assets/images/sco_havekar_support_1.png',
+        description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+        fractionId: 2,
+        ability: 'muster',
+        fieldType: ['melee'],
+        power: 5,
+        quantity: 1,
+      },
+      {
         id: 7,
         name: 'Командирский рог',
         type: 'special',
@@ -572,11 +584,13 @@ export const useGameStore = defineStore('gameStore', {
     musterAbility(card: Card, line: cardLineType, isAllies: boolean, isCards: boolean) {
       if (card.ability === 'muster') {
         const deck = !isAllies ? this.deck['enemy'] : this.deck['allies'];
+        const fromHand = this.hand.filter((item) => item.name.split(':')[0] === card.name.split(':')[0]);
         const newCardsHand = deck.filter((item) => item.name.split(':')[0] === card.name.split(':')[0]);
 
-        newCardsHand.forEach((item) => {
+        [...fromHand, ...newCardsHand].forEach((item) => {
           this.addToLine(item, line, isAllies, isCards);
           this.removeFromDeck(isAllies, item);
+          this.removeFromHand(item);
         });
       }
     },
