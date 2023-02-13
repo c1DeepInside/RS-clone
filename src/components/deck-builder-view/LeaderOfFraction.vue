@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import CardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
 import SliderComponent from '@/components/common/SliderComponent.vue';
 import type Card from '@/interfaces/card';
 
@@ -32,7 +32,7 @@ export default defineComponent({
     },
   },
   components: {
-    CardInfoCopmponent,
+    CardInfoComponent,
     SliderComponent,
   },
   props: {
@@ -49,7 +49,7 @@ export default defineComponent({
 
 <template>
   <div class="leader__img__wrap" @click="showModal">
-    <CardInfoCopmponent :card="leader" :layout-type="cardLayoutType.EXTENDED" />
+    <CardInfoComponent :card="leader" :layout-type="cardLayoutType.EXTENDED" />
   </div>
   <div v-if="ifModal" class="modal" @click="closeModal">
     <div class="modal__content">

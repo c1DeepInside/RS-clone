@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
-import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import CardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
 import type Card from '@/interfaces/card';
 interface Filter {
   id: number;
@@ -93,7 +93,7 @@ export default defineComponent({
     },
   },
   components: {
-    CardInfoCopmponent,
+    CardInfoComponent,
   },
   props: {
     currentFraction: {
@@ -121,7 +121,7 @@ export default defineComponent({
     </div>
     <div class="cards">
       <div class="card" v-for="item in filteredCards" :key="item.id">
-        <CardInfoCopmponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
+        <CardInfoComponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
       </div>
     </div>
   </div>

@@ -272,7 +272,12 @@ export default defineComponent({
       <div class="game__players">
         <div class="game__leader game__leader-1">
           <div class="game__leader-card card-off">
-            <CardInfoComponent :card="leader.enemy" :layoutType="0" class="card" />
+            <CardInfoComponent
+              v-if="JSON.stringify(leader.enemy) !== JSON.stringify({})"
+              :card="leader.enemy"
+              :layoutType="0"
+              class="card"
+            />
           </div>
           <div class="game__leader-icon">
             <div></div>
@@ -307,7 +312,13 @@ export default defineComponent({
 
         <div class="game__leader game__leader-2">
           <div class="game__leader-card" :class="leader.allies.quantity <= 0 ? 'card-off' : ''">
-            <CardInfoComponent :card="leader.allies" :layoutType="0" class="card" @click="setLeader(leader.allies)" />
+            <CardInfoComponent
+              v-if="JSON.stringify(leader.allies) !== JSON.stringify({})"
+              :card="leader.allies"
+              :layoutType="0"
+              class="card"
+              @click="setLeader(leader.allies)"
+            />
           </div>
           <div class="game__leader-icon game__leader-active">
             <div></div>

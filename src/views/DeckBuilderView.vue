@@ -22,7 +22,7 @@ export default defineComponent({
           ability: null,
           fieldType: ['melee'],
           power: 15,
-          quantity: 1,
+          quantity: 10,
         },
         {
           id: 1,
@@ -46,7 +46,7 @@ export default defineComponent({
           ability: 'bond',
           fieldType: ['siege'],
           power: 8,
-          quantity: 2,
+          quantity: 5,
         },
         {
           id: 3,

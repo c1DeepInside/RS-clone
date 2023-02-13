@@ -3,7 +3,9 @@ import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
-import { mapState, mapActions } from 'pinia';
+import { mapActions } from 'pinia';
+import router from '@/router';
+import { getRandom } from '@/utilits/getRandom';
 
 export default defineComponent({
   data() {
@@ -62,17 +64,34 @@ export default defineComponent({
         this.changeFractionLeader(this.currentLeader);
       }
       const checkCards = this.deckInformation.find((item) => item.error === true);
-
       if (!checkCards) {
         this.setFraction(this.currentFraction);
         this.setSelectedLeader(this.currentLeader);
-        this.setHand(this.selectedCards);
+        this.parseDeck(this.selectedCards);
+        router.push('/game');
       }
     },
+    parseDeck(cards: Card[]): Card[] {
+      let finCards: Card[] = [];
+      cards.forEach((card) => {
+        const updateCard = JSON.parse(JSON.stringify(card));
+        updateCard.quantity = 1;
+        finCards = [...finCards, ...Array(card.quantity).fill(updateCard)];
+      });
+      const indexes = getRandom(finCards.length);
+      let sortCards: Card[] = [];
+      indexes.forEach((index) => {
+        sortCards.push(finCards[index]);
+      });
+      this.setHand(sortCards.slice(0, 10));
+      this.setDeck(sortCards.slice(10));
+      return sortCards;
+    },
     ...mapActions(useGameStore, {
-      setHand: 'setHand',
+      setDeck: 'setDeck',
       setSelectedLeader: 'setSelectedLeader',
       setFraction: 'setFraction',
+      setHand: 'setHand',
     }),
   },
   computed: {
@@ -139,11 +158,6 @@ export default defineComponent({
       }
       return this.currentLeader;
     },
-    ...mapState(useGameStore, {
-      hand: 'hand',
-      selectLeader: 'selectLeader',
-      fraction: 'fraction',
-    }),
   },
   components: {
     LeaderOfFraction,
