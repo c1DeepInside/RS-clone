@@ -296,6 +296,42 @@ export const useGameStore = defineStore('gameStore', {
           quantity: 3,
         },
         {
+          id: 19,
+          name: 'Поддержка гавенкаров',
+          type: 'usual',
+          image: 'src/assets/images/sco_havekar_support_1.png',
+          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
+          fractionId: 2,
+          ability: 'muster',
+          fieldType: ['melee'],
+          power: 5,
+          quantity: 1,
+        },
+        {
+          id: 4,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 4,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 3,
+        },
+        {
           id: 2,
           name: 'Лекарь Бурой Хоругви',
           type: 'usual',
@@ -438,7 +474,7 @@ export const useGameStore = defineStore('gameStore', {
           id: 78,
           name: 'Чучело',
           type: 'special',
-          image: 'special_decoy.png',
+          image: 'src/assets/images/special_decoy.png',
           description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
           fractionId: null,
           ability: 'decoy',
@@ -525,14 +561,33 @@ export const useGameStore = defineStore('gameStore', {
     setEnemyPower() {
       this.enemyPower = this.power.enemy.melee + this.power.enemy.range + this.power.enemy.siege;
     },
+    setIsShowSelected(isShow: boolean) {
+      this.isShowSelected = isShow;
+    },
+    setSelectedCard(card: Card) {
+      this.selectedCard = card;
+    },
+    setShowDiscard() {
+      this.showDiscard = !this.showDiscard;
+    },
+    setWhoseDiscard(type: enemyAlliesType) {
+      this.whoseDiscard = type;
+    },
+    setMedic(value: boolean) {
+      this.isMedic = value;
+    },
     clearWeathers() {
       this.board.weather = [];
     },
-    addToHand(cards: Card[]) {
-      this.hand = [...this.hand, ...cards];
-    },
-    addToEnemyHand(cards: Card[]) {
-      this.enemyHand = [...this.enemyHand, ...cards];
+    removeFromDiscard(card: Card) {
+      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
+
+      for (let i = 0; i < discard.length; i++) {
+        if (discard[i].id === card.id) {
+          discard.splice(i, 1);
+          break;
+        }
+      }
     },
     removeFromHand(card: Card) {
       const index = this.hand.indexOf(card);
@@ -555,12 +610,6 @@ export const useGameStore = defineStore('gameStore', {
 
       board.splice(cardId, 1);
     },
-    setIsShowSelected(isShow: boolean) {
-      this.isShowSelected = isShow;
-    },
-    setSelectedCard(card: Card) {
-      this.selectedCard = card;
-    },
     addToWeather(card: Card) {
       this.board.weather.push(card);
     },
@@ -573,6 +622,12 @@ export const useGameStore = defineStore('gameStore', {
       } else {
         this.board[`${key}Boost`][line].push(card);
       }
+    },
+    addToHand(cards: Card[]) {
+      this.hand = [...this.hand, ...cards];
+    },
+    addToEnemyHand(cards: Card[]) {
+      this.enemyHand = [...this.enemyHand, ...cards];
     },
     spyAbility(card: Card, type: enemyAlliesType) {
       if (card.ability === 'spy') {
@@ -605,24 +660,8 @@ export const useGameStore = defineStore('gameStore', {
       this.setMedic(false);
       return discard;
     },
-    removeFromDiscard(card: Card) {
-      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
-
-      for (let i = 0; i < discard.length; i++) {
-        if (discard[i].id === card.id) {
-          discard.splice(i, 1);
-          break;
-        }
-      }
+    getLineCards(type: enemyAlliesType, line: cardLineType) {
+      return this.board[type][line];
     },
-    setShowDiscard() {
-      this.showDiscard = !this.showDiscard;
-    },
-    setWhoseDiscard(type: enemyAlliesType) {
-      this.whoseDiscard = type;
-    },
-    setMedic(value: boolean) {
-      this.isMedic = value;
-    }
   },
 });
