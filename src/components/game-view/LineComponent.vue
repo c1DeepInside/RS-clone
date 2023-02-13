@@ -80,6 +80,9 @@ export default defineComponent({
     cards(): Card[] {
       let line = JSON.parse(JSON.stringify(this.board[this.type][this.attackType]));
       line = line.map((card: Card) => {
+        if (card.power === null) {
+          return card;
+        }
         if (this.ifFogRainFrost && card.type !== 'hero') {
           card.power = 1;
         }
