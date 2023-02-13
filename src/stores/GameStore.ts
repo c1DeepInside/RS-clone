@@ -585,9 +585,10 @@ export const useGameStore = defineStore('gameStore', {
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
       if (this.selectedCard.ability === 'medic' && discard.length !== 0 && this.isMedic) {
         this.showDiscard = true;
-        // this.isMedic = true;
+        this.setMedic(true);
         return discardMedic;
       }
+      this.setMedic(false);
       return discard;
     },
     removeFromDiscard(card: Card) {
