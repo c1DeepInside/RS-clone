@@ -36,36 +36,38 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  // align-items: center;
   position: fixed;
-  gap: 15px;
+  gap: 1vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40rem;
-  height: 39rem;
+  width: 35vw;
+  height: 30vw;
   color: $GOLDEN_COLOR;
-  font-size: 21px;
+  font-size: 1vw;
   line-height: 1.2;
   background-color: rgba(0, 0, 0, 0.753);
-  padding: 30px 30px;
+  padding: 1vw 1vw;
 
   &__title {
-    font-size: 26px;
+    font-size: 2vw;
     letter-spacing: 3px;
+    text-align: center;
   }
 
   &__button {
-    width: 300px;
-    height: 40px;
-    font-size: 1rem;
+    width: 16vw;
+    height: 2.4vw;
+    font-size: 1vw;
+    margin: 0 auto;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-top: 10px;
+    margin-top: 1vw;
     color: $BLACK_COLOR;
     border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.767);
-    border-radius: 80px;
+    border-radius: 1vw;
     transition: background-color 0.2s linear;
 
     &:hover {

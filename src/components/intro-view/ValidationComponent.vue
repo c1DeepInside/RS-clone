@@ -33,21 +33,22 @@ export default {
   justify-content: center;
   align-items: center;
   position: fixed;
-  gap: 50px;
+  gap: 4vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 36rem;
-  height: 36rem;
+  width: 30vw;
+  height: 30vw;
   background-color: rgba(0, 0, 0, 0.753);
 
   &__input {
-    width: 300px;
-    height: 40px;
+    width: 16vw;
+    height: 2.4vw;
     font-size: 1rem;
     font-weight: 300;
     font-style: italic;
-    padding-left: 10px;
+    padding-left: 0.5vw;
+    font-size: 0.9vw;
 
     &:focus {
       outline: none;
@@ -55,30 +56,30 @@ export default {
 
     &-password {
       display: fixed;
-      top: 300px;
+      top: 16vw;
       position: fixed;
       margin-top: 10px;
       color: white;
-      width: 300px;
+      width: 16vw;
     }
   }
 
   &__link {
-    margin-top: -30px;
+    margin-top: -3vw;
     color: white;
   }
 
   &__button {
-    width: 300px;
-    height: 40px;
-    font-size: 1rem;
+    width: 16vw;
+    height: 2.4vw;
+    font-size: 1vw;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;
     border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
     transition: background-color 0.2s linear;
-    border-radius: 80px;
+    border-radius: 1vw;
 
     &:hover {
       background-color: white;
