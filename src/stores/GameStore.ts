@@ -1043,8 +1043,8 @@ export const useGameStore = defineStore('gameStore', {
       this.deck.allies.splice(index[0], 1);
       this.deck.allies.push(card);
     },
-    setHand(cards: Card[]) {
-      this.hand = cards;
+    setDeck(cards: Card[]) {
+      this.deck.allies = cards;
     },
     setSelectedLeader(card: Card) {
       this.selectLeader = card;

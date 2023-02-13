@@ -47,11 +47,12 @@ export default defineComponent({
     }),
     setDecoy(card: Card, cardId: number) {
       if (this.selectedCard.ability === 'decoy' && card.type === 'usual') {
+        const origCard = this.board.allies[this.attackType][cardId];
         this.removeFromLine(cardId, this.attackType, true);
         this.addToLine(this.selectedCard, this.attackType, true, true);
         this.removeFromHand(this.selectedCard);
-        this.addToHand([card]);
-        this.setSelectedCard(card);
+        this.addToHand([origCard]);
+        this.setSelectedCard(origCard);
         this.setIsShowSelected(false);
       }
     },
