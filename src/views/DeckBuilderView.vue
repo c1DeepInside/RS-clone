@@ -142,7 +142,7 @@ export default defineComponent({
           ability: 'medic',
           fieldType: ['range'],
           power: 10,
-          quantity: 1,
+          quantity: 15,
         },
         {
           id: 11,

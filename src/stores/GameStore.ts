@@ -6,7 +6,32 @@ import { getRandom } from '@/utilits/getRandom';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
-    hand: [] as Card[],
+    hand: [
+      {
+        id: 0,
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между одни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 10,
+      },
+      {
+        id: 0,
+        name: 'Геральт из Ривии',
+        type: 'hero',
+        image: 'src/assets/images/neu_geralt.png',
+        description: 'Если надо выбирать между одни злом и другим, я предпочитаю не выбирать.',
+        fractionId: null,
+        ability: null,
+        fieldType: ['melee'],
+        power: 15,
+        quantity: 10,
+      },
+    ] as Card[],
     power: {
       enemy: {
         siege: 0,
@@ -143,7 +168,19 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'rain',
           fieldType: ['weather'],
           power: null,
-          quantity: 3,
+          quantity: 1,
+        },
+        {
+          id: 4,
+          name: 'Ливень',
+          type: 'special',
+          image: 'src/assets/images/spc_rain.png',
+          description: 'В этом карю даже дождь смердит мочой.',
+          fractionId: null,
+          ability: 'rain',
+          fieldType: ['weather'],
+          power: null,
+          quantity: 1,
         },
         {
           id: 2,
@@ -473,6 +510,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     setHand(cards: Card[]) {
       this.hand = cards;
+      console.log(this.hand);
     },
     setSelectedLeader(card: Card) {
       this.leader.allies = card;

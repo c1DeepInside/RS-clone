@@ -74,17 +74,25 @@ export default defineComponent({
     parseDeck(cards: Card[]): Card[] {
       let finCards: Card[] = [];
       cards.forEach((card) => {
-        const updateCard = JSON.parse(JSON.stringify(card));
+        const updateCard: Card = JSON.parse(JSON.stringify(card));
         updateCard.quantity = 1;
-        finCards = [...finCards, ...Array(card.quantity).fill(updateCard)];
+        for (let i = 0; i < card.quantity; i++) {
+          finCards.push(updateCard);
+        }
       });
       const indexes = getRandom(finCards.length);
       let sortCards: Card[] = [];
       indexes.forEach((index) => {
         sortCards.push(finCards[index]);
       });
-      this.setHand(sortCards.slice(0, 10));
-      this.setDeck(sortCards.slice(10));
+      console.log(this.currentLeader);
+      if (this.currentLeader.name === 'Францеска Финдабаир Маргаритка из Долин') {
+        this.setHand(sortCards.slice(0, 13));
+        this.setDeck(sortCards.slice(13));
+      } else {
+        this.setHand(sortCards.slice(0, 10));
+        this.setDeck(sortCards.slice(10));
+      }
       return sortCards;
     },
     ...mapActions(useGameStore, {
