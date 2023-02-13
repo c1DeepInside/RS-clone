@@ -53,7 +53,7 @@ export default defineComponent({
   </div>
   <div v-if="ifModal" class="modal" @click="closeModal">
     <div class="modal__content">
-      <SliderComponent @selectedCard="changeLeader" :cards="leadersCards" />
+      <SliderComponent @cardSelected="changeLeader" :cards="leadersCards" />
     </div>
   </div>
 </template>
@@ -73,9 +73,9 @@ export default defineComponent({
   }
 }
 .leader__img__wrap {
-  width: 45.23%;
-  height: 87%;
-  border-radius: 2vw;
+  width: 7.67vw;
+  height: 14.63vw;
+  border-radius: 1vw;
 
   &:hover {
     animation: pulse 2s infinite;

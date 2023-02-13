@@ -173,9 +173,9 @@ export default defineComponent({
 .card {
   box-sizing: border-box;
   position: relative;
-  width: 31.3%;
-  height: 18.859vw;
-  border-radius: 2vw;
+  width: 9.71vw;
+  height: 18vw;
+  border-radius: 1vw;
 
   &:hover {
     animation: pulse 2s infinite;
