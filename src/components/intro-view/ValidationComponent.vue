@@ -69,7 +69,7 @@ export default defineComponent({
   </form>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .validation {
   display: flex;
   flex-direction: column;
