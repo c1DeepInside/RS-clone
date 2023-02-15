@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
-import CardFromCollection from '@/components/deck-builder-view/CardFromCollection.vue';
+import { defineComponent, type PropType } from 'vue';
+import CardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import type Card from '@/interfaces/card';
 interface Filter {
   id: number;
   name: string;
@@ -56,15 +57,51 @@ export default defineComponent({
         },
       ] as Filter[],
       currFilter: 'all',
+
+      cardLayoutType: CardLayoutType,
     };
-  },
-  components: {
-    CardFromCollection,
   },
   methods: {
     changeFilter(filter: Filter): void {
       this.currFilter = filter.name;
       this.$emit('filterChanged', this.currFilter);
+    },
+    takeCard(item: Card) {
+      this.$emit('selectedCard', item);
+    },
+  },
+  computed: {
+    filterFractions() {
+      return this.gwentCards.filter(
+        (item) => item.fractionId === null || (item.fractionId === this.currentFraction && item.type !== 'leader')
+      );
+    },
+    filteredCards() {
+      if (this.currFilter === 'all') {
+        return this.filterFractions.filter(
+          (item) => item.fractionId === null || item.fractionId === this.currentFraction
+        );
+      } else if (this.currFilter === 'hero' || this.currFilter === 'special') {
+        return this.filterFractions.filter((card) => card.type === this.currFilter);
+      } else if (this.currFilter === 'weather') {
+        return this.filterFractions.filter((card) => card.fieldType.some((type) => type === this.currFilter));
+      }
+      return this.filterFractions.filter(
+        (card) =>
+          card.fieldType.some((type) => type === this.currFilter) && (card.type === 'usual' || card.type === 'hero')
+      );
+    },
+  },
+  components: {
+    CardInfoComponent,
+  },
+  props: {
+    currentFraction: {
+      type: Number,
+    },
+    gwentCards: {
+      type: Array as PropType<Card[]>,
+      required: true,
     },
   },
 });
@@ -83,17 +120,9 @@ export default defineComponent({
       />
     </div>
     <div class="cards">
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
-      <CardFromCollection></CardFromCollection>
+      <div class="card" v-for="item in filteredCards" :key="item.id">
+        <CardInfoComponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
+      </div>
     </div>
   </div>
 </template>
@@ -138,6 +167,18 @@ export default defineComponent({
     background-color: rgba($color: #4d392c, $alpha: 0.2);
     border: 1px rgba($color: #4d392c, $alpha: 0.6) solid;
     border-radius: 20px;
+  }
+}
+
+.card {
+  box-sizing: border-box;
+  position: relative;
+  width: 9.71vw;
+  height: 18vw;
+  border-radius: 1vw;
+
+  &:hover {
+    animation: pulse 2s infinite;
   }
 }
 </style>

@@ -2,14 +2,15 @@
 import { defineComponent, type PropType } from 'vue';
 import type Card from '@/interfaces/card';
 import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
-import CardDescriptionComponent from '@/components/game-view/CardDescriptionComponent.vue';
+import CardDescriptionComponent from '@/components/common/CardDescriptionComponent.vue';
+import { mapState, mapActions } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
 
 enum CardSize {
   large = 15,
   medium = 13,
   small = 11,
 }
-
 export default defineComponent({
   data() {
     return {
@@ -24,6 +25,7 @@ export default defineComponent({
       default: () => [],
     },
   },
+  emits: ['cardSelected'],
   components: {
     CardInfoCopmponent,
     CardDescriptionComponent,
@@ -32,44 +34,56 @@ export default defineComponent({
     getCardSize(idx: number): CardSize {
       const cards = [null, null, ...this.cards];
       const selectedCard = this.cards[this.selectedCardIdx];
-
-      if (cards[idx]?.id === selectedCard?.id) {
+      if (cards[idx] === selectedCard) {
         return CardSize.large;
       }
-
-      if (cards[idx - 1]?.id === selectedCard?.id) {
+      if (cards[idx - 1] === selectedCard) {
         return CardSize.medium;
       }
-
-      if (cards[idx + 1]?.id === selectedCard?.id) {
+      if (cards[idx + 1] === selectedCard) {
         return CardSize.medium;
       }
-
       return CardSize.small;
+    },
+    ...mapActions(useGameStore, {
+      setShowDiscard: 'setShowDiscard',
+      addToLine: 'addToLine',
+      setSelectedCard: 'setSelectedCard',
+      removeFromDiscard: 'removeFromDiscard',
+    }),
+    onCardClick(idx: number) {
+      if (idx === this.selectedCardIdx) {
+        this.$emit('cardSelected', this.cards[this.selectedCardIdx]);
+      } else {
+        this.selectedCardIdx = idx;
+      }
     },
   },
   computed: {
     offset(): number {
       const gap = 2;
-
       return CardSize.small * this.selectedCardIdx + gap * this.selectedCardIdx;
     },
     panelSize(): string {
       const gap = 2;
       const cardsNum = 5;
-
       const l = CardSize.large;
       const m = CardSize.medium;
       const s = CardSize.small;
-
       return `${l + m * 2 + s * 2 + (gap * cardsNum - 1)}vw`;
     },
+    ...mapState(useGameStore, {
+      selectedCard: 'selectedCard',
+      discard: 'discard',
+      showDiscard: 'showDiscard',
+      whoseDiscard: 'whoseDiscard',
+    }),
   },
 });
 </script>
 
 <template>
-  <div class="choice-panel__cards" :style="{ maxWidth: panelSize }">
+  <div v-if="cards.length > 0" class="choice-panel__cards" :style="{ maxWidth: panelSize }">
     <div class="choice-panel__cards-inner">
       <div
         class="card-wrapper"
@@ -84,7 +98,7 @@ export default defineComponent({
           :card="card"
           :layout-type="cardLayoutType.EXTENDED"
           :is-selected="idx - 2 === selectedCardIdx"
-          @click="selectedCardIdx = idx - 2"
+          @click="onCardClick(idx - 2)"
           v-if="card"
         />
 
@@ -106,7 +120,6 @@ export default defineComponent({
     </div>
   </div>
 </template>
-
 <style scoped lang="scss">
 .choice-panel {
   position: fixed;
@@ -114,49 +127,31 @@ export default defineComponent({
   width: 100%;
   z-index: 20;
   background-color: rgba(58, 41, 25, 0.486);
-
-  &__title {
-    margin-top: 8%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    height: 70px;
-    font-size: 26px;
-    letter-spacing: -1px;
-    background-color: $BLACK_COLOR_MAIN;
-    color: $TAN_COLOR;
-  }
-
   &__cards {
     margin: 0 auto;
     margin-top: 5px;
   }
-
   &__cards-inner {
     display: flex;
     gap: 2vw;
     position: relative;
     overflow: hidden;
-    padding-top: 10px;
+    padding-top: 1vw;
   }
 }
-
 .card-wrapper {
   flex-shrink: 0;
   position: relative;
+  height: 30vw;
   transition: margin-left linear 0.2s;
 }
-
 .dummy-card {
   height: 50%;
 }
-
 .description-card {
-  margin-top: -7%;
-  margin-left: 29%;
+  margin-top: 0.5vw;
+  margin-left: 20.5vw;
 }
-
 :deep(.card-info) {
   transition: transform linear 0.2s;
 }

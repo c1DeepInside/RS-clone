@@ -38,7 +38,8 @@ export default defineComponent({
       );
     },
     putCard(event: Event) {
-      if (this.isShowSelectedCard) {
+      if (this.isShowSelectedCard && this.selectedCard.ability !== 'decoy') {
+        this.setMedic(true);
         const target = event.currentTarget as HTMLElement;
         const targetProp = target.id.split('__');
         const isBoost = this.selectedCard.fieldType.includes('boost');
@@ -55,6 +56,7 @@ export default defineComponent({
           if (this.selectedCard.ability === 'scorch') {
             this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
           }
+          this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
         }, 400);
       }
     },
@@ -63,6 +65,8 @@ export default defineComponent({
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
       putLineScorch: 'putLineScorch',
+      musterAbility: 'musterAbility',
+      setMedic: 'setMedic',
     }),
   },
   components: {

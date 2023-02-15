@@ -1,41 +1,61 @@
 <script lang="ts">
 import { useGameStore } from '@/stores/GameStore';
-import { defineComponent } from 'vue';
 import { mapState, mapActions } from 'pinia';
+import { fractions } from '@/utilits/cardBuildImgs';
+import type { IntRange } from '@/utilits/types';
+import { defineComponent, type PropType } from 'vue';
+
+export enum PlayerType {
+  enemy = 'enemy',
+  ally = 'allies',
+}
 
 export default defineComponent({
   data() {
     return {
       imageAvatar:
-        this.name === 'Player 1'
+        this.playerType === PlayerType.enemy
           ? 'src/assets/images/player_avatar_enemy.png'
           : 'src/assets/images/player_avatar_geralt.png',
+      fractionsEmblemImg: fractions,
     };
   },
   props: {
-    name: {
-      type: String,
-      default: 'Player',
-    },
-    deckName: {
-      type: String,
-      default: 'Нильфгаард',
-    },
-    img: {
-      type: String,
-      default: '/src/assets/images/deck_shield_realms.png',
+    playerType: {
+      type: String as PropType<PlayerType>,
+      default: () => PlayerType.ally,
     },
     isPass: {
       type: Boolean,
       default: false,
     },
   },
+  methods: {
+    getFraction() {
+      const idx = this.leader[this.playerType].fractionId! as IntRange<0, 4>;
+      return fractions[idx];
+    },
+    getNickName() {
+      return this.playerType === 'enemy' ? this.enemyNickName : this.alliesNickName;
+    },
+    getNumbersCards() {
+      return this.playerType === 'enemy' ? this.enemyHand.length : this.hand.length;
+    },
+    ...mapActions(useGameStore, {
+      setAlliesPower: 'setAlliesPower',
+      setEnemyPower: 'setEnemyPower',
+    }),
+  },
   computed: {
     ...mapState(useGameStore, {
       hand: 'hand',
-      enemyHand: 'enemyHand',
+      leader: 'leader',
+      enemyNickName: 'enemyNickName',
+      alliesNickName: 'alliesNickName',
+      lives: 'lives',
       getAlliesPower: 'alliesPower',
       getEnemyPower: 'enemyPower',
+      enemyHand: 'enemyHand',
     }),
     alliesPower(): number {
       this.setAlliesPower();
@@ -45,12 +65,9 @@ export default defineComponent({
       this.setEnemyPower();
       return this.getEnemyPower;
     },
-  },
-  methods: {
-    ...mapActions(useGameStore, {
-      setAlliesPower: 'setAlliesPower',
-      setEnemyPower: 'setEnemyPower',
-    }),
+    isLeader(): boolean {
+      return JSON.stringify(this.leader[this.playerType]) !== JSON.stringify({});
+    },
   },
 });
 </script>
@@ -65,28 +82,28 @@ export default defineComponent({
     <div>
       <div
         :style="{
-          backgroundImage: `url(${img})`,
+          backgroundImage: isLeader ? `url(${getFraction().img})` : '',
         }"
       ></div>
     </div>
   </div>
-  <template v-if="name === 'Player 1'">
-    <div class="player__name">{{ name }}</div>
-    <div class="player__deck-name">{{ deckName }}</div>
-    <div class="player__hand-count">{{ enemyHand.length }}</div>
-    <div class="player__gem player__gem-1 player__gem-true"></div>
-    <div class="player__gem player__gem-2"></div>
-  </template>
-  <template v-else>
-    <div class="player__hand-count">{{ hand.length }}</div>
-    <div class="player__gem player__gem-1 player__gem-true"></div>
-    <div class="player__gem player__gem-2"></div>
-    <div class="player__name">{{ name }}</div>
-    <div class="player__deck-name">{{ deckName }}</div>
-  </template>
+  <div class="player__name">{{ getNickName() }}</div>
+  <div class="player__deck-name">{{ isLeader ? getFraction().name : '' }}</div>
+  <div class="player__hand-count">{{ getNumbersCards() }}</div>
+  <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
+  <div v-else class="player__gem player__gem-1"></div>
+
+  <div v-if="lives[playerType] === 2" class="player__gem player__gem-2 player__gem-true"></div>
+  <div v-else class="player__gem player__gem-2"></div>
+
   <div class="player__score player__score-more">
-    <span>{{ name === 'Player 1' ? Number(enemyPower) : Number(alliesPower) }}</span>
-    <div></div>
+    <span>{{ playerType === 'enemy' ? Number(enemyPower) : Number(alliesPower) }}</span>
+    <div
+      v-if="
+        (playerType === 'enemy' && Number(enemyPower) > Number(alliesPower)) ||
+        (playerType === 'allies' && Number(enemyPower) < Number(alliesPower))
+      "
+    ></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
 </template>
@@ -123,7 +140,6 @@ export default defineComponent({
         height: 30%;
         left: 4.5%;
         top: 4.5%;
-        background-image: url('@/assets/images/player_faction_northern.png');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;

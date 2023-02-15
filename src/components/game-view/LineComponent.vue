@@ -38,7 +38,24 @@ export default defineComponent({
     ...mapActions(useGameStore, {
       setPower: 'setPower',
       setAffectedBoard: 'setAffectedBoard',
+      removeFromLine: 'removeFromLine',
+      setSelectedCard: 'setSelectedCard',
+      addToLine: 'addToLine',
+      setIsShowSelected: 'setIsShowSelected',
+      addToHand: 'addToHand',
+      removeFromHand: 'removeFromHand',
     }),
+    setDecoy(card: Card, cardId: number) {
+      if (this.selectedCard.ability === 'decoy' && card.type === 'usual') {
+        const origCard = this.board.allies[this.attackType][cardId];
+        this.removeFromLine(cardId, this.attackType, true);
+        this.addToLine(this.selectedCard, this.attackType, true, true);
+        this.removeFromHand(this.selectedCard);
+        this.addToHand([origCard]);
+        this.setSelectedCard(origCard);
+        this.setIsShowSelected(false);
+      }
+    },
   },
   components: {
     CardInfoComponent,
@@ -46,6 +63,7 @@ export default defineComponent({
   computed: {
     ...mapState(useGameStore, {
       board: 'board',
+      hand: 'hand',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       affectedBoard: 'affectedBoard',
@@ -63,6 +81,9 @@ export default defineComponent({
     cards(): Card[] {
       let line = JSON.parse(JSON.stringify(this.board[this.type][this.attackType]));
       line = line.map((card: Card) => {
+        if (card.power === null) {
+          return card;
+        }
         if (this.ifFogRainFrost && card.type !== 'hero') {
           card.power = 1;
         }
@@ -162,6 +183,7 @@ export default defineComponent({
     >
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
         <CardInfoComponent
+          @click="setDecoy(card, index)"
           :card="card"
           :layoutType="0"
           class="card"
