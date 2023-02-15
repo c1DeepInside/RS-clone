@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { registration } from '@/api/userAPI';
 
 export default defineComponent({
   data() {
@@ -12,6 +13,7 @@ export default defineComponent({
         hasErrorName: false,
         hasErrorPassword: false,
       },
+      isLoading: false,
     };
   },
   methods: {
@@ -23,16 +25,28 @@ export default defineComponent({
       }
     },
     validatePassword() {
-      this.errors.hasErrorPassword = true;
-
-      for (let i = 0; i < this.inputs.password.length; i++) {
-        if (!isNaN(+this.inputs.password[i])) {
-          this.errors.hasErrorPassword = false;
-          break;
-        }
+      const passwordRegex = /^(?=.*\d).{6,}$/;
+      if (!passwordRegex.test(this.inputs.password)) {
+        this.errors.hasErrorPassword = true;
+      } else {
+        this.errors.hasErrorPassword = false;
+      }
+    },
+    async registrationUser() {
+      if (this.errors.hasErrorName || this.errors.hasErrorPassword) {
+        return;
       }
 
-      this.errors.hasErrorPassword = this.inputs.password.length >= 6 ? this.errors.hasErrorPassword : true;
+      this.isLoading = true;
+
+      try {
+        await registration(this.inputs.login, this.inputs.password);
+        this.$emit('registrationFinished', true);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
   emits: {
@@ -44,32 +58,38 @@ export default defineComponent({
 </script>
 
 <template>
-  <form class="registration" v-on:submit.prevent>
-    <input
-      v-model="inputs.login"
-      @input="validateName"
-      v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }"
-      class="registration__input"
-      type="text"
-      placeholder="Введите свое имя/никнейм"
-      required
-    />
+  <form class="registration" @submit.prevent="registrationUser">
+    <div class="registration__inputs">
+      <input
+        v-model="inputs.login"
+        @input="validateName"
+        v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }"
+        class="registration__input"
+        type="text"
+        placeholder="Введите свое имя/никнейм"
+        required
+      />
 
-    <input
-      v-model="inputs.password"
-      @input="validatePassword"
-      v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }"
-      class="registration__input"
-      type="password"
-      placeholder="Введите пароль"
-      autocomplete="current-password"
-      required
-    />
+      <p v-if="errors.hasErrorName" class="registration__input-error">Логин должен содержать не менее 4 символов</p>
+    </div>
+    <div class="registration__inputs">
+      <input
+        v-model="inputs.password"
+        @input="validatePassword"
+        v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }"
+        class="registration__input"
+        type="password"
+        placeholder="Введите пароль"
+        autocomplete="current-password"
+        required
+      />
 
-    <p v-if="errors.hasErrorPassword" class="registration__input-password">
-      Пароль должен содержать не менее 6 символов и 1 цифры
-    </p>
-    <button @click="$emit('registrationFinished', true)" class="registration__button">Зарегестрироваться</button>
+      <p v-if="errors.hasErrorPassword" class="registration__input-error">
+        Пароль должен содержать не менее 6 символов и 1 цифры
+      </p>
+    </div>
+
+    <button class="registration__button" type="submit" :disabled="isLoading">Зарегестрироваться</button>
   </form>
 </template>
 
@@ -88,14 +108,16 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   position: fixed;
-  gap: 4vw;
+  gap: 2vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 30vw;
   height: 30vw;
   background-color: rgba(0, 0, 0, 0.753);
-
+  &__inputs {
+    height: 6vw;
+  }
   &__input {
     width: 16vw;
     height: 2.4vw;
@@ -109,10 +131,8 @@ export default defineComponent({
       outline: none;
     }
 
-    &-password {
-      display: fixed;
-      top: 16vw;
-      position: fixed;
+    &-error {
+      margin-top: 1vw;
       color: white;
       line-height: 1.2;
       width: 16vw;
@@ -125,17 +145,20 @@ export default defineComponent({
     width: 16vw;
     height: 2.4vw;
     font-size: 1vw;
-    margin-top: 2vw;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;
     border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
     border-radius: 80px;
-    transition: background-color 0.2s linear;
+    transition: all 0.2s linear;
 
     &:hover {
       background-color: white;
+    }
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.5;
     }
   }
 }
