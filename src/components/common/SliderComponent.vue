@@ -92,7 +92,7 @@ export default defineComponent({
           marginLeft: idx === 0 ? `-${offset}vw` : '0',
         }"
         v-for="(card, idx) in [null, null, ...cards]"
-        :key="idx"
+        :key="`${card?.id}-${idx}`"
       >
         <CardInfoCopmponent
           :card="card"
