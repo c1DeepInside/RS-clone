@@ -1,5 +1,33 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+import { login } from '@/api/userAPI';
+
+export default defineComponent({
+  data() {
+    return {
+      inputs: {
+        login: '',
+        password: '',
+      },
+      isLoading: false,
+      errorMessage: '',
+    };
+  },
+  methods: {
+    async loginUser() {
+      this.errorMessage = '';
+      this.isLoading = true;
+      try {
+        await login(this.inputs.login, this.inputs.password);
+        this.$emit('validationFinished', true);
+      } catch (error) {
+        console.error(error);
+        this.errorMessage = 'Неправильный логин или пароль';
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
   emits: {
     validationFinished(isFinished: boolean): boolean {
       return isFinished;
@@ -8,20 +36,35 @@ export default {
       return isRegistration;
     },
   },
-};
+});
 </script>
 
 <template>
-  <form class="validation" v-on:submit.prevent>
-    <input class="validation__input" type="text" placeholder="Введите свое имя/никнейм" required />
+  <form class="validation" @submit.prevent="loginUser">
     <input
+      v-model="inputs.login"
       class="validation__input"
+      :class="{ error: errorMessage !== '' }"
+      type="text"
+      placeholder="Введите свое имя/никнейм"
+      required
+    />
+    <input
+      v-model="inputs.password"
+      class="validation__input"
+      :class="{ error: errorMessage !== '' }"
       type="password"
       placeholder="Введите пароль"
       autocomplete="current-password"
       required
     />
-    <button @click="$emit('validationFinished', true)" class="validation__button">ВОЙТИ</button>
+    <div>
+      <p v-if="errorMessage" class="validation__error">{{ errorMessage }}</p>
+    </div>
+
+    <button class="validation__button" type="submit" :disabled="isLoading">
+      {{ isLoading ? 'Загрузка...' : 'Войти' }}
+    </button>
     <div @click="$emit('startRegistration', true)" class="validation__link">Зарегистрироваться</div>
   </form>
 </template>
@@ -33,7 +76,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: fixed;
-  gap: 4vw;
+  gap: 2vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -64,8 +107,19 @@ export default {
     }
   }
 
+  div {
+    height: 1vw;
+  }
+
+  &__error {
+    color: white;
+    line-height: 1.2;
+    width: 16vw;
+    font-size: 0.9vw;
+    text-align: center;
+  }
+
   &__link {
-    margin-top: -3vw;
     color: white;
   }
 
@@ -78,12 +132,21 @@ export default {
     color: $BLACK_COLOR;
     border: 1px solid white;
     background-color: rgba(255, 255, 255, 0.781);
-    transition: background-color 0.2s linear;
+    transition: all 0.2s linear;
     border-radius: 1vw;
 
     &:hover {
       background-color: white;
     }
+
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
+}
+
+.error {
+  box-shadow: 0px 0px 30px red;
 }
 </style>
