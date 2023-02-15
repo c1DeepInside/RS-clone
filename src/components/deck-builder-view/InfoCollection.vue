@@ -76,10 +76,8 @@ export default defineComponent({
     parseDeck(cards: Card[]): Card[] {
       let finCards: Card[] = [];
       cards.forEach((card) => {
-        const updateCard: Card = JSON.parse(JSON.stringify(card));
-
         for (let i = 0; i < card.quantity; i++) {
-          const newCard = JSON.parse(JSON.stringify(updateCard));
+          const newCard = JSON.parse(JSON.stringify(card));
           newCard.quantity = 1;
           newCard.uuid = uuidv4();
 
@@ -91,14 +89,12 @@ export default defineComponent({
       indexes.forEach((index) => {
         sortCards.push(finCards[index]);
       });
-      console.log(this.currentLeader);
       if (this.currentLeader.name === 'Францеска Финдабаир Маргаритка из Долин') {
         this.setHand(sortCards.slice(0, 11));
         this.setDeck(sortCards.slice(11));
       } else {
         this.setHand(sortCards.slice(0, 10));
         this.setDeck(sortCards.slice(10));
-        this.setDiscard(sortCards.slice(10));
       }
       return sortCards;
     },

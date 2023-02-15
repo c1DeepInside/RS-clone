@@ -568,7 +568,6 @@ export const useGameStore = defineStore('gameStore', {
     },
     setHand(cards: Card[]) {
       this.hand = cards;
-      console.log(this.hand);
     },
     setSelectedLeader(card: Card) {
       this.leader.allies = card;
