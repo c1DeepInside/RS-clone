@@ -304,9 +304,6 @@ export default defineComponent({
   .player__score {
     background-image: url('@/assets/images/score_total_op.png');
   }
-  .player__img {
-    background-size: auto;
-  }
 }
 
 .game__player-2 {
