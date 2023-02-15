@@ -635,6 +635,9 @@ export const useGameStore = defineStore('gameStore', {
       this.isMedic = value;
     },
     exchangeCard(card: Card) {
+      if (this.deck.allies.length < 1) {
+        return;
+      }
       const handIndex = this.hand.indexOf(card);
       this.removeFromHand(card);
       const index = getRandom(this.deck.allies.length, 1);
