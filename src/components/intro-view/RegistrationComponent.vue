@@ -88,21 +88,22 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   position: fixed;
-  gap: 50px;
+  gap: 4vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 36rem;
-  height: 36rem;
+  width: 30vw;
+  height: 30vw;
   background-color: rgba(0, 0, 0, 0.753);
 
   &__input {
-    width: 300px;
-    height: 40px;
+    width: 16vw;
+    height: 2.4vw;
     font-size: 1rem;
     font-weight: 300;
     font-style: italic;
-    padding-left: 10px;
+    padding-left: 0.5vw;
+    font-size: 0.9vw;
 
     &:focus {
       outline: none;
@@ -110,20 +111,21 @@ export default defineComponent({
 
     &-password {
       display: fixed;
-      top: 300px;
+      top: 16vw;
       position: fixed;
       color: white;
       line-height: 1.2;
-      width: 350px;
+      width: 16vw;
+      font-size: 0.9vw;
       text-align: center;
     }
   }
 
   &__button {
-    width: 300px;
-    height: 40px;
-    font-size: 1rem;
-    margin-top: 50px;
+    width: 16vw;
+    height: 2.4vw;
+    font-size: 1vw;
+    margin-top: 2vw;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $BLACK_COLOR;

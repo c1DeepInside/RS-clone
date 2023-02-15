@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import SliderComponent from '@/components/common/SliderComponent.vue';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import { mapActions, mapState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
@@ -9,6 +10,7 @@ import type Card from '@/interfaces/card';
 export default defineComponent({
   data() {
     return {
+      showCards: false,
       linePowerWraps: {
         enemy: 'src/assets/images/score_total_op.png',
         allies: 'src/assets/images/score_total_me.png',
@@ -44,6 +46,7 @@ export default defineComponent({
       setIsShowSelected: 'setIsShowSelected',
       addToHand: 'addToHand',
       removeFromHand: 'removeFromHand',
+      getLineCards: 'getLineCards',
     }),
     setDecoy(card: Card, cardId: number) {
       if (this.selectedCard.ability === 'decoy' && card.type === 'usual') {
@@ -59,6 +62,7 @@ export default defineComponent({
   },
   components: {
     CardInfoComponent,
+    SliderComponent,
   },
   computed: {
     ...mapState(useGameStore, {
@@ -66,6 +70,7 @@ export default defineComponent({
       hand: 'hand',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
+      isShowSelected: 'isShowSelected',
       affectedBoard: 'affectedBoard',
     }),
     ifFogRainFrost(): boolean {
@@ -141,14 +146,12 @@ export default defineComponent({
     },
     cardMargin(): string {
       return this.board[this.type][this.attackType].length > 8
-        ? `margin-left: -${
-            this.board[this.type][this.attackType].length /
-            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6))
-          }vw; left: ${
-            this.board[this.type][this.attackType].length /
-            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6)) /
-            2
-          }vw`
+        ? `margin-left: -${this.board[this.type][this.attackType].length /
+        (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6))
+        }vw; left: ${this.board[this.type][this.attackType].length /
+        (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6)) /
+        2
+        }vw`
         : '';
     },
   },
@@ -156,7 +159,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="line">
+  <div @dblclick="showCards = true" class="line">
     <div class="power__wrap">
       <img class="power__img" src="@/assets/images/power_wrap.png" alt="wrap" />
       <div class="power__dmg__wrap">
@@ -165,22 +168,17 @@ export default defineComponent({
       </div>
     </div>
 
-    <div
-      :class="[
-        activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
-        `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
-      ]"
-      class="boosts__wrap wrap_animation"
-    >
+    <div :class="[
+      activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
+      `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
+    ]" class="boosts__wrap wrap_animation">
       <div class="boost__wrap" v-for="(card, index) in board[`${type}Boost`][attackType]" :key="index">
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
 
-    <div
-      :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
-      class="cards__wrap wrap_animation"
-    >
+    <div :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
+      class="cards__wrap wrap_animation">
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
         <CardInfoComponent
           @click="setDecoy(card, index)"
@@ -204,19 +202,45 @@ export default defineComponent({
     <div v-if="attackType === 'melee' && ifFogRainFrost" class="weather__wrap">
       <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
     </div>
+
+    <div v-if="showCards && !isShowSelected && getLineCards(type, attackType).length !== 0" class="line-view">
+      <div @click="showCards = false" class="line-view__close">x</div>
+      <SliderComponent :cards="getLineCards(type, attackType)" />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.line-view {
+  position: fixed;
+  height: 117vh;
+  top: 0;
+  padding-top: 5vw;
+  left: 0;
+  width: 100%;
+  z-index: 40;
+  background-color: rgba(58, 41, 25, 0.486);
+
+  &__close {
+    font-size: 3vw;
+    color: white;
+    position: absolute;
+    right: 12vw;
+    top: 3vw;
+  }
+}
+
 .card__wrap {
   height: 100%;
   position: relative;
   width: 4.5vw;
 }
+
 .boost__wrap {
   height: 100%;
   width: 4.3vw;
 }
+
 .active {
   z-index: 3;
   animation: pulseField 2s infinite;
@@ -226,19 +250,23 @@ export default defineComponent({
       background-color: rgba($color: #fe9902, $alpha: 0);
       box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
     }
+
     50% {
       background-color: rgba($color: #fe9902, $alpha: 0.1);
       box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
     }
+
     100% {
       background-color: rgba($color: #fe9902, $alpha: 0);
       box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
     }
   }
+
   &:hover {
     animation: none;
   }
 }
+
 .weather {
   &__wrap {
     top: -0.5vw;
@@ -300,9 +328,11 @@ export default defineComponent({
     background-position-x: 0%;
     background-position-y: 0%;
   }
+
   50% {
     background-position-x: 100%;
   }
+
   100% {
     background-position-x: 0%;
   }
@@ -312,9 +342,11 @@ export default defineComponent({
   0% {
     background-position-x: 100%;
   }
+
   50% {
     background-position-x: 0%;
   }
+
   100% {
     background-position-x: 100%;
   }
@@ -395,6 +427,7 @@ export default defineComponent({
     z-index: 1;
     transform: translateY(-0.5vw);
   }
+
   .wrap_animation {
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

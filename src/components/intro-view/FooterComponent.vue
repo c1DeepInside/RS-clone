@@ -12,7 +12,7 @@ export default defineComponent({});
 
     <div class="footer__github-link">
       <svg
-        class="feather feather-github"
+        class="footer-github"
         fill="none"
         height="24"
         stroke="rgb(224, 228, 228)"
@@ -32,7 +32,7 @@ export default defineComponent({});
 
     <div class="footer__github-link">
       <svg
-        class="feather feather-github"
+        class="footer-github"
         fill="none"
         height="24"
         stroke="rgb(224, 228, 228)"
@@ -52,7 +52,7 @@ export default defineComponent({});
 
     <div class="footer__github-link">
       <svg
-        class="feather feather-github"
+        class="footer-github"
         fill="none"
         height="24"
         stroke="rgb(224, 228, 228)"
@@ -86,14 +86,19 @@ export default defineComponent({});
   align-items: center;
   bottom: 0;
   width: 100%;
-  height: 80px;
+  height: 4vw;
   background: rgba(0, 0, 0, 0.377);
+
+  &-github {
+    width: 3.5vw;
+  }
 
   &__github-link {
     display: flex;
-    gap: 10px;
+    gap: 0.1vw;
     align-items: center;
     opacity: 0.7;
+    font-size: 1.2vw;
     transition: opacity 0.2s linear;
 
     &:hover {
@@ -103,7 +108,7 @@ export default defineComponent({});
 }
 
 .rs-school {
-  height: 40px;
+  height: 3vw;
   opacity: 0.7;
   transition: opacity 0.2s linear;
 

@@ -68,17 +68,16 @@ export default defineComponent({
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 24vw;
   text-decoration: none;
   display: inline-block;
-  padding: 20px 30px;
-  margin: 10px 20px;
+  padding: 1.4vw 1.4vw;
   color: white;
   border: 1px solid rgba(150, 150, 150, 0.411);
   background: none;
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 24px;
+  font-size: 2vw;
   letter-spacing: 3px;
   transition: background 0.2s linear;
 
