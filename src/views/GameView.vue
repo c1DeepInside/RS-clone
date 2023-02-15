@@ -7,7 +7,10 @@ import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
-import type Card from '@/interfaces/card';
+import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
+import { useGameStore } from '@/stores/GameStore';
+import { mapState, mapActions } from 'pinia';
+import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 
 export default defineComponent({
   data() {
@@ -15,19 +18,7 @@ export default defineComponent({
       isPass: false,
       isGiveUpAnimation: false,
       isEnd: false,
-      selectedCard: {
-        name: 'Геральт из Ривии',
-        type: 'hero',
-        image: 'src/assets/images/neu_geralt.png',
-        description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-        fractionId: null,
-        ability: null,
-        fieldType: ['melee'],
-        power: 15,
-        quantity: 1,
-      } as Card,
       timer: 0,
-      isShowCardView: false,
     };
   },
   methods: {
@@ -45,13 +36,53 @@ export default defineComponent({
       this.isGiveUpAnimation = false;
       clearTimeout(this.timer);
     },
-    updateSelectedItem(value: Card, show: boolean) {
-      this.selectedCard = value;
-      this.isShowCardView = show;
-    },
     updateShowEnd(value: boolean) {
       this.isEnd = value;
     },
+    showSunAnimation() {
+      const target = this.$refs.sunAnimation as HTMLElement;
+      target.style.display = 'block';
+      setTimeout(() => {
+        target.style.display = 'none';
+      }, 2000);
+    },
+    putWeatherCard() {
+      if (this.isShowSelectedCard) {
+        cardAnimation(this.$refs.animationWrap as HTMLElement, topPos.weather, leftPos.weather);
+        this.removeFromHand(this.selectedCard);
+        this.setIsShowSelected(false);
+        setTimeout(() => {
+          if (this.selectedCard.ability === 'specScorch') {
+            this.putSpecScorch();
+          } else {
+            this.addToWeather(this.selectedCard);
+            if (this.selectedCard.ability === 'clear') {
+              this.showSunAnimation();
+              this.clearWeathers();
+            }
+          }
+        }, 400);
+      }
+    },
+    ...mapActions(useGameStore, {
+      setIsShowSelected: 'setIsShowSelected',
+      removeFromHand: 'removeFromHand',
+      clearWeathers: 'clearWeathers',
+      addToWeather: 'addToWeather',
+      setAlliesPower: 'setAlliesPower',
+      setEnemyPower: 'setEnemyPower',
+      putSpecScorch: 'putSpecScorch',
+    }),
+  },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      board: 'board',
+      affectedBoard: 'affectedBoard',
+      selectedCard: 'selectedCard',
+      isShowSelectedCard: 'isShowSelected',
+      enemyPower: 'enemyPower',
+    }),
   },
   components: {
     GameExchangePanelComponent,
@@ -61,6 +92,7 @@ export default defineComponent({
     EndComponent,
     InformationBar,
     MusicComponent,
+    CardInfoComponent,
   },
 });
 </script>
@@ -68,11 +100,6 @@ export default defineComponent({
 <template>
   <GameExchangePanelComponent />
   <main class="page-game">
-    <div
-      :class="['click', { noclick: isShowCardView === false }]"
-      @click="isShowCardView = false"
-      ref="clickField"
-    ></div>
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -83,23 +110,28 @@ export default defineComponent({
         </div>
 
         <div class="game__player game__player-1 player">
-          <PlayerComponent
-            name="Player 1"
-            deckName="Нильфгаард"
-            count="10"
-            img="/src/assets/images/deck_shield_realms.png"
-          />
+          <PlayerComponent name="Player 1" deckName="Нильфгаард" img="/src/assets/images/deck_shield_realms.png" />
         </div>
-
-        <div class="game__weather"></div>
-
+        <div
+          class="game__weather"
+          :class="selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : ''"
+          @click="putWeatherCard"
+        >
+          <div
+            class="card__wrap"
+            v-for="(card, index) in board.weather"
+            :key="index"
+            :style="board.weather.length > 2 ? `margin-left: -0.6vw; left: 0.3vw` : ''"
+          >
+            <CardInfoComponent :card="card" :layoutType="0" class="card" />
+          </div>
+        </div>
         <button @click="showPass" class="btn-game game__pass">Спасовать</button>
 
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent
             name="Player 2"
             deckName="Королевства Севера"
-            count="10"
             img="/src/assets/images/deck_shield_realms.png"
             :isPass="isPass"
           />
@@ -111,23 +143,15 @@ export default defineComponent({
             <div></div>
           </div>
         </div>
-
-        <button
-          @mousedown="showEndGame"
-          @mouseup="dontShowEndGame"
-          @mouseout="dontShowEndGame"
-          :class="['btn-game game__give-up', { 'give-animation': isGiveUpAnimation }]"
-        >
-          Сдаться
-        </button>
       </div>
 
       <div class="game__board board">
-        <BoardComponent @update:selectedItem="updateSelectedItem" />
+        <BoardComponent />
       </div>
 
       <div class="game__decks deck">
         <div class="deck__content">
+          <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__cemetery deck__cemetery-1"></div>
           <div class="deck__player deck__player-1">
             <div class="deck__counter">28</div>
@@ -135,13 +159,17 @@ export default defineComponent({
         </div>
         <div class="deck__content">
           <div class="deck__cemetery deck__cemetery-2"></div>
+          <div class="deck__cemetery deck__cemetery-2"></div>
           <div class="deck__player deck__player-2">
             <div class="deck__counter">28</div>
           </div>
         </div>
       </div>
     </div>
-    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowCardView" />
+    <div class="animation__card__wrap" ref="animationWrap">
+      <CardInfoComponent :card="selectedCard" :layoutType="0" />
+    </div>
+    <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
     <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />
@@ -153,10 +181,36 @@ export default defineComponent({
     >
       Сдаться
     </button>
+    <div class="sun__animation__wrap" ref="sunAnimation">
+      <img class="sun__animation" src="src/assets/images/sun-animation.png" />
+    </div>
   </main>
 </template>
 
 <style lang="scss" scoped>
+.sun__animation {
+  width: 50vw;
+}
+.sun__animation__wrap {
+  opacity: 0.8;
+  position: absolute;
+  top: -2vw;
+  left: -2vw;
+  animation: sun 2s infinite;
+  display: none;
+
+  @keyframes sun {
+    0% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 0.8;
+    }
+  }
+}
 .music {
   position: absolute;
   right: 15vw;
@@ -192,6 +246,20 @@ export default defineComponent({
   height: 2%;
 }
 
+.animation__card__wrap {
+  position: absolute;
+  top: 20vw;
+  left: 85vw;
+  width: 4.5vw;
+  height: 6.5vw;
+  scale: 3;
+  opacity: 0;
+}
+.card__wrap {
+  position: relative;
+  height: 100%;
+  width: 5vw;
+}
 .page-game {
   width: 100%;
   height: calc(100vw * 1080 / 1920);
@@ -199,13 +267,6 @@ export default defineComponent({
   background-size: 100% auto;
   background-repeat: no-repeat;
   position: relative;
-}
-
-.click {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
 }
 
 .game {
@@ -304,6 +365,29 @@ export default defineComponent({
     }
   }
 
+  .active__weather {
+    z-index: 3;
+    animation: pulseField 2s infinite;
+
+    @keyframes pulseField {
+      0% {
+        background-color: rgba($color: #fe9902, $alpha: 0);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+      50% {
+        background-color: rgba($color: #fe9902, $alpha: 0.1);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+      100% {
+        background-color: rgba($color: #fe9902, $alpha: 0);
+        box-shadow: 0px 0px 0px 0.15vw rgba($color: #fe9902, $alpha: 0.4);
+      }
+    }
+    &:hover {
+      animation: none;
+    }
+  }
+
   &__weather {
     position: relative;
     display: flex;
@@ -313,7 +397,7 @@ export default defineComponent({
     margin-left: 27.9%;
     width: 54.9%;
     height: 12.75%;
-    z-index: 2;
+    gap: 0.2vw;
 
     &:hover {
       background-color: rgba($color: #fe9902, $alpha: 0.1);

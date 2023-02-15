@@ -26,7 +26,7 @@ export const cardFractionsImg: Record<number, string> = {
 
 export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range';
 
-export const сardEquipmendImg: Record<CardEquipmendType, string> = {
+export const cardEquipmendImg: Record<CardEquipmendType, string> = {
   melee: '/src/assets/images/build/card_row_close.png',
   range: '/src/assets/images/build/card_row_ranged.png',
   siege: '/src/assets/images/build/card_row_siege.png',

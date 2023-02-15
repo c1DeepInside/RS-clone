@@ -1,5 +1,7 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
 import { defineComponent } from 'vue';
+import { mapState, mapActions } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -19,10 +21,6 @@ export default defineComponent({
       type: String,
       default: 'Нильфгаард',
     },
-    count: {
-      type: String,
-      default: '10',
-    },
     img: {
       type: String,
       default: '/src/assets/images/deck_shield_realms.png',
@@ -31,6 +29,28 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+  },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      enemyHand: 'enemyHand',
+      getAlliesPower: 'alliesPower',
+      getEnemyPower: 'enemyPower',
+    }),
+    alliesPower(): number {
+      this.setAlliesPower();
+      return this.getAlliesPower;
+    },
+    enemyPower(): number {
+      this.setEnemyPower();
+      return this.getEnemyPower;
+    },
+  },
+  methods: {
+    ...mapActions(useGameStore, {
+      setAlliesPower: 'setAlliesPower',
+      setEnemyPower: 'setEnemyPower',
+    }),
   },
 });
 </script>
@@ -53,19 +73,19 @@ export default defineComponent({
   <template v-if="name === 'Player 1'">
     <div class="player__name">{{ name }}</div>
     <div class="player__deck-name">{{ deckName }}</div>
-    <div class="player__hand-count">{{ count }}</div>
+    <div class="player__hand-count">{{ enemyHand.length }}</div>
     <div class="player__gem player__gem-1 player__gem-true"></div>
     <div class="player__gem player__gem-2"></div>
   </template>
   <template v-else>
-    <div class="player__hand-count">{{ count }}</div>
+    <div class="player__hand-count">{{ hand.length }}</div>
     <div class="player__gem player__gem-1 player__gem-true"></div>
     <div class="player__gem player__gem-2"></div>
     <div class="player__name">{{ name }}</div>
     <div class="player__deck-name">{{ deckName }}</div>
   </template>
   <div class="player__score player__score-more">
-    <span>0</span>
+    <span>{{ name === 'Player 1' ? Number(enemyPower) : Number(alliesPower) }}</span>
     <div></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>

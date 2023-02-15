@@ -1,21 +1,21 @@
 <script lang="ts">
-import type Card from '@/interfaces/card';
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent } from 'vue';
+import CardDescriptionComponent from './CardDescriptionComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
-import CardDescriptionComponent from '@/components/game-view/CardDescriptionComponent.vue';
+import { mapState } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
   data() {
-    return {
-      isDescription: true,
-    };
+    return {};
   },
-  props: {
-    selectedItem: Object as PropType<Card>,
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
+  computed: {
+    ...mapState(useGameStore, {
+      hand: 'hand',
+      board: 'board',
+      selectedCard: 'selectedCard',
+      isShowSelectedCard: 'isShowSelected',
+    }),
   },
   components: {
     CardInfoComponent,
@@ -25,15 +25,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div :class="['card-view', { 'card-view-true': isShow }]">
+  <div :class="['card-view', { 'card-view-true': isShowSelectedCard }]">
     <div class="card__wrap">
-      <CardInfoComponent :card="selectedItem" :layoutType="2" />
+      <CardInfoComponent :card="selectedCard" :layoutType="2" />
     </div>
 
     <div class="description-card">
       <CardDescriptionComponent
-        v-if="(isDescription && selectedItem?.ability !== null) || selectedItem?.type !== 'usual'"
-        :card="selectedItem"
+        v-if="selectedCard?.ability !== null || selectedCard?.type !== 'usual'"
+        :card="selectedCard"
       />
     </div>
   </div>

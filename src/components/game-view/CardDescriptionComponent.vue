@@ -46,11 +46,10 @@ export default defineComponent({
     <div
       class="information-card__img"
       :style="{
-        backgroundImage: `url('/src/assets/images/card_ability_bond.png')`,
+        backgroundImage: ``,
       }"
-    >
-  </div>
-  <img v-if="card?.ability !== null" :src="abilityImg[card?.ability!]" class="information-card__ability-image">
+    ></div>
+    <img v-if="card?.ability !== null" :src="abilityImg[card?.ability!]" class="information-card__ability-image" />
     <h2 class="information-card__title">{{ getTitleCard() }}</h2>
     <p class="information-card__descr">{{ getDescriptionCard() }}</p>
   </div>

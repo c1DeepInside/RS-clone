@@ -1,6 +1,6 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
-import { cardAbilitiesImg, cardFractionsImg, сardEquipmendImg } from '@/utilits/cardBuildImgs';
+import { cardAbilitiesImg, cardFractionsImg, cardEquipmendImg } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
@@ -16,7 +16,7 @@ export default defineComponent({
       scaleFactor: 1,
       cardLayoutType: CardLayoutType,
       abilitiesImg: cardAbilitiesImg,
-      equipmendImg: сardEquipmendImg,
+      equipmendImg: cardEquipmendImg,
       fraction: cardFractionsImg,
     };
   },
@@ -26,6 +26,14 @@ export default defineComponent({
       type: Number as PropType<CardLayoutType>,
     },
     card: Object as PropType<Card>,
+    ifBuff: {
+      type: Boolean,
+      default: false,
+    },
+    ifDebuff: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     updateScaleFactor() {
@@ -46,17 +54,17 @@ export default defineComponent({
       if (card.fieldType.length === 1) {
         const key = card.fieldType[0];
 
-        if (!(key in сardEquipmendImg)) {
+        if (!(key in cardEquipmendImg)) {
           return '';
         }
 
         // @ts-ignore
-        return сardEquipmendImg[key];
+        return cardEquipmendImg[key];
       }
 
       if (card.fieldType.length == 2) {
         if (card.fieldType.includes('melee') && card.fieldType.includes('range')) {
-          return сardEquipmendImg['melee_range'];
+          return cardEquipmendImg['melee_range'];
         }
       }
 
@@ -91,7 +99,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="card-info__count">
       <img class="card-info__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="card-info__count-power">{{ card?.power }}</p>
+      <p class="card-info__count-power">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img
@@ -133,7 +143,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="game-card__count">
       <img class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="game-card__count-power">{{ card?.power }}</p>
+      <p class="game-card__count-power" :class="[ifBuff ? 'card-buff' : '', ifDebuff ? 'card-debuff' : '']">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img v-if="card?.type !== 'special'" class="game-card__equipment" :src="getEquipmendImage(card)" />
@@ -337,10 +349,18 @@ export default defineComponent({
 
     &-power {
       position: absolute;
-      top: 49%;
-      left: 49%;
+      top: 47%;
+      left: 47%;
+      font-weight: 400;
       transform: translate(-49%, -49%);
       font-size: 1vw;
+    }
+    .card-buff {
+      color: green;
+    }
+
+    .card-debuff {
+      color: red;
     }
   }
 
