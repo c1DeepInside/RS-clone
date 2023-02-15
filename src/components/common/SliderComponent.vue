@@ -5,14 +5,12 @@ import CardInfoCopmponent, { CardLayoutType } from '@/components/common/CardInfo
 import CardDescriptionComponent from '@/components/common/CardDescriptionComponent.vue';
 import { mapState, mapActions } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
-import type { cardLineType } from '@/utilits/lineTypes';
 
 enum CardSize {
   large = 15,
   medium = 13,
   small = 11,
 }
-
 export default defineComponent({
   data() {
     return {
@@ -36,19 +34,15 @@ export default defineComponent({
     getCardSize(idx: number): CardSize {
       const cards = [null, null, ...this.cards];
       const selectedCard = this.cards[this.selectedCardIdx];
-
       if (cards[idx] === selectedCard) {
         return CardSize.large;
       }
-
       if (cards[idx - 1] === selectedCard) {
         return CardSize.medium;
       }
-
       if (cards[idx + 1] === selectedCard) {
         return CardSize.medium;
       }
-
       return CardSize.small;
     },
     ...mapActions(useGameStore, {
@@ -68,17 +62,14 @@ export default defineComponent({
   computed: {
     offset(): number {
       const gap = 2;
-
       return CardSize.small * this.selectedCardIdx + gap * this.selectedCardIdx;
     },
     panelSize(): string {
       const gap = 2;
       const cardsNum = 5;
-
       const l = CardSize.large;
       const m = CardSize.medium;
       const s = CardSize.small;
-
       return `${l + m * 2 + s * 2 + (gap * cardsNum - 1)}vw`;
     },
     ...mapState(useGameStore, {
@@ -92,7 +83,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="choice-panel__cards" :style="{ maxWidth: panelSize }">
+  <div v-if="cards.length > 0" class="choice-panel__cards" :style="{ maxWidth: panelSize }">
     <div class="choice-panel__cards-inner">
       <div
         class="card-wrapper"
@@ -101,7 +92,7 @@ export default defineComponent({
           marginLeft: idx === 0 ? `-${offset}vw` : '0',
         }"
         v-for="(card, idx) in [null, null, ...cards]"
-        :key="idx"
+        :key="`${card?.id}-${idx}`"
       >
         <CardInfoCopmponent
           :card="card"
@@ -129,7 +120,6 @@ export default defineComponent({
     </div>
   </div>
 </template>
-
 <style scoped lang="scss">
 .choice-panel {
   position: fixed;
@@ -137,12 +127,10 @@ export default defineComponent({
   width: 100%;
   z-index: 20;
   background-color: rgba(58, 41, 25, 0.486);
-
   &__cards {
     margin: 0 auto;
     margin-top: 5px;
   }
-
   &__cards-inner {
     display: flex;
     gap: 2vw;
@@ -151,23 +139,19 @@ export default defineComponent({
     padding-top: 1vw;
   }
 }
-
 .card-wrapper {
   flex-shrink: 0;
   position: relative;
   height: 30vw;
   transition: margin-left linear 0.2s;
 }
-
 .dummy-card {
   height: 50%;
 }
-
 .description-card {
   margin-top: 0.5vw;
   margin-left: 20.5vw;
 }
-
 :deep(.card-info) {
   transition: transform linear 0.2s;
 }

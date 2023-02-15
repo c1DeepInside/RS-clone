@@ -93,6 +93,7 @@ export default defineComponent({
     top: 0.5vw;
     left: 2vw;
     font-size: 1vw;
+    margin-top: 0.5vw;
   }
 
   &__ability-image {

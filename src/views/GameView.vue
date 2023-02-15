@@ -24,17 +24,21 @@ export default defineComponent({
       timer: 0,
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
+      handChangeCount: 0,
+      isShowDeck: false,
+      isShowEnemyDeck: false,
+      isShowWeatherDeck: false,
+      isShowAlliesDiscard: false,
+      isShowEnemyDiscard: false,
     };
   },
   methods: {
     onCardSelected(card: Card) {
       if (this.selectedCard.ability === 'medic') {
-        const key = this.whoseDiscard === 'allies' ? true : false;
-
         if (this.discard[this.whoseDiscard as enemyAlliesType].length !== 0) {
           this.setShowDiscard();
           this.setSelectedCard(card);
-          this.removeFromDiscard(card);
+          this.removeFromDiscard(card, 'allies');
           this.getDiscard(this.whoseDiscard);
         }
 
@@ -45,6 +49,38 @@ export default defineComponent({
       } else {
         this.setMedic(false);
       }
+    },
+    onHandToDiscard(card: Card) {
+      this.removeFromHand(card);
+      this.addToDiscard(card, 'allies');
+      if (this.handChangeCount >= 1) {
+        this.setShowHand(false);
+        this.handChangeCount = 0;
+        this.isShowDeck = true;
+      } else {
+        this.handChangeCount += 1;
+      }
+    },
+    onDiscardToHand(card: Card) {
+      if (this.isShowAlliesDiscard) {
+        this.isShowAlliesDiscard = false;
+        this.removeFromDiscard(card, 'allies');
+      }
+      if (this.isShowEnemyDiscard) {
+        this.isShowEnemyDiscard = false;
+        this.removeFromDiscard(card, 'enemy');
+      }
+      this.addToHand([card]);
+    },
+    onWeatherDeck(card: Card) {
+      this.addToWeather(card);
+      this.removeFromDeck('allies', card);
+      this.isShowWeatherDeck = false;
+    },
+    onDeckToHand(card: Card) {
+      this.removeFromDeck('allies', card);
+      this.addToHand([card]);
+      this.isShowDeck = false;
     },
     showPass() {
       if (this.lives.allies > 0) {
@@ -78,13 +114,91 @@ export default defineComponent({
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
         setTimeout(() => {
-          this.addToWeather(this.selectedCard);
-          if (this.selectedCard.ability === 'clear') {
-            this.showSunAnimation();
-            this.clearWeathers();
+          if (this.selectedCard.type === 'leader') {
+            this.putLeaderCard();
+          } else if (this.selectedCard.ability === 'specScorch') {
+            this.putSpecScorch();
+            this.addToDiscard(this.selectedCard, 'allies');
+          } else {
+            this.addToWeather(this.selectedCard);
+            if (this.selectedCard.ability === 'clear') {
+              this.showSunAnimation();
+              this.clearWeathers();
+            }
           }
         }, 400);
       }
+    },
+    putLeaderCard() {
+      switch (this.selectedCard.name) {
+        case 'Фольтест Предводитель Севера':
+          this.showSunAnimation();
+          this.clearWeathers();
+          break;
+        case 'Фольтест Железный Владыка':
+          this.putLineScorch('siege', 'enemy');
+          break;
+        case 'Францеска Финдабаир Королева Дол Блатанны':
+          this.putLineScorch('range', 'enemy');
+          break;
+        case 'Фольтест Завоеватель':
+          this.putLineBoost('siege', 'allies');
+          break;
+        case 'Францеска Финдабаир Прекраснейшая':
+          this.putLineBoost('range', 'allies');
+          break;
+        case 'Эредин Бреакк Глас Командир Дикой Охоты':
+          this.putLineBoost('melee', 'allies');
+          break;
+        case 'Фольтест Король Темерии':
+          this.getWeatherFromDeck('fog');
+          break;
+        case 'Эмгыр вар Эмрейс Йож из Эрленвальда':
+          this.getWeatherFromDeck('rain');
+          break;
+        case 'Францеска Финдабаир Истинная эльфка':
+          this.getWeatherFromDeck('frost');
+          break;
+        case 'Эредин Бреакк Глас Владыка Тир на Лиа':
+          this.exchangeLeaderAbility();
+          break;
+        case 'Эмгыр вар Эмрейс Император Нильфграада':
+          this.isShowEnemyDeck = true;
+          break;
+        case 'Эредин Бреакк Глас Король Aen Elle':
+          this.isShowWeatherDeck = true;
+          break;
+        case 'Эредин Бреакк Глас Убийца Оберона':
+          this.isShowAlliesDiscard = true;
+          break;
+        case 'Эмгыр вар Эмрейс Властелин Юга':
+          this.isShowEnemyDiscard = true;
+          break;
+        default:
+      }
+      this.leader.allies.quantity = 0;
+    },
+    exchangeLeaderAbility() {
+      this.setShowHand(true);
+    },
+    getWeatherFromDeck(weather: string) {
+      let weatherIndex = -1;
+      if (
+        this.deck.allies.some((card: Card, index) => {
+          weatherIndex = index;
+          return card.ability === weather;
+        }) === false
+      ) {
+        weatherIndex = -1;
+      }
+      if (weatherIndex >= 0) {
+        this.addToWeather(this.deck.allies[weatherIndex]);
+        this.removeFromDeck('allies', this.deck.allies[weatherIndex]);
+      }
+    },
+    setLeader(card: Card) {
+      this.setSelectedCard(card);
+      this.setIsShowSelected(true);
     },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
@@ -93,12 +207,19 @@ export default defineComponent({
       addToWeather: 'addToWeather',
       setAlliesPower: 'setAlliesPower',
       setEnemyPower: 'setEnemyPower',
+      putSpecScorch: 'putSpecScorch',
       setSelectedCard: 'setSelectedCard',
+      putLineScorch: 'putLineScorch',
+      putLineBoost: 'putLineBoost',
       getDiscard: 'getDiscard',
       setShowDiscard: 'setShowDiscard',
       setWhoseDiscard: 'setWhoseDiscard',
       removeFromDiscard: 'removeFromDiscard',
       addToLine: 'addToLine',
+      removeFromDeck: 'removeFromDeck',
+      setShowHand: 'setShowHand',
+      addToDiscard: 'addToDiscard',
+      addToHand: 'addToHand',
       setMedic: 'setMedic',
     }),
     getLastDiscardCard(fieldType: string): Card {
@@ -114,6 +235,7 @@ export default defineComponent({
     ...mapState(useGameStore, {
       hand: 'hand',
       board: 'board',
+      affectedBoard: 'affectedBoard',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       enemyPower: 'enemyPower',
@@ -123,7 +245,10 @@ export default defineComponent({
       lives: 'lives',
       showDiscard: 'showDiscard',
       whoseDiscard: 'whoseDiscard',
+      showHand: 'showHand',
+      getEnemyHand: 'getEnemyHand',
       isMedic: 'isMedic',
+      getWeatherDeck: 'getWeatherDeck',
     }),
   },
   components: {
@@ -147,9 +272,13 @@ export default defineComponent({
       <div class="game__players">
         <div class="game__leader game__leader-1">
           <div class="game__leader-card card-off">
-            <img class="game__leader-image" :src="leader.enemy.image" draggable="false" />
+            <CardInfoComponent
+              v-if="JSON.stringify(leader.enemy) !== JSON.stringify({})"
+              :card="leader.enemy"
+              :layoutType="0"
+              class="card"
+            />
           </div>
-
           <div class="game__leader-icon">
             <div></div>
           </div>
@@ -160,7 +289,10 @@ export default defineComponent({
         </div>
         <div
           class="game__weather"
-          :class="selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : ''"
+          :class="[
+            selectedCard.fieldType.includes('weather') && isShowSelectedCard ? 'active__weather' : '',
+            selectedCard.type === 'leader' && isShowSelectedCard ? 'active__weather' : '',
+          ]"
           @click="putWeatherCard"
         >
           <div
@@ -179,10 +311,15 @@ export default defineComponent({
         </div>
 
         <div class="game__leader game__leader-2">
-          <div @click="setSelectedCard(leader.allies), setIsShowSelected(true)" class="game__leader-card">
-            <img class="game__leader-image" :src="leader.allies.image" draggable="false" />
+          <div class="game__leader-card" :class="leader.allies.quantity <= 0 ? 'card-off' : ''">
+            <CardInfoComponent
+              v-if="JSON.stringify(leader.allies) !== JSON.stringify({})"
+              :card="leader.allies"
+              :layoutType="0"
+              class="card"
+              @click="setLeader(leader.allies)"
+            />
           </div>
-
           <div class="game__leader-icon game__leader-active">
             <div></div>
           </div>
@@ -198,7 +335,7 @@ export default defineComponent({
           <!-- enemy discard last card -->
           <div class="deck__cemetery deck__cemetery-1">
             <div
-              v-if="discard['enemy'].length  !== 0"
+              v-if="discard['enemy'].length !== 0"
               @click="setShowDiscard(), setWhoseDiscard('enemy')"
               class="card-wrapper"
             >
@@ -230,10 +367,33 @@ export default defineComponent({
         </div>
       </div>
       <!-- discard slider -->
-      <div v-if="showDiscard" class="discard">
-        <div v-if="!isMedic" class="discard__close" @click="setShowDiscard()">x</div>
+      <div v-if="showDiscard" class="show_cards_close">
+        <div v-if="!isMedic" class="close" @click="setShowDiscard()">x</div>
 
         <SliderComponent @card-selected="onCardSelected" :cards="getDiscard(whoseDiscard)" />
+      </div>
+      <div v-if="showHand" class="show_cards">
+        <SliderComponent @card-selected="onHandToDiscard" :cards="hand" />
+      </div>
+      <div v-if="isShowDeck" class="show_cards">
+        <SliderComponent @card-selected="onDeckToHand" :cards="deck.allies" />
+      </div>
+      <div v-if="isShowWeatherDeck && getWeatherDeck.length > 0" class="show_cards">
+        <SliderComponent @card-selected="onWeatherDeck" :cards="getWeatherDeck" />
+      </div>
+      <div
+        v-if="(isShowAlliesDiscard && discard.allies.length > 0) || (isShowEnemyDiscard && discard.enemy.length > 0)"
+        class="show_cards"
+      >
+        <SliderComponent
+          @card-selected="onDiscardToHand"
+          :cards="isShowAlliesDiscard ? discard.allies : isShowEnemyDiscard ? discard.enemy : []"
+        />
+      </div>
+      <div v-if="isShowEnemyDeck" class="show_cards_close">
+        <div class="close" @click="isShowEnemyDeck = false">x</div>
+
+        <SliderComponent :cards="getEnemyHand" />
       </div>
     </div>
 
@@ -260,7 +420,7 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
-.discard {
+.show_cards_close {
   position: absolute;
   top: 0;
   left: 0;
@@ -270,13 +430,28 @@ export default defineComponent({
   padding-top: 8vw;
   background-color: rgba(58, 41, 25, 0.699);
 
-  &__close {
+  .close {
     position: absolute;
     color: white;
     font-size: 4vw;
     top: 4vw;
     right: 6vw;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
+}
+
+.show_cards {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  padding-top: 8vw;
+  background-color: rgba(58, 41, 25, 0.699);
 }
 .card-wrapper {
   width: 5.4vw;
@@ -464,7 +639,7 @@ export default defineComponent({
   }
 
   .active__weather {
-    z-index: 2;
+    z-index: 3;
     animation: pulseField 2s infinite;
 
     @keyframes pulseField {
@@ -525,7 +700,7 @@ export default defineComponent({
 
 .card-off {
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.5;
 }
 
 .deck {

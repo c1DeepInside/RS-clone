@@ -65,6 +65,9 @@ export default defineComponent({
       this.setEnemyPower();
       return this.getEnemyPower;
     },
+    isLeader(): boolean {
+      return JSON.stringify(this.leader[this.playerType]) !== JSON.stringify({});
+    },
   },
 });
 </script>
@@ -79,13 +82,13 @@ export default defineComponent({
     <div>
       <div
         :style="{
-          backgroundImage: `url(${getFraction().img})`,
+          backgroundImage: isLeader ? `url(${getFraction().img})` : '',
         }"
       ></div>
     </div>
   </div>
   <div class="player__name">{{ getNickName() }}</div>
-  <div class="player__deck-name">{{ getFraction().name }}</div>
+  <div class="player__deck-name">{{ isLeader ? getFraction().name : '' }}</div>
   <div class="player__hand-count">{{ getNumbersCards() }}</div>
   <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
   <div v-else class="player__gem player__gem-1"></div>
@@ -95,7 +98,12 @@ export default defineComponent({
 
   <div class="player__score player__score-more">
     <span>{{ playerType === 'enemy' ? Number(enemyPower) : Number(alliesPower) }}</span>
-    <div></div>
+    <div
+      v-if="
+        (playerType === 'enemy' && Number(enemyPower) > Number(alliesPower)) ||
+        (playerType === 'allies' && Number(enemyPower) < Number(alliesPower))
+      "
+    ></div>
   </div>
   <div :class="['player__passed', { 'player__passed-true': isPass }]">Пас</div>
 </template>

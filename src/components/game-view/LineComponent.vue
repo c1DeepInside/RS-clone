@@ -39,6 +39,7 @@ export default defineComponent({
   methods: {
     ...mapActions(useGameStore, {
       setPower: 'setPower',
+      setAffectedBoard: 'setAffectedBoard',
       removeFromLine: 'removeFromLine',
       setSelectedCard: 'setSelectedCard',
       addToLine: 'addToLine',
@@ -49,14 +50,15 @@ export default defineComponent({
     }),
     setDecoy(card: Card, cardId: number) {
       if (this.selectedCard.ability === 'decoy' && card.type === 'usual') {
+        const origCard = this.board.allies[this.attackType][cardId];
         this.removeFromLine(cardId, this.attackType, true);
         this.addToLine(this.selectedCard, this.attackType, true, true);
         this.removeFromHand(this.selectedCard);
-        this.addToHand([card]);
-        this.setSelectedCard(card);
+        this.addToHand([origCard]);
+        this.setSelectedCard(origCard);
         this.setIsShowSelected(false);
       }
-    }
+    },
   },
   components: {
     CardInfoComponent,
@@ -69,6 +71,7 @@ export default defineComponent({
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
       isShowSelected: 'isShowSelected',
+      affectedBoard: 'affectedBoard',
     }),
     ifFogRainFrost(): boolean {
       let isActive = false;
@@ -83,6 +86,9 @@ export default defineComponent({
     cards(): Card[] {
       let line = JSON.parse(JSON.stringify(this.board[this.type][this.attackType]));
       line = line.map((card: Card) => {
+        if (card.power === null) {
+          return card;
+        }
         if (this.ifFogRainFrost && card.type !== 'hero') {
           card.power = 1;
         }
@@ -95,12 +101,25 @@ export default defineComponent({
           });
           card.power! *= bondCardsCount;
         }
+        if (this.moraleCount > 0 && card.type !== 'hero') {
+          card.power =
+            card.ability === 'morale' ? card.power! + (1 * this.moraleCount - 1) : card.power! + 1 * this.moraleCount;
+        }
         if (this.ifBoost && card.type !== 'hero') {
           card.power! *= 2;
         }
         return card;
       });
+      this.setAffectedBoard(line, this.attackType, this.type);
       return line;
+    },
+    moraleCount(): number {
+      return this.board[this.type][this.attackType].reduce((prev, next): number => {
+        if (next.ability === 'morale') {
+          return prev + 1;
+        }
+        return prev;
+      }, 0);
     },
     ifBoost(): boolean {
       const isBoostCard = this.board[this.type][this.attackType].some((card) => {
@@ -161,8 +180,14 @@ export default defineComponent({
     <div :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
       class="cards__wrap wrap_animation">
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
-        <CardInfoComponent @click="setDecoy(card, index)" :card="card" :layoutType="0" class="card" :ifBuff="ifBoost"
-          :ifDebuff="ifFogRainFrost" />
+        <CardInfoComponent
+          @click="setDecoy(card, index)"
+          :card="card"
+          :layoutType="0"
+          class="card"
+          :ifBuff="card.power! > board[type][attackType][index].power!"
+          :ifDebuff="card.power! < board[type][attackType][index].power!"
+        />
       </div>
     </div>
 
@@ -217,7 +242,7 @@ export default defineComponent({
 }
 
 .active {
-  z-index: 2;
+  z-index: 3;
   animation: pulseField 2s infinite;
 
   @keyframes pulseField {

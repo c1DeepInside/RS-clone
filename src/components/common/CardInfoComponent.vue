@@ -58,7 +58,6 @@ export default defineComponent({
           return '';
         }
 
-        // @ts-ignore
         return cardEquipmendImg[key];
       }
 
@@ -158,7 +157,9 @@ export default defineComponent({
 
     <div v-else-if="card?.power !== null" class="game-card__count">
       <img draggable="false" class="game-card__count-img" src="/src/assets/images/build/power_normal.png" />
-      <p class="game-card__count-power">{{ card?.power }}</p>
+      <p class="game-card__count-power" :class="[ifBuff ? 'card-buff' : '', ifDebuff ? 'card-debuff' : '']">
+        {{ card?.power }}
+      </p>
     </div>
 
     <img
@@ -286,6 +287,7 @@ export default defineComponent({
   }
 
   &__description {
+    color: $BLACK_COLOR;
     background-image: url('/src/assets/images/build/card_description.png');
     background-size: cover;
     color: black;
