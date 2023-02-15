@@ -146,12 +146,14 @@ export default defineComponent({
     },
     cardMargin(): string {
       return this.board[this.type][this.attackType].length > 8
-        ? `margin-left: -${this.board[this.type][this.attackType].length /
-        (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6))
-        }vw; left: ${this.board[this.type][this.attackType].length /
-        (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6)) /
-        2
-        }vw`
+        ? `margin-left: -${
+            this.board[this.type][this.attackType].length /
+            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6))
+          }vw; left: ${
+            this.board[this.type][this.attackType].length /
+            (7.2 + Math.pow(2.6, -this.board[this.type][this.attackType].length + 12.6)) /
+            2
+          }vw`
         : '';
     },
   },
@@ -168,17 +170,22 @@ export default defineComponent({
       </div>
     </div>
 
-    <div :class="[
-      activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
-      `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
-    ]" class="boosts__wrap wrap_animation">
+    <div
+      :class="[
+        activeBoost && board[`${type}Boost`][attackType].length < 1 ? 'active' : '',
+        `boost__wrap__${attackType}__${type ? 'enemy' : 'allies'}`,
+      ]"
+      class="boosts__wrap wrap_animation"
+    >
       <div class="boost__wrap" v-for="(card, index) in board[`${type}Boost`][attackType]" :key="index">
         <CardInfoComponent :card="card" :layoutType="0" class="card" />
       </div>
     </div>
 
-    <div :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
-      class="cards__wrap wrap_animation">
+    <div
+      :class="[activeLine ? 'active' : '', `cards__wrap__${attackType}__${type ? 'enemy' : 'allies'}`]"
+      class="cards__wrap wrap_animation"
+    >
       <div class="card__wrap" v-for="(card, index) in cards" :key="index" :style="cardMargin">
         <CardInfoComponent
           @click="setDecoy(card, index)"

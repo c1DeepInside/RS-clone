@@ -360,7 +360,7 @@ export const useGameStore = defineStore('gameStore', {
           ability: 'decoy',
           fieldType: ['melee', 'range', 'siege'],
           power: null,
-          quantity: 3
+          quantity: 3,
         },
         {
           id: 3,
@@ -533,25 +533,9 @@ export const useGameStore = defineStore('gameStore', {
     setShowDiscard() {
       this.showDiscard = !this.showDiscard;
     },
-    setWhoseDiscard(type: enemyAlliesType) {
-      this.whoseDiscard = type;
-    },
-    setMedic(value: boolean) {
-      this.isMedic = value;
-    },
     clearWeathers() {
       this.discard.allies = [...this.discard.allies, ...this.board.weather];
       this.board.weather = [];
-    },
-    removeFromDiscard(card: Card) {
-      const discard = this.whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
-
-      for (let i = 0; i < discard.length; i++) {
-        if (discard[i].id === card.id) {
-          discard.splice(i, 1);
-          break;
-        }
-      }
     },
     removeFromHand(card: Card) {
       const index = this.hand.indexOf(card);
@@ -571,14 +555,8 @@ export const useGameStore = defineStore('gameStore', {
 
       board.splice(cardId, 1);
     },
-    setIsShowSelected(isShow: boolean) {
-      this.isShowSelected = isShow;
-    },
     setShowHand(isShow: boolean) {
       this.showHand = isShow;
-    },
-    setSelectedCard(card: Card) {
-      this.selectedCard = card;
     },
     addToWeather(card: Card) {
       const isHereWeather = this.board.weather.some((weatherCard: Card) => weatherCard.ability === card.ability);
@@ -649,9 +627,6 @@ export const useGameStore = defineStore('gameStore', {
       if (index >= 0) {
         this.discard[type].splice(index, 1);
       }
-    },
-    setShowDiscard() {
-      this.showDiscard = !this.showDiscard;
     },
     setWhoseDiscard(type: enemyAlliesType) {
       this.whoseDiscard = type;
