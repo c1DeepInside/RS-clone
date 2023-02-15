@@ -63,7 +63,7 @@ export default defineComponent({
       <input
         v-model="inputs.login"
         @input="validateName"
-        v-bind:class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }"
+        :class="{ active: inputs.login !== '' && !errors.hasErrorName, error: errors.hasErrorName }"
         class="registration__input"
         type="text"
         placeholder="Введите свое имя/никнейм"
@@ -76,7 +76,7 @@ export default defineComponent({
       <input
         v-model="inputs.password"
         @input="validatePassword"
-        v-bind:class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }"
+        :class="{ active: inputs.password !== '' && !errors.hasErrorPassword, error: errors.hasErrorPassword }"
         class="registration__input"
         type="password"
         placeholder="Введите пароль"
@@ -89,7 +89,9 @@ export default defineComponent({
       </p>
     </div>
 
-    <button class="registration__button" type="submit" :disabled="isLoading">Зарегестрироваться</button>
+    <button class="registration__button" type="submit" :disabled="isLoading">
+      {{ isLoading ? 'Загрузка...' : 'Зарегистрироваться' }}
+    </button>
   </form>
 </template>
 
