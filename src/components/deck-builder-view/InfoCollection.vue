@@ -8,6 +8,7 @@ import router from '@/router';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
+import type { IntRange } from '@/utilits/types';
 
 export default defineComponent({
   data() {
@@ -23,19 +24,19 @@ export default defineComponent({
   methods: {
     changeFractionLeader(data: Card) {
       switch (this.currentFraction) {
-        case 0:
+        case 1:
           this.currentLeader = data;
           this.currentLeaderNorth = data;
           break;
-        case 1:
+        case 2:
           this.currentLeader = data;
           this.currentLeaderNilfgaard = data;
           break;
-        case 2:
+        case 3:
           this.currentLeader = data;
           this.currentLeaderScoiatel = data;
           break;
-        case 3:
+        case 4:
           this.currentLeader = data;
           this.currentLeaderMonsters = data;
           break;
@@ -43,16 +44,16 @@ export default defineComponent({
     },
     changeCurrentLeader() {
       switch (this.currentFraction) {
-        case 0:
+        case 1:
           this.currentLeader = this.currentLeaderNorth;
           break;
-        case 1:
+        case 2:
           this.currentLeader = this.currentLeaderNilfgaard;
           break;
-        case 2:
+        case 3:
           this.currentLeader = this.currentLeaderScoiatel;
           break;
-        case 3:
+        case 4:
           this.currentLeader = this.currentLeaderMonsters;
           break;
       }
@@ -176,7 +177,7 @@ export default defineComponent({
   },
   props: {
     currentFraction: {
-      type: Number,
+      type: Object as PropType<IntRange<1, 5>>,
       required: true,
     },
     leadersCards: {

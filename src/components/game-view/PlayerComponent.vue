@@ -2,7 +2,6 @@
 import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { fractions } from '@/utilits/cardBuildImgs';
-import type { IntRange } from '@/utilits/types';
 import { defineComponent, type PropType } from 'vue';
 
 export enum PlayerType {
@@ -32,7 +31,7 @@ export default defineComponent({
   },
   methods: {
     getFraction() {
-      const idx = this.leader[this.playerType].fractionId! as IntRange<0, 4>;
+      const idx = this.playerType === 'enemy' ? this.fractionEnemy : this.fractionAlly;
       return fractions[idx];
     },
     getNickName() {
@@ -56,6 +55,8 @@ export default defineComponent({
       getAlliesPower: 'alliesPower',
       getEnemyPower: 'enemyPower',
       enemyHand: 'enemyHand',
+      fractionAlly: 'fractionAlly',
+      fractionEnemy: 'fractionEnemy',
     }),
     alliesPower(): number {
       this.setAlliesPower();
@@ -64,9 +65,6 @@ export default defineComponent({
     enemyPower(): number {
       this.setEnemyPower();
       return this.getEnemyPower;
-    },
-    isLeader(): boolean {
-      return JSON.stringify(this.leader[this.playerType]) !== JSON.stringify({});
     },
   },
 });
@@ -82,13 +80,13 @@ export default defineComponent({
     <div>
       <div
         :style="{
-          backgroundImage: isLeader ? `url(${getFraction().img})` : '',
+          backgroundImage: `url(${getFraction().img})`,
         }"
-      ></div>
+        ></div>
     </div>
   </div>
   <div class="player__name">{{ getNickName() }}</div>
-  <div class="player__deck-name">{{ isLeader ? getFraction().name : '' }}</div>
+  <div class="player__deck-name">{{ getFraction().name}}</div>
   <div class="player__hand-count">{{ getNumbersCards() }}</div>
   <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
   <div v-else class="player__gem player__gem-1"></div>

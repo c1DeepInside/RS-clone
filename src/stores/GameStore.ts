@@ -23,7 +23,9 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    fraction: 0,
+    isHost: true,
+    fractionAlly: 3 as IntRange<1, 5>,
+    fractionEnemy: 2 as IntRange<1, 5>,
     board: {
       enemy: {
         siege: [
@@ -329,7 +331,7 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 1,
         description: 'Проклятая политика... Я доверяю только своему оружию.',
         ability: null,
-        fractionId: 0,
+        fractionId: 1,
         image: 'src/assets/images/realms_foltest_gold.jpg',
       } as Card,
       allies: {
@@ -341,7 +343,7 @@ export const useGameStore = defineStore('gameStore', {
         quantity: 1,
         description: 'Проклятая политика... Я доверяю только своему оружию.',
         ability: null,
-        fractionId: 0,
+        fractionId: 1,
         image: 'src/assets/images/realms_foltest_gold.jpg',
       } as Card,
     },
@@ -572,8 +574,8 @@ export const useGameStore = defineStore('gameStore', {
     setSelectedLeader(card: Card) {
       this.leader.allies = card;
     },
-    setFraction(value: number) {
-      this.fraction = value;
+    setFraction(value: IntRange<1, 5>) {
+      this.fractionAlly = value;
     },
   },
 });

@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import PlayerComponent, { PlayerType } from '@/components/game-view/PlayerComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
-import InformationBar from '@/components/game-view/InformationBar.vue';
+import InformationBar, { BarType } from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
@@ -13,7 +13,7 @@ import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
-import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
+import { Fractions, fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export default defineComponent({
@@ -25,7 +25,11 @@ export default defineComponent({
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
       handChangeCount: 0,
+      isShowExchangePanel: false,
       isShowDeck: false,
+      isShowInfoBar: false,
+      infoBar: BarType.alliesStart,
+      isShowQestion: false,
       isShowEnemyDeck: false,
       isShowWeatherDeck: false,
       isShowAlliesDiscard: false,
@@ -230,6 +234,20 @@ export default defineComponent({
       const idx = this.discard.allies.length - 1;
       return this.discard.allies[idx];
     },
+    chooseMove(side: PlayerType) {
+      this.infoBar = side === this.playerType.ally ? BarType.alliesStart : BarType.enemyStart;
+      this.isShowQestion = false;
+      this.isShowInfoBar = true;
+      this.closeInfoBar();
+      setTimeout(() => {
+        this.isShowExchangePanel = true;
+      }, 1000);
+    },
+    closeInfoBar() {
+      setTimeout(() => {
+        this.isShowInfoBar = false;
+      }, 1000);
+    }
   },
   computed: {
     ...mapState(useGameStore, {
@@ -249,7 +267,25 @@ export default defineComponent({
       getEnemyHand: 'getEnemyHand',
       isMedic: 'isMedic',
       getWeatherDeck: 'getWeatherDeck',
+      fractionAlly: 'fractionAlly',
+      fractionEnemy: 'fractionEnemy',
+      isHost: 'isHost',
     }),
+  },
+  mounted() {
+    //TODO: Добавить поддержку вебсокетов
+    //если противник id фракции 3 сделать чтобы пересылал истину на хост
+    if (this.fractionAlly === Fractions.SCOIATAEL && this.isHost) {
+      this.isShowQestion = true;
+    } else if (this.isHost) {
+      const whoStart = Math.floor(Math.random() * 2) === 0 ? BarType.alliesStart : BarType.enemyStart;
+      this.infoBar = whoStart;
+      this.isShowInfoBar = true;
+      this.closeInfoBar();
+      setTimeout(() => {
+        this.isShowExchangePanel = true;
+      }, 1000);
+    }
   },
   components: {
     GameExchangePanelComponent,
@@ -266,8 +302,31 @@ export default defineComponent({
 </script>
 
 <template>
-  <GameExchangePanelComponent />
+  <InformationBar v-if="isShowInfoBar" :bar-type="infoBar" />
+  <GameExchangePanelComponent v-if="isShowExchangePanel" />
   <main class="page-game">
+    <div v-if="isShowQestion" class="whose-turn">
+      <div class="whose-turn__popup">
+      <div class="whose-turn__question">
+        Хотите сделать первый ход?
+      </div>
+      <div class="whose-turn__description">
+        Свойство фракции скоя'таэлей позволяет вам решить, кто делает первый ход.
+      </div>
+
+      <div class="whose-turn__buttons">
+        <div @click="chooseMove(playerType.ally)" class="whose-turn__ally">
+          Сделать ход первым
+        </div>
+
+        <div @click="chooseMove(playerType.enemy)" class="whose-turn__enemy">
+          Пусть начнёт противник
+        </div>
+      </div>
+    </div>
+    </div>
+    
+
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -344,7 +403,7 @@ export default defineComponent({
           </div>
 
           <div class="deck__player deck__player-1">
-            <img class="deck__background" :src="deckBack[leader.enemy.fractionId!]" draggable="false" />
+            <img class="deck__background" :src="deckBack[fractionEnemy]" draggable="false" />
             <div class="deck__counter">{{ deck.enemy.length }}</div>
           </div>
         </div>
@@ -361,7 +420,7 @@ export default defineComponent({
           </div>
 
           <div class="deck__player deck__player-2">
-            <img class="deck__background" :src="deckBack[leader.allies.fractionId!]" draggable="false" />
+            <img class="deck__background" :src="deckBack[fractionAlly]" draggable="false" />
             <div class="deck__counter">{{ deck.allies.length }}</div>
           </div>
         </div>
@@ -402,7 +461,6 @@ export default defineComponent({
     </div>
 
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
-    <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />
     <button
@@ -420,6 +478,53 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.whose-turn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+
+  &__popup {
+    position: absolute;
+    top: 20vw;
+    left: 36vw;
+    width: 34vw;
+    z-index: 60;
+    padding: 2vw;
+    color: white;
+    text-align: center;
+    background-color: rgba(16, 16, 16, 0.952);
+  }
+
+  &__question {
+    text-transform: uppercase;
+    font-size: 2vw;
+    letter-spacing: -2px;
+    margin-bottom: 2vw;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 3vw;
+    font-weight: 500;
+  }
+
+  &__description {
+    line-height: 1.4vw;
+    margin-bottom: 2vw;
+  }
+
+  &__ally {
+    color: green;
+  }
+
+  &__enemy {
+    color: rgb(192, 4, 4);
+  }
+}
 .show_cards_close {
   position: absolute;
   top: 0;

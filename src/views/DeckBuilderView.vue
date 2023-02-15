@@ -10,7 +10,7 @@ export default defineComponent({
     return {
       collectionFilter: 'all' as Filters,
       deckFilter: 'all' as Filters,
-      currentFraction: 0,
+      currentFraction: 1,
       collectionCards: [
         {
           id: 0,
@@ -42,7 +42,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nor_catapult_1.png',
           description: 'Боги на стороне того, у кого лучше катапульты...',
-          fractionId: 0,
+          fractionId: 1,
           ability: 'bond',
           fieldType: ['siege'],
           power: 8,
@@ -54,7 +54,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nor_dethmold.png',
           description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
-          fractionId: 0,
+          fractionId: 1,
           ability: null,
           fieldType: ['range'],
           power: 6,
@@ -78,7 +78,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nor_blue_stripes.png',
           description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-          fractionId: 0,
+          fractionId: 1,
           ability: 'bond',
           fieldType: ['melee'],
           power: 4,
@@ -237,7 +237,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
           ability: null,
-          fractionId: 0,
+          fractionId: 1,
           image: 'src/assets/images/realms_foltest_silver.jpg',
         },
         {
@@ -249,7 +249,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Проклятая политика... Я доверяю только своему оружию.',
           ability: null,
-          fractionId: 0,
+          fractionId: 1,
           image: 'src/assets/images/realms_foltest_gold.jpg',
         },
         {
@@ -261,7 +261,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Точный выстрел из баллисты сокрушит не только укрпеления врага, но и его дух.',
           ability: null,
-          fractionId: 0,
+          fractionId: 1,
           image: 'src/assets/images/realms_foltest_copper.jpg',
         },
         {
@@ -273,7 +273,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Замечательный день для битвы!',
           ability: null,
-          fractionId: 0,
+          fractionId: 1,
           image: 'src/assets/images/realms_foltest_bronze.jpg',
         },
         {

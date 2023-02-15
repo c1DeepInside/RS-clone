@@ -1,22 +1,39 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 
-export default defineComponent({});
+export enum BarType { 
+  scoiatael = 'scoiatael' ,
+  alliesStart = 'alliesStart' ,
+  enemyStart = 'enemyStart'
+};
+
+export default defineComponent({
+  data() {
+    return {
+
+    }
+  },
+  props: {
+    barType: {
+      type: Object as PropType<BarType>,
+      default: BarType.alliesStart,
+    },
+  }
+});
 </script>
 
 <template>
-  <!-- "information-true появится сообщение" -->
-  <div class="information">
-    <div class="information__content information__content-roundStart"></div>
+  <div class="information information-true">
+    <div :class="`information__content information__content-${barType}`"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .information {
   width: 100%;
-  height: 14%;
+  height: 8vw;
   position: absolute;
-  top: 43%;
+  top: 22vw;
   background-color: rgba($color: #101010, $alpha: 0.9);
   z-index: 100;
   opacity: 0;
@@ -53,6 +70,7 @@ export default defineComponent({});
 
     &-roundStart {
       background-image: url('@/assets/images/board_round_start.png');
+
       &::after {
         content: 'Начало раунда';
       }
@@ -60,6 +78,7 @@ export default defineComponent({});
 
     &-loseRound {
       background-image: url('@/assets/images/board_lose_round.png');
+
       &::after {
         content: 'Противник выиграл раунд';
       }
@@ -67,6 +86,7 @@ export default defineComponent({});
 
     &-drawRound {
       background-image: url('@/assets/images/board_draw_round.png');
+
       &::after {
         content: 'Раунд завершился вничью';
       }
@@ -74,6 +94,7 @@ export default defineComponent({});
 
     &-north {
       background-image: url('@/assets/images/board_north.png');
+
       &::after {
         content: 'Из-за умения фракции королевств Севера - Север берет дополнительную карту.';
       }
@@ -81,6 +102,7 @@ export default defineComponent({});
 
     &-monsters {
       background-image: url('@/assets/images/board_monsters.png');
+
       &::after {
         content: 'Срабатывает способность фракции монстров - одна случайно выбранная карта подразделения монстра остается на доске.';
       }
@@ -88,6 +110,7 @@ export default defineComponent({});
 
     &-scoiatael {
       background-image: url('@/assets/images/board_scoiatael.png');
+
       &::after {
         content: "Противник воспользовался свойством фракции скоя'таэлей, чтобы пойти первым.";
       }
@@ -95,6 +118,7 @@ export default defineComponent({});
 
     &-enemyStart {
       background-image: url('@/assets/images/board_coin_enemy.png');
+
       &::after {
         content: 'Противник ходит первым';
       }
@@ -102,6 +126,7 @@ export default defineComponent({});
 
     &-enemyMove {
       background-image: url('@/assets/images/board_turn_enemy.png');
+
       &::after {
         content: 'Ход противника';
       }
@@ -109,6 +134,7 @@ export default defineComponent({});
 
     &-enemyWinRound {
       background-image: url('@/assets/images/board_turn_enemy.png');
+
       &::after {
         content: 'Противник выиграл раунд';
       }
@@ -116,6 +142,7 @@ export default defineComponent({});
 
     &-enemyPassed {
       background-image: url('@/assets/images/board_round_passed.png');
+
       &::after {
         content: 'Противник спасовал';
       }
@@ -123,6 +150,7 @@ export default defineComponent({});
 
     &-alliesStart {
       background-image: url('@/assets/images/board_coin_allies.png');
+
       &::after {
         content: 'Вы делаете первый ход';
       }
@@ -130,6 +158,7 @@ export default defineComponent({});
 
     &-alliesMove {
       background-image: url('@/assets/images/board_turn_allies.png');
+
       &::after {
         content: 'Ваш ход!';
       }
@@ -137,6 +166,7 @@ export default defineComponent({});
 
     &-alliesWinRound {
       background-image: url('@/assets/images/board_win_round.png');
+
       &::after {
         content: 'Вы выиграли раунд!';
       }
@@ -144,6 +174,7 @@ export default defineComponent({});
 
     &-alliesPassed {
       background-image: url('@/assets/images/board_round_passed.png');
+
       &::after {
         content: 'Вы спасовали';
       }
