@@ -4,6 +4,7 @@ import FractionChoose, { type Filters } from '@/components/deck-builder-view/Fra
 import CardCollection from '@/components/deck-builder-view/CardsCollection.vue';
 import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 import type Card from '@/interfaces/card';
+import type { CardAPI } from '@/interfaces/cardAPI';
 
 export default defineComponent({
   data() {
@@ -94,7 +95,7 @@ export default defineComponent({
           ability: null,
           fieldType: ['siege'],
           power: 10,
-          quantity: 1,
+          quantity: 2,
         },
         {
           id: 7,
@@ -349,13 +350,14 @@ export default defineComponent({
           image: 'src/assets/images/monsters_eredin_gold.jpg',
         },
       ] as Card[],
-      deckCards: [] as Card[],
-      deckCardsNorth: [] as Card[],
-      deckCardsNilfgaard: [] as Card[],
-      deckCardsScoiatel: [] as Card[],
-      deckCardsMonsters: [] as Card[],
+      deckCards: [] as CardAPI[],
+      deckCardsNorth: [] as CardAPI[],
+      deckCardsNilfgaard: [] as CardAPI[],
+      deckCardsScoiatel: [] as CardAPI[],
+      deckCardsMonsters: [] as CardAPI[],
     };
   },
+  beforeMount() {},
   methods: {
     changeFilterCollection(data: Filters) {
       this.collectionFilter = data;
@@ -384,19 +386,22 @@ export default defineComponent({
       }
     },
     addCard(data: Card) {
-      let deckCard = this.deckCards.find((item) => item.id === data.id);
+      let deckCard = this.deckCards.find((item) => item.card_id === data.id);
       if (deckCard) {
         deckCard.quantity += 1;
       } else {
-        this.deckCards.push({ ...data, quantity: 1 });
+        this.deckCards.push({ card_id: data.id, quantity: 1 });
       }
     },
     deleteCard(data: Card) {
-      const index = this.deckCards.indexOf(data);
-      if (data.quantity === 1) {
-        this.deckCards.splice(index, 1);
-      } else {
-        data.quantity--;
+      let deckCard = this.deckCards.find((item) => item.card_id === data.id);
+      if (deckCard) {
+        if (data.quantity === 1) {
+          const index = this.deckCards.indexOf(deckCard);
+          this.deckCards.splice(index, 1);
+        } else {
+          deckCard.quantity -= 1;
+        }
       }
     },
   },
@@ -404,7 +409,7 @@ export default defineComponent({
     changeCollectionsCards() {
       return this.collectionCards
         .map((item) => {
-          let deckCard = this.deckCards.find((el) => el.id === item.id);
+          let deckCard = this.deckCards.find((el) => el.card_id === item.id);
           if (deckCard) {
             return {
               ...item,
@@ -414,6 +419,19 @@ export default defineComponent({
           return item;
         })
         .filter((item) => item.quantity > 0);
+    },
+    fullDeckCards(): Card[] {
+      let cards: Card[] = [];
+      this.deckCards.forEach((cardAPI) => {
+        this.collectionCards.forEach((card) => {
+          if (cardAPI.card_id === card.id) {
+            let newCard: Card = JSON.parse(JSON.stringify(card));
+            newCard.quantity = cardAPI.quantity;
+            cards.push(newCard);
+          }
+        });
+      });
+      return cards;
     },
   },
   created() {
@@ -447,12 +465,16 @@ export default defineComponent({
           :currentFraction="currentFraction"
           :gwentCards="changeCollectionsCards"
         />
-        <InfoCollection :currentFraction="currentFraction" :leadersCards="collectionCards" :selectedCards="deckCards" />
+        <InfoCollection
+          :currentFraction="currentFraction"
+          :leadersCards="collectionCards"
+          :selectedCards="fullDeckCards"
+        />
         <CardCollection
           @filterChanged="changeFilterDeck"
           @selectedCard="deleteCard"
           :currentFraction="currentFraction"
-          :gwentCards="deckCards"
+          :gwentCards="fullDeckCards"
         />
       </div>
     </div>
