@@ -23,7 +23,8 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    fraction: 0,
+    fractionAlly: 1 as IntRange<1, 4>,
+    fractionEnemy: 2 as IntRange<1, 4>,
     board: {
       enemy: {
         siege: [
@@ -572,8 +573,8 @@ export const useGameStore = defineStore('gameStore', {
     setSelectedLeader(card: Card) {
       this.leader.allies = card;
     },
-    setFraction(value: number) {
-      this.fraction = value;
+    setFraction(value: IntRange<1, 4>) {
+      this.fractionAlly = value;
     },
   },
 });

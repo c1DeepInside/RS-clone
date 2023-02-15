@@ -155,9 +155,10 @@ export default defineComponent({
   height: 43.5vw;
   display: flex;
   flex-wrap: wrap;
-  gap: 2% 3%;
+  gap: 1vw 1.2vw;
   padding: 3%;
   padding-top: 2%;
+  align-content: flex-start;
   overflow: auto;
 
   &::-webkit-scrollbar {

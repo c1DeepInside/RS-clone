@@ -8,6 +8,7 @@ import router from '@/router';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
+import type { IntRange } from '@/utilits/types';
 
 export default defineComponent({
   data() {
@@ -67,7 +68,7 @@ export default defineComponent({
       }
       const checkCards = this.deckInformation.find((item) => item.error === true);
       if (!checkCards) {
-        this.setFraction(this.currentFraction);
+        this.setFraction(this.currentFraction as IntRange<1, 4>);
         this.setSelectedLeader(this.currentLeader);
         this.parseDeck(this.selectedCards);
         router.push('/game');
@@ -90,6 +91,7 @@ export default defineComponent({
         sortCards.push(finCards[index]);
       });
       if (this.currentLeader.name === 'Францеска Финдабаир Маргаритка из Долин') {
+        this.currentLeader.quantity = 0;
         this.setHand(sortCards.slice(0, 11));
         this.setDeck(sortCards.slice(11));
       } else {

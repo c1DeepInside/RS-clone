@@ -27,7 +27,7 @@ export default defineComponent({
           quantity: 10,
         },
         {
-          id: 1,
+          id: 228,
           name: 'Цирилла',
           type: 'hero',
           image: 'src/assets/images/neutral_ciri.jpg',
