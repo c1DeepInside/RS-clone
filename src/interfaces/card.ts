@@ -20,6 +20,7 @@ type CardType = 'hero' | 'usual' | 'special' | 'leader';
 
 export default interface Card {
   id: number;
+  uuid?: string;
   name: string;
   type: CardType;
   image: string;

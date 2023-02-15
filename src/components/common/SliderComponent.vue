@@ -32,17 +32,18 @@ export default defineComponent({
   },
   methods: {
     getCardSize(idx: number): CardSize {
-      const cards = [null, null, ...this.cards];
-      const selectedCard = this.cards[this.selectedCardIdx];
-      if (cards[idx] === selectedCard) {
+      if (idx === this.selectedCardIdx) {
         return CardSize.large;
       }
-      if (cards[idx - 1] === selectedCard) {
+
+      if (idx - 1 === this.selectedCardIdx) {
         return CardSize.medium;
       }
-      if (cards[idx + 1] === selectedCard) {
+
+      if (idx + 1 === this.selectedCardIdx) {
         return CardSize.medium;
       }
+
       return CardSize.small;
     },
     ...mapActions(useGameStore, {
@@ -88,7 +89,7 @@ export default defineComponent({
       <div
         class="card-wrapper"
         :style="{
-          width: getCardSize(idx) + 'vw',
+          width: getCardSize(idx - 2) + 'vw',
           marginLeft: idx === 0 ? `-${offset}vw` : '0',
         }"
         v-for="(card, idx) in [null, null, ...cards]"
@@ -106,7 +107,7 @@ export default defineComponent({
           v-else
           class="dummy-card"
           :style="{
-            width: getCardSize(idx) + 'vw',
+            width: getCardSize(idx - 2) + 'vw',
           }"
         ></div>
       </div>

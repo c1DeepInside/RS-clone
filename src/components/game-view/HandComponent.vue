@@ -6,13 +6,7 @@
   ></div>
   <div class="board__hand">
     <div class="board__hand-row">
-      <div
-        class="card__wrap"
-        v-for="(item, index) in hand"
-        :key="`${item.id}-${index}`"
-        @click="startAnimate($event)"
-        :style="cardMargin"
-      >
+      <div class="card__wrap" v-for="item in hand" :key="item.uuid" @click="startAnimate($event)" :style="cardMargin">
         <CardInfoComponent :card="item" :layoutType="0" class="card" @click="showCard(item)" />
       </div>
     </div>
@@ -68,9 +62,11 @@ export default defineComponent({
       isShowSelectedCard: 'isShowSelected',
     }),
     cardMargin(): string {
-      return `margin-left: -${this.hand.length / (8.5 + Math.pow(2.15, -this.hand.length + 15))}vw; left: ${
-        this.hand.length / (8.5 + Math.pow(2.15, -this.hand.length + 15)) / 2
-      }vw`;
+      return this.hand.length > 10
+        ? `margin-left: -${this.hand.length / (8.5 + Math.pow(2.15, -this.hand.length + 15))}vw; left: ${
+            this.hand.length / (8.5 + Math.pow(2.15, -this.hand.length + 15)) / 2
+          }vw`
+        : '0';
     },
   },
   components: {

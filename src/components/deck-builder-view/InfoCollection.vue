@@ -7,6 +7,8 @@ import { mapActions } from 'pinia';
 import router from '@/router';
 import { getRandom } from '@/utilits/getRandom';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export default defineComponent({
   data() {
     return {
@@ -75,9 +77,13 @@ export default defineComponent({
       let finCards: Card[] = [];
       cards.forEach((card) => {
         const updateCard: Card = JSON.parse(JSON.stringify(card));
-        updateCard.quantity = 1;
+
         for (let i = 0; i < card.quantity; i++) {
-          finCards.push(updateCard);
+          const newCard = JSON.parse(JSON.stringify(updateCard));
+          newCard.quantity = 1;
+          newCard.uuid = uuidv4();
+
+          finCards.push(newCard);
         }
       });
       const indexes = getRandom(finCards.length);
@@ -87,11 +93,12 @@ export default defineComponent({
       });
       console.log(this.currentLeader);
       if (this.currentLeader.name === 'Францеска Финдабаир Маргаритка из Долин') {
-        this.setHand(sortCards.slice(0, 13));
-        this.setDeck(sortCards.slice(13));
+        this.setHand(sortCards.slice(0, 11));
+        this.setDeck(sortCards.slice(11));
       } else {
         this.setHand(sortCards.slice(0, 10));
         this.setDeck(sortCards.slice(10));
+        this.setDiscard(sortCards.slice(10));
       }
       return sortCards;
     },
@@ -100,6 +107,7 @@ export default defineComponent({
       setSelectedLeader: 'setSelectedLeader',
       setFraction: 'setFraction',
       setHand: 'setHand',
+      setDiscard: 'setDiscard',
     }),
   },
   computed: {
