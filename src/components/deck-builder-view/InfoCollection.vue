@@ -4,7 +4,7 @@ import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vu
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
 import { mapActions, mapState } from 'pinia';
-// import router from '@/router';
+import router from '@/router';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -67,6 +67,11 @@ export default defineComponent({
         const data = JSON.parse(event.data);
         if (data.status === 'game_found') {
           this.isGameFind = true;
+          this.sendConnectInfo(data.session_info.user.username);
+        }
+        if (data.deck) {
+          this.setConnectInfo(data);
+          router.push('/game');
         }
       };
     },
@@ -121,6 +126,8 @@ export default defineComponent({
       setHand: 'setHand',
       setDiscard: 'setDiscard',
       setWebSocket: 'setWebSocket',
+      sendConnectInfo: 'sendConnectInfo',
+      setConnectInfo: 'setConnectInfo',
     }),
   },
   computed: {

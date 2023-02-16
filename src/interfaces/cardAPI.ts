@@ -36,3 +36,10 @@ export interface AllCardsFromAPI {
   quantity: number;
   fraction: number | null;
 }
+
+export interface ConnectInfo {
+  deck: Card[];
+  hand: Card[];
+  leader: Card;
+  name: string;
+}

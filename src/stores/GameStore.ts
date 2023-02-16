@@ -3,6 +3,7 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
+import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -25,7 +26,7 @@ export const useGameStore = defineStore('gameStore', {
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
     fractionAlly: 1 as IntRange<1, 4>,
-    fractionEnemy: 2 as IntRange<1, 4>,
+    fractionEnemy: 1 as IntRange<1, 4>,
     board: {
       enemy: {
         siege: [] as Card[],
@@ -324,6 +325,23 @@ export const useGameStore = defineStore('gameStore', {
     },
     setWebSocket(token: string) {
       this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
+    },
+    sendConnectInfo(username: string) {
+      this.webSocket.send(
+        JSON.stringify({
+          deck: this.deck.allies,
+          hand: this.hand,
+          name: username,
+          leader: this.leader.allies,
+        })
+      );
+    },
+    setConnectInfo(data: ConnectInfo) {
+      this.enemyHand = data.hand;
+      this.deck.enemy = data.deck;
+      this.leader.enemy = data.leader;
+      this.enemyNickName = data.name;
+      this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
     },
   },
 });
