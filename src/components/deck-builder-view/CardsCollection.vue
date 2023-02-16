@@ -152,7 +152,7 @@ export default defineComponent({
 
 .cards {
   margin-top: 1%;
-  height: 43.5vw;
+  height: 39.5vw;
   display: flex;
   flex-wrap: wrap;
   gap: 1vw 1.2vw;

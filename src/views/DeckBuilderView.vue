@@ -4,8 +4,10 @@ import FractionChoose, { type Filters } from '@/components/deck-builder-view/Fra
 import CardCollection from '@/components/deck-builder-view/CardsCollection.vue';
 import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 import type Card from '@/interfaces/card';
-import type { CardAPI, UserCard } from '@/interfaces/cardAPI';
+import type { CardAPI, CardFromAPI, CardQuantity, UserCard, AllCardsFromAPI } from '@/interfaces/cardAPI';
 import { getCards, getUserCards } from '@/api/deckAPI';
+
+const token = '7b605cfdafb649794fe9d95f5e1827f490e7ac50';
 
 export default defineComponent({
   data() {
@@ -13,344 +15,7 @@ export default defineComponent({
       collectionFilter: 'all' as Filters,
       deckFilter: 'all' as Filters,
       currentFraction: 1,
-      collectionCards: [
-        {
-          id: 1,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между одни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 10,
-        },
-        {
-          id: 228,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: 'Катапульта',
-          type: 'usual',
-          image: 'src/assets/images/nor_catapult_1.png',
-          description: 'Боги на стороне того, у кого лучше катапульты...',
-          fractionId: 1,
-          ability: 'bond',
-          fieldType: ['siege'],
-          power: 8,
-          quantity: 5,
-        },
-        {
-          id: 3,
-          name: 'Детмольд',
-          type: 'usual',
-          image: 'src/assets/images/nor_dethmold.png',
-          description: 'Такими чарами выиграывают войны! Тысячи жертв в одну минуту!',
-          fractionId: 1,
-          ability: null,
-          fieldType: ['range'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 4,
-          name: 'Рубайлы из Кринфрида',
-          type: 'usual',
-          image: 'src/assets/images/nor_crinfrid.png',
-          description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
-          fractionId: 1,
-          ability: 'bond',
-          fieldType: ['range'],
-          power: 5,
-          quantity: 3,
-        },
-        {
-          id: 5,
-          name: 'Боец Синих Полосок',
-          type: 'usual',
-          image: 'src/assets/images/nor_blue_stripes.png',
-          description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-          fractionId: 1,
-          ability: 'bond',
-          fieldType: ['melee'],
-          power: 4,
-          quantity: 3,
-        },
-        {
-          id: 6,
-          name: 'Морвран Воорхис',
-          type: 'hero',
-          image: 'src/assets/images/nil_moorvran.png',
-          description: '- А ты кто? Цирюльник? - Нет. Морван Воорхис. Командующий дивизией "Альба"',
-          fractionId: 2,
-          ability: null,
-          fieldType: ['siege'],
-          power: 10,
-          quantity: 2,
-        },
-        {
-          id: 7,
-          name: 'Тибор Эггебрахт',
-          type: 'hero',
-          image: 'src/assets/images/nil_tibor.png',
-          description: 'Вперед, "Альба"! Да здравствует император!',
-          fractionId: 2,
-          ability: null,
-          fieldType: ['range'],
-          power: 10,
-          quantity: 1,
-        },
-        {
-          id: 8,
-          name: 'Лето из Гулеты',
-          type: 'hero',
-          image: 'src/assets/images/nil_letho.png',
-          description: 'Еще ни один ведьмак не умер от старости, в постели, диктуя завещание.',
-          fractionId: 2,
-          ability: null,
-          fieldType: ['melee'],
-          power: 10,
-          quantity: 1,
-        },
-        {
-          id: 9,
-          name: 'Лучник Бурой Хоругви',
-          type: 'usual',
-          image: 'src/assets/images/nil_black_archer.png',
-          description: 'Я всегда бью по коленям.',
-          fractionId: 2,
-          ability: null,
-          fieldType: ['range'],
-          power: 10,
-          quantity: 2,
-        },
-        {
-          id: 10,
-          name: 'Мильва',
-          type: 'usual',
-          image: 'src/assets/images/sco_milva.png',
-          description: 'Она подкинула лук, мягко натянула тетиву, прицелилась уже во время натяжения...',
-          fractionId: 3,
-          ability: 'medic',
-          fieldType: ['range'],
-          power: 10,
-          quantity: 15,
-        },
-        {
-          id: 11,
-          name: 'Изенгрим Фаоильтиарна',
-          type: 'hero',
-          image: 'src/assets/images/sco_isengrim.png',
-          description: 'Железный Волк, славнейший, уже почти легендарный командир скоя`таэлей.',
-          fractionId: 3,
-          ability: 'medic',
-          fieldType: ['melee'],
-          power: 10,
-          quantity: 1,
-        },
-        {
-          id: 12,
-          name: 'Следопыт из Дол Блатанны',
-          type: 'usual',
-          image: 'src/assets/images/sco_dol_infantry_1.png',
-          description: 'Нюх у них, как у гончих. Глаза, как у орла. А сердца изо льда.',
-          fractionId: 3,
-          ability: 'agile',
-          fieldType: ['melee', 'range'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 13,
-          name: 'Ведьма: Пряха',
-          type: 'usual',
-          image: 'src/assets/images/nml_witch_velen_1.png',
-          description: 'Я чую твою боль, вижу страх...',
-          fractionId: 4,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 14,
-          name: 'Элементаль земли',
-          type: 'usual',
-          image: 'src/assets/images/nml_earth_elemental.png',
-          description: 'Как выжить при встрече с элементалем земли? Очень просто. Бежать со всех ног.',
-          fractionId: 4,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 15,
-          name: 'Гарпия келено',
-          type: 'usual',
-          image: 'src/assets/images/nml_celaeno_harpy.png',
-          description: 'Обычные гарпии питаются падалью. А келено - снами.',
-          fractionId: 4,
-          ability: 'agile',
-          fieldType: ['melee', 'range'],
-          power: 2,
-          quantity: 1,
-        },
-        {
-          id: 16,
-          name: 'Чучело',
-          type: 'special',
-          image: 'src/assets/images/spc_dummy.png',
-          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
-          fractionId: null,
-          ability: 'decoy',
-          fieldType: ['melee', 'range', 'siege'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 17,
-          name: 'Мороз',
-          type: 'special',
-          image: 'src/assets/images/spc_frost.png',
-          description: 'Мечта хорошего командира... кошмар плохого.',
-          fractionId: null,
-          ability: 'frost',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 10,
-        },
-        {
-          id: 18,
-          name: 'Фольтест Король Темерии',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
-          ability: null,
-          fractionId: 1,
-          image: 'src/assets/images/realms_foltest_silver.jpg',
-        },
-        {
-          id: 19,
-          name: 'Фольтест Предводитель Севера',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Проклятая политика... Я доверяю только своему оружию.',
-          ability: null,
-          fractionId: 1,
-          image: 'src/assets/images/realms_foltest_gold.jpg',
-        },
-        {
-          id: 20,
-          name: 'Фольтест Завоеватель',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Точный выстрел из баллисты сокрушит не только укрпеления врага, но и его дух.',
-          ability: null,
-          fractionId: 1,
-          image: 'src/assets/images/realms_foltest_copper.jpg',
-        },
-        {
-          id: 21,
-          name: 'Фольтест Железный Владыка',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Замечательный день для битвы!',
-          ability: null,
-          fractionId: 1,
-          image: 'src/assets/images/realms_foltest_bronze.jpg',
-        },
-        {
-          id: 22,
-          name: 'Эмгыр вар Эмрейс Йож из Эрленвальда',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Интересно, как чувствует себя человек, прикончивший собственную жену?',
-          ability: null,
-          fractionId: 2,
-          image: 'src/assets/images/nilfgaard_emhyr_gold.jpg',
-        },
-        {
-          id: 23,
-          name: 'Эмгыр вар Эмрейс Император Нильфграада',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Мотивы меня не интересуют. Только результаты.',
-          ability: null,
-          fractionId: 2,
-          image: 'src/assets/images/nilfgaard_emhyr_bronze.jpg',
-        },
-        {
-          id: 24,
-          name: 'Францеска Финдабаир Истинная эльфка',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Пепел удобряет. Весной Долина Цветов расцветёт вновь.',
-          ability: null,
-          fractionId: 3,
-          image: 'src/assets/images/scoiatael_francesca_gold.jpg',
-        },
-        {
-          id: 25,
-          name: 'Францеска Финдабаир Маргаритка из Долин',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Старшая Раса забыла больше, чем  люди когда-либо знали.',
-          ability: null,
-          fractionId: 3,
-          image: 'src/assets/images/scoiatael_francesca_silver.jpg',
-        },
-        {
-          id: 26,
-          name: 'Эредин Бреакк Глас Командир Дикой Охоты',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Держи себя в руках Геральт. Ты же знаешь, чем это кончится.',
-          ability: null,
-          fractionId: 4,
-          image: 'src/assets/images/monsters_eredin_silver.jpg',
-        },
-        {
-          id: 27,
-          name: 'Эредин Бреакк Глас Владыка Тир на Лиа',
-          type: 'leader',
-          fieldType: [],
-          power: null,
-          quantity: 1,
-          description: 'Это неизбежно.',
-          ability: null,
-          fractionId: 4,
-          image: 'src/assets/images/monsters_eredin_gold.jpg',
-        },
-      ] as Card[],
+      collectionCards: [] as Card[],
       deckCards: [] as CardAPI[],
       deckCardsNorth: [] as CardAPI[],
       deckCardsNilfgaard: [] as CardAPI[],
@@ -359,30 +24,58 @@ export default defineComponent({
     };
   },
   async beforeMount() {
-    /*
-    this.collectionCards = await getCards();
-    const myCards: UserCard[] = await getUserCards();
+    const deckAPI: AllCardsFromAPI[] = await getCards(token);
+    this.collectionCards = this.getNormalCards(deckAPI);
+    const myCards: CardFromAPI[] = await getUserCards(token);
     myCards.forEach((userCard) => {
-      switch (userCard.fraction_id) {
+      switch (userCard.fraction.id) {
         case 1:
-          this.deckCardsNorth = userCard.cards;
+          this.deckCardsNorth = this.getNormalDeck(userCard.cards);
+          this.deckCards = this.deckCardsNorth;
           break;
         case 2:
-          this.deckCardsNilfgaard = userCard.cards;
+          this.deckCardsNilfgaard = this.getNormalDeck(userCard.cards);
           break;
         case 3:
-          this.deckCardsScoiatel = userCard.cards;
+          this.deckCardsScoiatel = this.getNormalDeck(userCard.cards);
           break;
         case 4:
-          this.deckCardsMonsters = userCard.cards;
+          this.deckCardsMonsters = this.getNormalDeck(userCard.cards);
           break;
         default:
           break;
       }
     });
-    */
   },
   methods: {
+    getNormalDeck(deckAPI: CardQuantity[]): CardAPI[] {
+      let deck: CardAPI[] = [];
+      deckAPI.forEach((card) => {
+        deck.push({
+          card_id: card.card.id,
+          quantity: card.quantity,
+        });
+      });
+      return deck;
+    },
+    getNormalCards(deckAPI: AllCardsFromAPI[]): Card[] {
+      let deck: Card[] = [];
+      deckAPI.forEach((card: AllCardsFromAPI) => {
+        deck.push({
+          id: card.id,
+          name: card.name,
+          type: card.type,
+          image: card.image,
+          description: card.description,
+          fractionId: card.fraction,
+          ability: card.card_ability,
+          fieldType: card.field_type,
+          power: card.power,
+          quantity: card.quantity,
+        });
+      });
+      return deck;
+    },
     changeFilterCollection(data: Filters) {
       this.collectionFilter = data;
     },
@@ -457,6 +150,14 @@ export default defineComponent({
       });
       return cards;
     },
+    deckCardsForAPI(): UserCard[] {
+      const deckArr = [this.deckCardsNorth, this.deckCardsNilfgaard, this.deckCardsScoiatel, this.deckCardsMonsters];
+      const userCards: UserCard[] = [];
+      deckArr.forEach((deck, index) => {
+        userCards.push({ fraction_id: index + 1, cards: deck });
+      });
+      return userCards;
+    },
   },
   created() {
     this.currentDeckCards();
@@ -493,6 +194,7 @@ export default defineComponent({
           :currentFraction="currentFraction"
           :leadersCards="collectionCards"
           :selectedCards="fullDeckCards"
+          :cardsForAPI="deckCardsForAPI"
         />
         <CardCollection
           @filterChanged="changeFilterDeck"

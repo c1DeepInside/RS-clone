@@ -7,6 +7,7 @@ import { getRandom } from '@/utilits/getRandom';
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [] as Card[],
+    webSocket: {} as WebSocket,
     power: {
       enemy: {
         siege: 0,
@@ -575,6 +576,9 @@ export const useGameStore = defineStore('gameStore', {
     },
     setFraction(value: IntRange<1, 4>) {
       this.fractionAlly = value;
+    },
+    setWebSocket(token: string) {
+      this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
     },
   },
 });

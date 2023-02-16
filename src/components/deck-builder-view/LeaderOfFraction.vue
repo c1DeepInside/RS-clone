@@ -48,7 +48,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="leader__img__wrap" @click="showModal">
+  <div class="leader__img__wrap" v-if="leader" @click="showModal">
     <CardInfoComponent :card="leader" :layout-type="cardLayoutType.EXTENDED" />
   </div>
   <div v-if="ifModal" class="modal" @click="closeModal">
