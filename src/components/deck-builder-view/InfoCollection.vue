@@ -4,7 +4,7 @@ import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vu
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
 import { mapActions, mapState } from 'pinia';
-import router from '@/router';
+// import router from '@/router';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';

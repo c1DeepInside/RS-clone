@@ -12,7 +12,7 @@ export async function getCards(token: string): Promise<AllCardsFromAPI[]> {
 }
 
 export async function updateUserCards(userCards: UserCard[], token: string) {
-  const response: Response = await fetch(`${baseURL}/decks/update_my_decks/`, {
+  await fetch(`${baseURL}/decks/update_my_decks/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
