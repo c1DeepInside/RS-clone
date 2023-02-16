@@ -3,10 +3,14 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
+import { ClientController, HostController, type HandshakeData, connectToServer, SocketEvent, type SessionInfo } from '@/api/game';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [] as Card[],
+    handsShaked: false,
+    host: null as HostController | null,
+    client: null as ClientController | null,
     power: {
       enemy: {
         siege: 0,
@@ -23,53 +27,14 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    isHost: true,
+    isMove: false,
     fractionAlly: 3 as IntRange<1, 5>,
     fractionEnemy: 2 as IntRange<1, 5>,
     board: {
       enemy: {
-        siege: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 4,
-            quantity: 1,
-          },
-        ] as Card[],
-        range: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 8,
-            quantity: 1,
-          },
-        ] as Card[],
-        melee: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 10,
-            quantity: 1,
-          },
-        ] as Card[],
+        siege: [] as Card[],
+        range: [] as Card[],
+        melee: [] as Card[],
       },
       allies: {
         siege: [] as Card[],
@@ -120,202 +85,8 @@ export const useGameStore = defineStore('gameStore', {
     enemyNickName: 'kekov',
     alliesNickName: 'lulzov',
     discard: {
-      enemy: [
-        {
-          id: 1,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-      ] as Card[],
-      allies: [
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 1,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 1,
-        },
-        {
-          id: 19,
-          name: 'Поддержка гавенкаров',
-          type: 'usual',
-          image: 'src/assets/images/sco_havekar_support_1.png',
-          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
-          fractionId: 2,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Лекарь Бурой Хоругви',
-          type: 'usual',
-          image: 'src/assets/images/nor_banner_nurse.png',
-          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
-          fractionId: 3,
-          ability: 'medic',
-          fieldType: ['siege'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_clearsky.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 12,
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 1,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 78,
-          name: 'Чучело',
-          type: 'special',
-          image: 'src/assets/images/special_decoy.png',
-          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
-          fractionId: null,
-          ability: 'decoy',
-          fieldType: ['melee', 'range', 'siege'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 15,
-          name: 'Поддержка гавенкаров',
-          type: 'usual',
-          image: 'src/assets/images/sco_havekar_support_2.png',
-          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
-          fractionId: 2,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 9,
-          name: 'Талер',
-          type: 'usual',
-          image: 'src/assets/images/nor_thaler.png',
-          description: 'Я вам всем галаза на жопу натяну!',
-          fractionId: 0,
-          ability: 'spy',
-          fieldType: ['siege'],
-          power: 1,
-          quantity: 1,
-        },
-      ] as Card[],
+      enemy: [] as Card[],
+      allies: [] as Card[],
     },
     deck: {
       enemy: [] as Card[],
@@ -348,7 +119,7 @@ export const useGameStore = defineStore('gameStore', {
       } as Card,
     },
     lives: {
-      enemy: 1 as IntRange<0, 3>,
+      enemy: 2 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
     },
   }),
@@ -431,6 +202,9 @@ export const useGameStore = defineStore('gameStore', {
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
+    },
+    setMove() {
+      this.isMove = !this.isMove;
     },
     setPower(power: number, line: cardLineType, type: enemyAlliesType) {
       this.power[type][line] = power;
@@ -577,5 +351,41 @@ export const useGameStore = defineStore('gameStore', {
     setFraction(value: IntRange<1, 5>) {
       this.fractionAlly = value;
     },
+    getHandshakeData(): HandshakeData {
+      return {
+        fractionID: this.fractionAlly,
+        leader: this.leader.allies,
+        username: this.alliesNickName,
+      }
+    },
+    setHandShakeData(data: HandshakeData) {
+      this.fractionEnemy = data.fractionID;
+      this.leader.enemy = data.leader;
+      this.enemyNickName = data.username;
+    },
+    connect() {
+      const socket = connectToServer();
+      this.client = new ClientController(socket);
+
+      const onmessage = (message: SessionInfo) => {
+        if (message?.status === 'enqueued') {
+          this.host = new HostController(socket);
+        }
+
+        if (message?.status === 'game_found') {
+          if (this.host) {
+            this.host.initiateHandshake();
+          }
+
+          socket.removeListener(SocketEvent.MESSAGE, onmessage);
+        }
+      }
+
+      socket.addListener(SocketEvent.MESSAGE, (message) => {
+        onmessage(message);
+      })
+
+      socket.open();
+    }
   },
 });

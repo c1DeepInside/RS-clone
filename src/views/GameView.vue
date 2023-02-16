@@ -13,7 +13,7 @@ import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
-import { Fractions, fractionsDeckImg } from '@/utilits/cardBuildImgs';
+import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
 export default defineComponent({
@@ -225,6 +225,8 @@ export default defineComponent({
       addToDiscard: 'addToDiscard',
       addToHand: 'addToHand',
       setMedic: 'setMedic',
+      setMove: 'setMove',
+      connect: 'connect'
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -247,7 +249,7 @@ export default defineComponent({
       setTimeout(() => {
         this.isShowInfoBar = false;
       }, 1000);
-    }
+    },
   },
   computed: {
     ...mapState(useGameStore, {
@@ -269,23 +271,32 @@ export default defineComponent({
       getWeatherDeck: 'getWeatherDeck',
       fractionAlly: 'fractionAlly',
       fractionEnemy: 'fractionEnemy',
-      isHost: 'isHost',
+      isMove: 'isMove',
     }),
   },
   mounted() {
     //TODO: Добавить поддержку вебсокетов
     //если противник id фракции 3 сделать чтобы пересылал истину на хост
-    if (this.fractionAlly === Fractions.SCOIATAEL && this.isHost) {
-      this.isShowQestion = true;
-    } else if (this.isHost) {
-      const whoStart = Math.floor(Math.random() * 2) === 0 ? BarType.alliesStart : BarType.enemyStart;
-      this.infoBar = whoStart;
-      this.isShowInfoBar = true;
-      this.closeInfoBar();
-      setTimeout(() => {
-        this.isShowExchangePanel = true;
-      }, 1000);
-    }
+
+    setTimeout(() => {
+      this.connect();
+    }, 1000)
+
+    // if (this.fractionAlly === Fractions.SCOIATAEL) {
+    //   this.setMove();
+
+    //   this.isShowQestion = true;
+    // } else if (this.isHost) {
+    //   const whoStart = Math.floor(Math.random() * 2) === 0 ? BarType.alliesStart : BarType.enemyStart;
+    //   this.infoBar = whoStart;
+    //   this.isShowInfoBar = true;
+    //   this.closeInfoBar();
+    //   // setTimeout(() => {
+    //   //   this.isShowExchangePanel = true;
+    //   // }, 1000);
+    // } else if (this.fractionAlly === Fractions.SCOIATAEL) {
+
+    // }
   },
   components: {
     GameExchangePanelComponent,
