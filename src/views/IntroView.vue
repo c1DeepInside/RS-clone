@@ -23,6 +23,13 @@ export default defineComponent({
       this.showFormValidation = true;
       this.showFormRegistration = false;
     },
+    startPlay() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        this.$router.push('/deck');
+      }
+      this.showFormValidation = true;
+    },
   },
   components: {
     RegistrationComponent,
@@ -39,13 +46,7 @@ export default defineComponent({
   </video>
 
   <div class="displayed">
-    <button
-      v-if="!showFormValidation && !showFormRegistration"
-      @click="showFormValidation = true"
-      class="border-button"
-    >
-      PLAY
-    </button>
+    <button v-if="!showFormValidation && !showFormRegistration" @click="startPlay" class="border-button">PLAY</button>
     <ValidationComponent
       v-if="showFormValidation && !showRules"
       @validation-finished="showRules = true"

@@ -1,11 +1,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import router from '@/router';
 
 export default defineComponent({
   methods: {
     createDeck() {
-      router.push('/deck');
+      this.$router.push('/deck');
     },
   },
 });
