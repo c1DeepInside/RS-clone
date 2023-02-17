@@ -31,6 +31,7 @@ export default defineComponent({
       isShowWeatherDeck: false,
       isShowAlliesDiscard: false,
       isShowEnemyDiscard: false,
+      isShowEnemyLeader: false,
     };
   },
   beforeMount() {
@@ -279,12 +280,13 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off">
+          <div class="game__leader-card">
             <CardInfoComponent
               v-if="JSON.stringify(leader.enemy) !== JSON.stringify({})"
               :card="leader.enemy"
               :layoutType="0"
-              class="card"
+              class="leader__card card"
+              @click="isShowEnemyLeader = true"
             />
           </div>
           <div class="game__leader-icon">
@@ -324,7 +326,7 @@ export default defineComponent({
               v-if="JSON.stringify(leader.allies) !== JSON.stringify({})"
               :card="leader.allies"
               :layoutType="0"
-              class="card"
+              class="card leader__card"
               @click="setLeader(leader.allies)"
             />
           </div>
@@ -400,8 +402,11 @@ export default defineComponent({
       </div>
       <div v-if="isShowEnemyDeck" class="show_cards_close">
         <div class="close" @click="isShowEnemyDeck = false">x</div>
-
         <SliderComponent :cards="getEnemyHand" />
+      </div>
+      <div v-if="isShowEnemyLeader" class="show_cards_close">
+        <div class="close" @click="isShowEnemyLeader = false">x</div>
+        <SliderComponent :cards="[leader.enemy]" />
       </div>
     </div>
 
@@ -543,6 +548,11 @@ export default defineComponent({
   background-size: 100% auto;
   background-repeat: no-repeat;
   position: relative;
+}
+
+.leader__card {
+  border-radius: 0.35vw;
+  overflow: hidden;
 }
 
 .game {
@@ -696,7 +706,6 @@ export default defineComponent({
       }
     }
   }
-
   &__pass {
     position: relative;
     top: 2%;
