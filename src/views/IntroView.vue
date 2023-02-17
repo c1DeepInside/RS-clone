@@ -14,7 +14,16 @@ export default defineComponent({
       showRules: false,
     };
   },
-  methods: {},
+  methods: {
+    startedRegistration() {
+      this.showFormRegistration = true;
+      this.showFormValidation = false;
+    },
+    finishedRegistration() {
+      this.showFormValidation = true;
+      this.showFormRegistration = false;
+    },
+  },
   components: {
     RegistrationComponent,
     FooterComponent,
@@ -40,9 +49,9 @@ export default defineComponent({
     <ValidationComponent
       v-if="showFormValidation && !showRules"
       @validation-finished="showRules = true"
-      @start-registration="(showFormRegistration = true), (showFormValidation = false)"
+      @start-registration="startedRegistration"
     />
-    <RegistrationComponent v-if="showFormRegistration && !showRules" @registration-finished="showRules = true" />
+    <RegistrationComponent v-if="showFormRegistration && !showRules" @registration-finished="finishedRegistration" />
     <FooterComponent />
 
     <RulesComponent v-if="showRules" />
