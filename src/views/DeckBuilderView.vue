@@ -10,8 +10,6 @@ import { mapState, mapActions } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import router from '@/router';
 
-const token = '7b605cfdafb649794fe9d95f5e1827f490e7ac50';
-
 export default defineComponent({
   data() {
     return {
@@ -32,9 +30,9 @@ export default defineComponent({
     } else {
       this.setFromPageToPage(false);
     }
-    const deckAPI: AllCardsFromAPI[] = await getCards(token);
+    const deckAPI: AllCardsFromAPI[] = await getCards(localStorage.getItem('token')!);
     this.collectionCards = this.getNormalCards(deckAPI);
-    const myCards: CardFromAPI[] = await getUserCards(token);
+    const myCards: CardFromAPI[] = await getUserCards(localStorage.getItem('token')!);
     myCards.forEach((userCard) => {
       switch (userCard.fraction.id) {
         case 1:

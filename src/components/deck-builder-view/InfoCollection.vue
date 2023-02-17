@@ -89,8 +89,8 @@ export default defineComponent({
         this.setFraction(this.currentFraction as IntRange<1, 4>);
         this.setSelectedLeader(this.currentLeader);
         this.parseDeck(this.selectedCards);
-        await updateUserCards(this.cardsForAPI, '7b605cfdafb649794fe9d95f5e1827f490e7ac50');
-        this.setWebSocket('7b605cfdafb649794fe9d95f5e1827f490e7ac50');
+        await updateUserCards(this.cardsForAPI, localStorage.getItem('token')!);
+        this.setWebSocket(localStorage.getItem('token')!);
         this.listenSocket();
         this.isShowSearch = true;
       }
