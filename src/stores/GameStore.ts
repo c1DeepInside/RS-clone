@@ -343,5 +343,8 @@ export const useGameStore = defineStore('gameStore', {
       this.enemyNickName = data.name;
       this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
     },
+    setAlliesNickName(value: string) {
+      this.alliesNickName = value;
+    },
   },
 });
