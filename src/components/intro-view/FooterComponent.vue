@@ -6,9 +6,10 @@ export default defineComponent({});
 
 <template>
   <footer class="footer">
-    <a href="https://rs.school/js/">
-      <img class="rs-school" src="@/assets/icons/rs-school.svg" alt="" />
-    </a>
+    <div class="logo__wrap">
+      <a href="https://rs.school/js/"> <img class="rs-school" src="@/assets/icons/rs-school.svg" alt="" /></a>
+      <p class="logo__year">2023</p>
+    </div>
 
     <div class="footer__github-link">
       <svg
@@ -73,6 +74,21 @@ export default defineComponent({});
 </template>
 
 <style scoped lang="scss">
+.logo__wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+  }
+  .logo__year {
+    color: rgb(224, 228, 228);
+    font-size: 1.3vw;
+  }
+}
+
 .link {
   text-decoration: none;
   color: rgb(224, 228, 228);
@@ -109,7 +125,6 @@ export default defineComponent({});
 
 .rs-school {
   height: 3vw;
-  opacity: 0.7;
   transition: opacity 0.2s linear;
 
   &:hover {
