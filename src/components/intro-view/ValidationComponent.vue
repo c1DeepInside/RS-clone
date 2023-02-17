@@ -114,6 +114,7 @@ export default defineComponent({
   }
 
   div {
+    font-size: 1.06vw;
     height: 1vw;
   }
 
