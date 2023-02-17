@@ -76,7 +76,7 @@ export default defineComponent({
     <div v-if="token" class="displayed__exit" @click="logout">
       <span>{{ username }}</span>
       <svg
-        fill="#daa520"
+        fill="#e0e4e4"
         height="800px"
         width="800px"
         version="1.1"
@@ -85,7 +85,7 @@ export default defineComponent({
         xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 0 512.021 512.021"
         xml:space="preserve"
-        stroke="#daa520"
+        stroke="#e0e4e4"
       >
         <g id="SVGRepo_bgCarrier" stroke-width="0" />
 
@@ -125,16 +125,16 @@ export default defineComponent({
 
   &__exit {
     position: absolute;
-    top: 0.5vw;
-    right: 0;
+    top: 1vw;
+    right: 1vw;
     display: flex;
     align-items: center;
-    gap: 1vw;
+    gap: 0.5vw;
     opacity: 0.7;
     font-size: 1.6vw;
-    font-weight: 700;
+    font-weight: 300;
     text-transform: uppercase;
-    color: $GOLDEN_COLOR;
+    color: #e0e4e4;
     transition: opacity 0.2s linear;
 
     svg {
