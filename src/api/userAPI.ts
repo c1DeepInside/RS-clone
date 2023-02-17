@@ -1,4 +1,4 @@
-const baseURL = '';
+const baseURL = 'http://45.67.35.28:8080';
 
 export const registration = async (username: string, password: string) => {
   const response: Response = await fetch(`${baseURL}/users/register/`, {
@@ -27,7 +27,7 @@ export const login = async (username: string, password: string) => {
     throw new Error('Login failed');
   }
 
-  const data: { token: string } = await response.json();
-  localStorage.setItem('token', data.token);
+  const data: string = await response.json();
+  localStorage.setItem('token', data);
   return data;
 };
