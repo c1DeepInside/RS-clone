@@ -66,7 +66,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nor_crinfrid.png',
           description: 'Записались мы на войну, а то с чудищами последнее время нам не шибко везет.',
-          fractionId: 0,
+          fractionId: 1,
           ability: 'bond',
           fieldType: ['range'],
           power: 5,
@@ -90,7 +90,7 @@ export default defineComponent({
           type: 'hero',
           image: 'src/assets/images/nil_moorvran.png',
           description: '- А ты кто? Цирюльник? - Нет. Морван Воорхис. Командующий дивизией "Альба"',
-          fractionId: 1,
+          fractionId: 2,
           ability: null,
           fieldType: ['siege'],
           power: 10,
@@ -102,7 +102,7 @@ export default defineComponent({
           type: 'hero',
           image: 'src/assets/images/nil_tibor.png',
           description: 'Вперед, "Альба"! Да здравствует император!',
-          fractionId: 1,
+          fractionId: 2,
           ability: null,
           fieldType: ['range'],
           power: 10,
@@ -114,7 +114,7 @@ export default defineComponent({
           type: 'hero',
           image: 'src/assets/images/nil_letho.png',
           description: 'Еще ни один ведьмак не умер от старости, в постели, диктуя завещание.',
-          fractionId: 1,
+          fractionId: 2,
           ability: null,
           fieldType: ['melee'],
           power: 10,
@@ -126,7 +126,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nil_black_archer.png',
           description: 'Я всегда бью по коленям.',
-          fractionId: 1,
+          fractionId: 2,
           ability: null,
           fieldType: ['range'],
           power: 10,
@@ -138,7 +138,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/sco_milva.png',
           description: 'Она подкинула лук, мягко натянула тетиву, прицелилась уже во время натяжения...',
-          fractionId: 2,
+          fractionId: 3,
           ability: 'medic',
           fieldType: ['range'],
           power: 10,
@@ -150,7 +150,7 @@ export default defineComponent({
           type: 'hero',
           image: 'src/assets/images/sco_isengrim.png',
           description: 'Железный Волк, славнейший, уже почти легендарный командир скоя`таэлей.',
-          fractionId: 2,
+          fractionId: 3,
           ability: 'medic',
           fieldType: ['melee'],
           power: 10,
@@ -162,7 +162,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/sco_dol_infantry_1.png',
           description: 'Нюх у них, как у гончих. Глаза, как у орла. А сердца изо льда.',
-          fractionId: 2,
+          fractionId: 3,
           ability: 'agile',
           fieldType: ['melee', 'range'],
           power: 6,
@@ -174,7 +174,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nml_witch_velen_1.png',
           description: 'Я чую твою боль, вижу страх...',
-          fractionId: 3,
+          fractionId: 4,
           ability: 'muster',
           fieldType: ['melee'],
           power: 6,
@@ -186,7 +186,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nml_earth_elemental.png',
           description: 'Как выжить при встрече с элементалем земли? Очень просто. Бежать со всех ног.',
-          fractionId: 3,
+          fractionId: 4,
           ability: null,
           fieldType: ['siege'],
           power: 6,
@@ -198,7 +198,7 @@ export default defineComponent({
           type: 'usual',
           image: 'src/assets/images/nml_celaeno_harpy.png',
           description: 'Обычные гарпии питаются падалью. А келено - снами.',
-          fractionId: 3,
+          fractionId: 4,
           ability: 'agile',
           fieldType: ['melee', 'range'],
           power: 2,
@@ -285,7 +285,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Интересно, как чувствует себя человек, прикончивший собственную жену?',
           ability: null,
-          fractionId: 1,
+          fractionId: 2,
           image: 'src/assets/images/nilfgaard_emhyr_gold.jpg',
         },
         {
@@ -297,7 +297,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Мотивы меня не интересуют. Только результаты.',
           ability: null,
-          fractionId: 1,
+          fractionId: 2,
           image: 'src/assets/images/nilfgaard_emhyr_bronze.jpg',
         },
         {
@@ -309,7 +309,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Пепел удобряет. Весной Долина Цветов расцветёт вновь.',
           ability: null,
-          fractionId: 2,
+          fractionId: 3,
           image: 'src/assets/images/scoiatael_francesca_gold.jpg',
         },
         {
@@ -321,7 +321,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Старшая Раса забыла больше, чем  люди когда-либо знали.',
           ability: null,
-          fractionId: 2,
+          fractionId: 3,
           image: 'src/assets/images/scoiatael_francesca_silver.jpg',
         },
         {
@@ -333,7 +333,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Держи себя в руках Геральт. Ты же знаешь, чем это кончится.',
           ability: null,
-          fractionId: 3,
+          fractionId: 4,
           image: 'src/assets/images/monsters_eredin_silver.jpg',
         },
         {
@@ -345,7 +345,7 @@ export default defineComponent({
           quantity: 1,
           description: 'Это неизбежно.',
           ability: null,
-          fractionId: 3,
+          fractionId: 4,
           image: 'src/assets/images/monsters_eredin_gold.jpg',
         },
       ] as Card[],
@@ -368,17 +368,18 @@ export default defineComponent({
       this.currentDeckCards();
     },
     currentDeckCards() {
+      console.log(this.currentFraction);
       switch (this.currentFraction) {
-        case 0:
+        case 1:
           this.deckCards = this.deckCardsNorth;
           break;
-        case 1:
+        case 2:
           this.deckCards = this.deckCardsNilfgaard;
           break;
-        case 2:
+        case 3:
           this.deckCards = this.deckCardsScoiatel;
           break;
-        case 3:
+        case 4:
           this.deckCards = this.deckCardsMonsters;
           break;
       }

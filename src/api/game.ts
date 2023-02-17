@@ -1,5 +1,6 @@
 import type Card from "@/interfaces/card";
 import { useGameStore } from "@/stores/GameStore";
+import { Fractions } from "@/utilits/cardBuildImgs";
 import type { IntRange } from "@/utilits/types";
 
 const URL = '45.67.35.28:8080';
@@ -30,7 +31,13 @@ type SubFunction = (...args: any) => any;
 
 export enum MessageType {
   HANDSHAKE = 'handshake',
+  TURN_INFO = 'turn_info',
   GAME_EVENT = 'game_event',
+}
+
+export enum TurnInfoEnum {
+  USER = 'user',
+  SHOW_SELECTION = 'show_selection',
 }
 
 export enum SocketEvent {
@@ -68,7 +75,7 @@ export class Socket {
     }
 
     this.socket.onerror = (...args) => {
-      console.log('error!')
+      console.log('error!', ...args)
       this.onError(...args);
     }
 
@@ -110,6 +117,9 @@ export class HostController {
   private store = useGameStore();
 
   constructor(private socket: Socket) {
+    this.socket.addListener(SocketEvent.MESSAGE, (message) => {
+      this.onMessage(message);
+    });
   }
 
   public initiateHandshake() {
@@ -117,6 +127,54 @@ export class HostController {
       type: MessageType.HANDSHAKE,
       payload: this.store.getHandshakeData(),
     })
+  }
+
+  private onMessage(message: SocketMessage) {
+    console.log("host message!");
+    if (message.type === MessageType.HANDSHAKE) {
+      this.determineTurn();
+    }
+  }
+
+  private determineTurn() {
+    const enemy = this.store.$state.fractionEnemy;
+    const ally = this.store.$state.fractionAlly;
+
+    const setRandomTurn = () => {
+      const player = Math.floor(Math.random() * 2) === 0 
+        ? this.store.$state.alliesNickName
+        : this.store.$state.enemyNickName;
+
+      this.socket.sendMessage({
+        type: MessageType.TURN_INFO,
+        payload: {
+          action: TurnInfoEnum.USER,
+          username: player,
+        }
+      })
+
+      setTimeout(() => {
+        this.store.showInfoBar(() => {
+          console.log('show on host')
+          this.store.$state.isShowExchangePanel = true;
+        });
+      }, 1000)
+    }
+
+    if (enemy === Fractions.SCOIATAEL && ally == Fractions.SCOIATAEL) {
+      setRandomTurn();
+    } else if (enemy === Fractions.SCOIATAEL) {
+      this.socket.sendMessage({
+        type: MessageType.TURN_INFO,
+        payload: {
+          action: TurnInfoEnum.SHOW_SELECTION,
+        }
+      })
+    } else if (ally === Fractions.SCOIATAEL) {
+      this.store.$state.isShowQuestion = true;
+    } else {
+      setRandomTurn();
+    }
   }
 }
 
@@ -129,6 +187,26 @@ export class ClientController {
     });
   }
 
+  public respondHandshake() {
+    this.store.$state.handsShaked = true;
+    this.socket.sendMessage({
+      type: MessageType.HANDSHAKE,
+      payload: this.store.getHandshakeData(),
+    })
+  }
+
+  public sendTurnInfo() {
+    this.socket.sendMessage({
+      type: MessageType.TURN_INFO,
+      payload: {
+        action: TurnInfoEnum.USER,
+        username: this.store.$state.canMove
+          ? this.store.$state.alliesNickName
+          : this.store.$state.enemyNickName
+      }
+    });
+  }
+
   private onMessage(message: SocketMessage) {
     if (message.type === MessageType.HANDSHAKE) {
       if (!this.store.$state.handsShaked) {
@@ -136,13 +214,21 @@ export class ClientController {
         this.respondHandshake();
       }
     }
-  }
 
-  public respondHandshake() {
-    this.store.$state.handsShaked = true;
-    this.socket.sendMessage({
-      type: MessageType.HANDSHAKE,
-      payload: this.store.getHandshakeData(),
-    })
+    if (message.type === MessageType.TURN_INFO) {
+      if (message.payload.action === TurnInfoEnum.USER) {
+        this.store.$state.canMove = 
+          message.payload.username === this.store.$state.alliesNickName;
+        
+        this.store.showInfoBar(() => {
+          console.log('show on client')
+          this.store.$state.isShowExchangePanel = true;
+        });
+      } else if (message.payload.action === TurnInfoEnum.SHOW_SELECTION) {
+        this.store.$state.isShowQuestion = true;
+      } else {
+        throw Error('Unknown TurnInfo type!');
+      }
+    }
   }
 }

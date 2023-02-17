@@ -27,9 +27,12 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    isMove: false,
+    canMove: false,
     fractionAlly: 3 as IntRange<1, 5>,
     fractionEnemy: 2 as IntRange<1, 5>,
+    isShowInfoBar: false,
+    isShowExchangePanel: false,
+    isShowQuestion: false,
     board: {
       enemy: {
         siege: [] as Card[],
@@ -83,7 +86,7 @@ export const useGameStore = defineStore('gameStore', {
     isMedic: false,
     whoseDiscard: 'allies',
     enemyNickName: 'kekov',
-    alliesNickName: 'lulzov',
+    alliesNickName: localStorage.getItem('username') || '',
     discard: {
       enemy: [] as Card[],
       allies: [] as Card[],
@@ -203,8 +206,8 @@ export const useGameStore = defineStore('gameStore', {
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
     },
-    setMove() {
-      this.isMove = !this.isMove;
+    setMove(move: boolean) {
+      this.canMove = move;
     },
     setPower(power: number, line: cardLineType, type: enemyAlliesType) {
       this.power[type][line] = power;
@@ -363,12 +366,20 @@ export const useGameStore = defineStore('gameStore', {
       this.leader.enemy = data.leader;
       this.enemyNickName = data.username;
     },
+    showInfoBar(callback: () => any = () => {}) {
+      this.isShowInfoBar = true;
+      setTimeout(() => {
+        this.isShowInfoBar = false;
+        callback();
+      }, 1000);
+    },
     connect() {
       const socket = connectToServer();
       this.client = new ClientController(socket);
 
       const onmessage = (message: SessionInfo) => {
         if (message?.status === 'enqueued') {
+          console.log('host created');
           this.host = new HostController(socket);
         }
 
@@ -377,7 +388,7 @@ export const useGameStore = defineStore('gameStore', {
             this.host.initiateHandshake();
           }
 
-          socket.removeListener(SocketEvent.MESSAGE, onmessage);
+          // socket.removeListener(SocketEvent.MESSAGE, onmessage);
         }
       }
 

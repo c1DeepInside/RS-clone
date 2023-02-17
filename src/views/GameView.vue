@@ -10,7 +10,7 @@ import GameExchangePanelComponent from '@/components/game-view/GameExchangePanel
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import SliderComponent from '@/components/common/SliderComponent.vue';
 import { useGameStore } from '@/stores/GameStore';
-import { mapState, mapActions } from 'pinia';
+import { mapState, mapActions, mapWritableState } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
@@ -25,11 +25,8 @@ export default defineComponent({
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
       handChangeCount: 0,
-      isShowExchangePanel: false,
       isShowDeck: false,
-      isShowInfoBar: false,
       infoBar: BarType.alliesStart,
-      isShowQestion: false,
       isShowEnemyDeck: false,
       isShowWeatherDeck: false,
       isShowAlliesDiscard: false,
@@ -226,7 +223,8 @@ export default defineComponent({
       addToHand: 'addToHand',
       setMedic: 'setMedic',
       setMove: 'setMove',
-      connect: 'connect'
+      connect: 'connect',
+      showInfoBar: 'showInfoBar',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -238,17 +236,15 @@ export default defineComponent({
     },
     chooseMove(side: PlayerType) {
       this.infoBar = side === this.playerType.ally ? BarType.alliesStart : BarType.enemyStart;
-      this.isShowQestion = false;
-      this.isShowInfoBar = true;
-      this.closeInfoBar();
-      setTimeout(() => {
+      this.isShowQuestion = false;
+      
+      this.canMove = side === PlayerType.ally;
+      this.client?.sendTurnInfo();
+
+      this.showInfoBar(() => {
         this.isShowExchangePanel = true;
-      }, 1000);
-    },
-    closeInfoBar() {
-      setTimeout(() => {
-        this.isShowInfoBar = false;
-      }, 1000);
+      });
+
     },
   },
   computed: {
@@ -271,7 +267,13 @@ export default defineComponent({
       getWeatherDeck: 'getWeatherDeck',
       fractionAlly: 'fractionAlly',
       fractionEnemy: 'fractionEnemy',
-      isMove: 'isMove',
+      isShowInfoBar: 'isShowInfoBar',
+      client: 'client',
+    }),
+    ...mapWritableState(useGameStore, {
+      canMove: 'canMove',
+      isShowExchangePanel: 'isShowExchangePanel',
+      isShowQuestion: 'isShowQuestion',
     }),
   },
   mounted() {
@@ -316,7 +318,7 @@ export default defineComponent({
   <InformationBar v-if="isShowInfoBar" :bar-type="infoBar" />
   <GameExchangePanelComponent v-if="isShowExchangePanel" />
   <main class="page-game">
-    <div v-if="isShowQestion" class="whose-turn">
+    <div v-if="isShowQuestion" class="whose-turn">
       <div class="whose-turn__popup">
       <div class="whose-turn__question">
         Хотите сделать первый ход?
