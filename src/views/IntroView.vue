@@ -5,6 +5,8 @@ import RegistrationComponent from '@/components/intro-view/RegistrationComponent
 import FooterComponent from '@/components/intro-view/FooterComponent.vue';
 import RulesComponent from '@/components/intro-view/RulesComponent.vue';
 import ValidationComponent from '@/components/intro-view/ValidationComponent.vue';
+import { mapActions } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
 
 export default defineComponent({
   data() {
@@ -17,6 +19,9 @@ export default defineComponent({
     };
   },
   methods: {
+    ...mapActions(useGameStore, {
+      setFromPageToPage: 'setFromPageToPage',
+    }),
     startedRegistration() {
       this.showFormRegistration = true;
       this.showFormValidation = false;
@@ -28,6 +33,7 @@ export default defineComponent({
     startPlay() {
       const token = localStorage.getItem('token');
       if (token) {
+        this.setFromPageToPage(true);
         this.$router.push('/deck');
       }
       this.showFormValidation = true;

@@ -71,6 +71,7 @@ export default defineComponent({
         }
         if (data.deck) {
           this.setConnectInfo(data);
+          this.setFromPageToPage(true);
           router.push('/game');
         }
       };
@@ -128,6 +129,7 @@ export default defineComponent({
       setWebSocket: 'setWebSocket',
       sendConnectInfo: 'sendConnectInfo',
       setConnectInfo: 'setConnectInfo',
+      setFromPageToPage: 'setFromPageToPage',
     }),
   },
   computed: {

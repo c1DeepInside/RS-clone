@@ -1,11 +1,17 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
 import { defineComponent } from 'vue';
+import { mapActions } from 'pinia';
 
 export default defineComponent({
   methods: {
     createDeck() {
+      this.setFromPageToPage(true);
       this.$router.push('/deck');
     },
+    ...mapActions(useGameStore, {
+      setFromPageToPage: 'setFromPageToPage',
+    }),
   },
 });
 </script>

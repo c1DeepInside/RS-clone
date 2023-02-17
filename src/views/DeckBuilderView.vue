@@ -6,6 +6,9 @@ import InfoCollection from '@/components/deck-builder-view/InfoCollection.vue';
 import type Card from '@/interfaces/card';
 import type { CardAPI, CardFromAPI, CardQuantity, UserCard, AllCardsFromAPI } from '@/interfaces/cardAPI';
 import { getCards, getUserCards } from '@/api/deckAPI';
+import { mapState, mapActions } from 'pinia';
+import { useGameStore } from '@/stores/GameStore';
+import router from '@/router';
 
 const token = '7b605cfdafb649794fe9d95f5e1827f490e7ac50';
 
@@ -24,6 +27,11 @@ export default defineComponent({
     };
   },
   async beforeMount() {
+    if (!this.fromPageToPage) {
+      router.push('/');
+    } else {
+      this.setFromPageToPage(false);
+    }
     const deckAPI: AllCardsFromAPI[] = await getCards(token);
     this.collectionCards = this.getNormalCards(deckAPI);
     const myCards: CardFromAPI[] = await getUserCards(token);
@@ -48,6 +56,9 @@ export default defineComponent({
     });
   },
   methods: {
+    ...mapActions(useGameStore, {
+      setFromPageToPage: 'setFromPageToPage',
+    }),
     getNormalDeck(deckAPI: CardQuantity[]): CardAPI[] {
       let deck: CardAPI[] = [];
       deckAPI.forEach((card) => {
@@ -158,6 +169,9 @@ export default defineComponent({
       });
       return userCards;
     },
+    ...mapState(useGameStore, {
+      fromPageToPage: 'fromPageToPage',
+    }),
   },
   created() {
     this.currentDeckCards();

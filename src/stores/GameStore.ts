@@ -97,6 +97,7 @@ export const useGameStore = defineStore('gameStore', {
       enemy: 2 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
     },
+    fromPageToPage: false,
   }),
   getters: {
     getEnemyHand(): Card[] {
@@ -345,6 +346,9 @@ export const useGameStore = defineStore('gameStore', {
     },
     setAlliesNickName(value: string) {
       this.alliesNickName = value;
+    },
+    setFromPageToPage(param: boolean) {
+      this.fromPageToPage = param;
     },
   },
 });

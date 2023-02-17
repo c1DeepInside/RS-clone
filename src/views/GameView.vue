@@ -15,6 +15,7 @@ import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
+import router from '@/router';
 
 export default defineComponent({
   data() {
@@ -31,6 +32,11 @@ export default defineComponent({
       isShowAlliesDiscard: false,
       isShowEnemyDiscard: false,
     };
+  },
+  beforeMount() {
+    if (!this.fromPageToPage) {
+      router.push('/');
+    }
   },
   methods: {
     onCardSelected(card: Card) {
@@ -221,6 +227,7 @@ export default defineComponent({
       addToDiscard: 'addToDiscard',
       addToHand: 'addToHand',
       setMedic: 'setMedic',
+      setFromPageToPage: 'setFromPageToPage',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -249,6 +256,7 @@ export default defineComponent({
       getEnemyHand: 'getEnemyHand',
       isMedic: 'isMedic',
       getWeatherDeck: 'getWeatherDeck',
+      fromPageToPage: 'fromPageToPage',
     }),
   },
   components: {
