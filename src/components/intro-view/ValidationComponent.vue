@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { login } from '@/api/userAPI';
+import { useGameStore } from '@/stores/GameStore';
+import { mapActions } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -19,6 +21,7 @@ export default defineComponent({
       this.isLoading = true;
       try {
         await login(this.inputs.login, this.inputs.password);
+        this.setAlliesNickName(this.inputs.login);
         this.$emit('validationFinished', true);
       } catch (error) {
         console.error(error);
@@ -27,6 +30,9 @@ export default defineComponent({
         this.isLoading = false;
       }
     },
+    ...mapActions(useGameStore, {
+      setAlliesNickName: 'setAlliesNickName',
+    }),
   },
   emits: {
     validationFinished(isFinished: boolean): boolean {

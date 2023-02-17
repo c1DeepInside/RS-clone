@@ -575,5 +575,8 @@ export const useGameStore = defineStore('gameStore', {
     setFraction(value: number) {
       this.fraction = value;
     },
+    setAlliesNickName(value: string) {
+      this.alliesNickName = value;
+    },
   },
 });
