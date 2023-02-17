@@ -79,8 +79,8 @@ export const useGameStore = defineStore('gameStore', {
     showHand: false,
     isMedic: false,
     whoseDiscard: 'allies',
-    enemyNickName: 'kekov',
-    alliesNickName: 'lulzov',
+    enemyNickName: '',
+    alliesNickName: '',
     discard: {
       enemy: [] as Card[],
       allies: [] as Card[],
@@ -327,12 +327,12 @@ export const useGameStore = defineStore('gameStore', {
     setWebSocket(token: string) {
       this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
     },
-    sendConnectInfo(username: string) {
+    sendConnectInfo() {
       this.webSocket.send(
         JSON.stringify({
           deck: this.deck.allies,
           hand: this.hand,
-          name: username,
+          name: this.alliesNickName,
           leader: this.leader.allies,
         })
       );

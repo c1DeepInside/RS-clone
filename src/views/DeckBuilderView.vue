@@ -30,6 +30,7 @@ export default defineComponent({
     } else {
       this.setFromPageToPage(false);
     }
+    this.setAlliesNickName(localStorage.getItem('username')!);
     const deckAPI: AllCardsFromAPI[] = await getCards(localStorage.getItem('token')!);
     this.collectionCards = this.getNormalCards(deckAPI);
     const myCards: CardFromAPI[] = await getUserCards(localStorage.getItem('token')!);
@@ -56,6 +57,7 @@ export default defineComponent({
   methods: {
     ...mapActions(useGameStore, {
       setFromPageToPage: 'setFromPageToPage',
+      setAlliesNickName: 'setAlliesNickName',
     }),
     getNormalDeck(deckAPI: CardQuantity[]): CardAPI[] {
       let deck: CardAPI[] = [];

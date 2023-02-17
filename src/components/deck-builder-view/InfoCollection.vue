@@ -67,7 +67,7 @@ export default defineComponent({
         const data = JSON.parse(event.data);
         if (data.status === 'game_found') {
           this.isGameFind = true;
-          this.sendConnectInfo(data.session_info.user.username);
+          this.sendConnectInfo();
         }
         if (data.deck) {
           this.setConnectInfo(data);
