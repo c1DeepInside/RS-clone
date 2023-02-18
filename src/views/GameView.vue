@@ -3,13 +3,13 @@ import { defineComponent } from 'vue';
 import PlayerComponent, { PlayerType } from '@/components/game-view/PlayerComponent.vue';
 import BoardComponent from '@/components/game-view/BoardComponent.vue';
 import CardViewComponent from '@/components/game-view/CardViewComponent.vue';
-import InformationBar, { BarType } from '@/components/game-view/InformationBar.vue';
+import InformationBar from '@/components/game-view/InformationBar.vue';
 import EndComponent from '@/components/game-view/EndComponent.vue';
 import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import SliderComponent from '@/components/common/SliderComponent.vue';
-import { useGameStore } from '@/stores/GameStore';
+import { InfoBarMessage, useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions, mapWritableState } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
@@ -26,7 +26,6 @@ export default defineComponent({
       playerType: PlayerType,
       handChangeCount: 0,
       isShowDeck: false,
-      infoBar: BarType.alliesStart,
       isShowEnemyDeck: false,
       isShowWeatherDeck: false,
       isShowAlliesDiscard: false,
@@ -83,10 +82,11 @@ export default defineComponent({
       this.addToHand([card]);
       this.isShowDeck = false;
     },
-    showPass() {
-      if (this.lives.allies > 0) {
-        this.lives.allies -= 1;
-      }
+    commitPass() {
+      // TODO: Should show confirmation
+      this.showInfoBar(InfoBarMessage.alliesPassed, () => {
+
+      });
     },
     showEndGame() {
       this.isGiveUpAnimation = true;
@@ -107,6 +107,7 @@ export default defineComponent({
       target.style.display = 'block';
       setTimeout(() => {
         target.style.display = 'none';
+        this.finishTurn();
       }, 2000);
     },
     putWeatherCard() {
@@ -120,11 +121,14 @@ export default defineComponent({
           } else if (this.selectedCard.ability === 'specScorch') {
             this.putSpecScorch();
             this.addToDiscard(this.selectedCard, 'allies');
+            this.finishTurn();
           } else {
             this.addToWeather(this.selectedCard);
             if (this.selectedCard.ability === 'clear') {
               this.showSunAnimation();
               this.clearWeathers();
+            } else {
+              this.finishTurn();
             }
           }
         }, 400);
@@ -178,6 +182,7 @@ export default defineComponent({
         default:
       }
       this.leader.allies.quantity = 0;
+      this.finishTurn();
     },
     exchangeLeaderAbility() {
       this.setShowHand(true);
@@ -225,6 +230,7 @@ export default defineComponent({
       setMove: 'setMove',
       connect: 'connect',
       showInfoBar: 'showInfoBar',
+      finishTurn: 'finishTurn',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -235,15 +241,20 @@ export default defineComponent({
       return this.discard.allies[idx];
     },
     chooseMove(side: PlayerType) {
-      this.infoBar = side === this.playerType.ally ? BarType.alliesStart : BarType.enemyStart;
       this.isShowQuestion = false;
       
       this.canMove = side === PlayerType.ally;
       this.client?.sendTurnInfo();
 
-      this.showInfoBar(() => {
-        this.isShowExchangePanel = true;
-      });
+      const barMessage = this.canMove
+        ? InfoBarMessage.alliesStart
+        : InfoBarMessage.enemyStart;
+
+      this.showInfoBar(InfoBarMessage.roundStart, () => {
+        this.showInfoBar(barMessage, () => {
+          this.isShowExchangePanel = true;
+        });
+      })
 
     },
   },
@@ -269,6 +280,7 @@ export default defineComponent({
       fractionEnemy: 'fractionEnemy',
       isShowInfoBar: 'isShowInfoBar',
       client: 'client',
+      alliesPassed: 'alliesPassed',
     }),
     ...mapWritableState(useGameStore, {
       canMove: 'canMove',
@@ -277,28 +289,9 @@ export default defineComponent({
     }),
   },
   mounted() {
-    //TODO: Добавить поддержку вебсокетов
-    //если противник id фракции 3 сделать чтобы пересылал истину на хост
-
     setTimeout(() => {
       this.connect();
     }, 1000)
-
-    // if (this.fractionAlly === Fractions.SCOIATAEL) {
-    //   this.setMove();
-
-    //   this.isShowQestion = true;
-    // } else if (this.isHost) {
-    //   const whoStart = Math.floor(Math.random() * 2) === 0 ? BarType.alliesStart : BarType.enemyStart;
-    //   this.infoBar = whoStart;
-    //   this.isShowInfoBar = true;
-    //   this.closeInfoBar();
-    //   // setTimeout(() => {
-    //   //   this.isShowExchangePanel = true;
-    //   // }, 1000);
-    // } else if (this.fractionAlly === Fractions.SCOIATAEL) {
-
-    // }
   },
   components: {
     GameExchangePanelComponent,
@@ -315,7 +308,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <InformationBar v-if="isShowInfoBar" :bar-type="infoBar" />
+  <InformationBar v-if="isShowInfoBar" />
   <GameExchangePanelComponent v-if="isShowExchangePanel" />
   <main class="page-game">
     <div v-if="isShowQuestion" class="whose-turn">
@@ -339,6 +332,7 @@ export default defineComponent({
     </div>
     </div>
     
+    <div v-if="!canMove" class="block-game"></div>
 
     <div class="game">
       <div class="game__players">
@@ -357,7 +351,7 @@ export default defineComponent({
         </div>
 
         <div class="game__player game__player-1 player">
-          <PlayerComponent :player-type="playerType.enemy" />
+          <PlayerComponent :player-type="playerType.enemy"/>
         </div>
         <div
           class="game__weather"
@@ -376,7 +370,7 @@ export default defineComponent({
             <CardInfoComponent :card="card" :layoutType="0" class="card" />
           </div>
         </div>
-        <button @click="showPass" class="btn-game game__pass">Спасовать</button>
+        <button @click="commitPass" class="btn-game game__pass">Спасовать</button>
 
         <div class="game__player game__player-2 player game__player-active">
           <PlayerComponent :player-type="playerType.ally" :isPass="true" />
@@ -491,6 +485,15 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.block-game {
+  background-color: #be0a0a2a;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 80%;
+  height: 77%;
+}
 .whose-turn {
   position: absolute;
   top: 0;

@@ -1,5 +1,5 @@
 import type Card from "@/interfaces/card";
-import { useGameStore } from "@/stores/GameStore";
+import { InfoBarMessage, useGameStore } from "@/stores/GameStore";
 import { Fractions } from "@/utilits/cardBuildImgs";
 import type { IntRange } from "@/utilits/types";
 
@@ -32,12 +32,14 @@ type SubFunction = (...args: any) => any;
 export enum MessageType {
   HANDSHAKE = 'handshake',
   TURN_INFO = 'turn_info',
-  GAME_EVENT = 'game_event',
+  BOARD_CHANGE = 'board_change',
 }
 
 export enum TurnInfoEnum {
   USER = 'user',
   SHOW_SELECTION = 'show_selection',
+  ENDED = 'ended',
+  PASS = 'pass',
 }
 
 export enum SocketEvent {
@@ -153,12 +155,22 @@ export class HostController {
         }
       })
 
+      if (player === this.store.$state.alliesNickName) {
+        this.store.$state.canMove = true;
+      }
+
       setTimeout(() => {
-        this.store.showInfoBar(() => {
-          console.log('show on host')
-          this.store.$state.isShowExchangePanel = true;
-        });
+        const message = this.store.$state.canMove
+          ? InfoBarMessage.alliesStart
+          : InfoBarMessage.enemyStart;
+
+        this.store.showInfoBar(InfoBarMessage.roundStart, () => {
+          this.store.showInfoBar(message, () => {
+            this.store.$state.isShowExchangePanel = true;
+          });
+        })
       }, 1000)
+
     }
 
     if (enemy === Fractions.SCOIATAEL && ally == Fractions.SCOIATAEL) {
@@ -207,6 +219,40 @@ export class ClientController {
     });
   }
 
+  public sendBoardChange() {
+    const board = this.store.$state.board;
+
+    this.socket.sendMessage({
+      type: MessageType.BOARD_CHANGE,
+      payload: {
+        cardsInHand: this.store.$state.hand.length,
+        board: {
+          enemy: board.allies,
+          enemyBoost: board.alliesBoost,
+          weather: board.weather,
+        }
+      }
+    })
+  }
+
+  public sendPassTurn() {
+    this.socket.sendMessage({
+      type: MessageType.TURN_INFO,
+      payload: {
+        action: TurnInfoEnum.PASS,
+      }
+    })
+  }
+
+  public sendFinishTurn() {
+    this.socket.sendMessage({
+      type: MessageType.TURN_INFO,
+      payload: {
+        action: TurnInfoEnum.ENDED,
+      }
+    })
+  }
+
   private onMessage(message: SocketMessage) {
     if (message.type === MessageType.HANDSHAKE) {
       if (!this.store.$state.handsShaked) {
@@ -220,14 +266,31 @@ export class ClientController {
         this.store.$state.canMove = 
           message.payload.username === this.store.$state.alliesNickName;
         
-        this.store.showInfoBar(() => {
-          console.log('show on client')
-          this.store.$state.isShowExchangePanel = true;
-        });
+        const barMessage = this.store.$state.canMove
+          ? InfoBarMessage.alliesStart
+          : InfoBarMessage.enemyStart;
+
+        this.store.showInfoBar(InfoBarMessage.roundStart, () => {
+          this.store.showInfoBar(barMessage, () => {
+            this.store.$state.isShowExchangePanel = true;
+          });
+        })
       } else if (message.payload.action === TurnInfoEnum.SHOW_SELECTION) {
         this.store.$state.isShowQuestion = true;
+      } else if (message.payload.action === TurnInfoEnum.ENDED) {
+        this.store.showInfoBar(InfoBarMessage.alliesMove, () => {
+          this.store.$state.canMove = true;
+        })
       } else {
         throw Error('Unknown TurnInfo type!');
+      }
+    }
+
+    if (message.type === MessageType.BOARD_CHANGE) {
+      this.store.$state.isServerUpdate = true;
+      this.store.$state.board = {
+        ...this.store.$state.board,
+        ...message.payload.board,
       }
     }
   }

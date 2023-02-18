@@ -5,6 +5,24 @@ import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
 import { ClientController, HostController, type HandshakeData, connectToServer, SocketEvent, type SessionInfo } from '@/api/game';
 
+export enum InfoBarMessage { 
+  roundStart = 'roundStart',
+  loseRound = 'loseRound',
+  drawRound = 'drawRound',
+  north = 'north',
+  monsters = 'monsters',
+  scoiatael = 'scoiatael',
+  enemyMove = 'enemyMove',
+  enemyStart = 'enemyStart',
+  enemyWinRound = 'enemyWinRound',
+  enemyPassed = 'enemyPassed',
+  alliesStart = 'alliesStart',
+  alliesMove = 'alliesMove',
+  alliesWinRound = 'alliesWinRound',
+  alliesPassed = 'alliesPassed',
+};
+
+
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [] as Card[],
@@ -28,11 +46,17 @@ export const useGameStore = defineStore('gameStore', {
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
     canMove: false,
+    moves: 0,
+    rounds: 0,
     fractionAlly: 3 as IntRange<1, 5>,
     fractionEnemy: 2 as IntRange<1, 5>,
+    infoBarMessage: InfoBarMessage.alliesStart,
     isShowInfoBar: false,
     isShowExchangePanel: false,
     isShowQuestion: false,
+    isServerUpdate: false,
+    alliesPassed: false,
+    enemyPassed: false,
     board: {
       enemy: {
         siege: [] as Card[],
@@ -366,12 +390,26 @@ export const useGameStore = defineStore('gameStore', {
       this.leader.enemy = data.leader;
       this.enemyNickName = data.username;
     },
-    showInfoBar(callback: () => any = () => {}) {
+    showInfoBar(message: InfoBarMessage, callback: () => any = () => {}) {
+      this.infoBarMessage = message;
       this.isShowInfoBar = true;
       setTimeout(() => {
         this.isShowInfoBar = false;
         callback();
       }, 1000);
+    },
+    passTurn() {
+      this.canMove = false;
+      this.client?.sendPassTurn();
+    },
+    finishTurn() {
+      if (this.enemyPassed) {
+        return;
+      }
+
+      this.canMove = false;
+      this.client?.sendFinishTurn();
+      this.showInfoBar(InfoBarMessage.enemyMove);
     },
     connect() {
       const socket = connectToServer();

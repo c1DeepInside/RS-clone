@@ -1,30 +1,31 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
+import { mapState } from 'pinia';
 import { defineComponent, type PropType } from 'vue';
-
-export enum BarType { 
-  scoiatael = 'scoiatael' ,
-  alliesStart = 'alliesStart' ,
-  enemyStart = 'enemyStart'
-};
 
 export default defineComponent({
   data() {
-    return {
-
-    }
+    return {}
   },
-  props: {
-    barType: {
-      type: Object as PropType<BarType>,
-      default: BarType.alliesStart,
-    },
-  }
+  // props: {
+  //   // barType: {
+  //   //   type: Object as PropType<BarType>,
+  //   //   default: BarType.alliesStart,
+  //   // },
+  // },
+  computed: {
+    //хранить ходы
+    //если 0 и canMove то BarType
+    ...mapState(useGameStore, {
+      infoBarMessage: 'infoBarMessage'
+    }),
+  },
 });
 </script>
 
 <template>
   <div class="information information-true">
-    <div :class="`information__content information__content-${barType}`"></div>
+    <div :class="`information__content information__content-${infoBarMessage}`"></div>
   </div>
 </template>
 

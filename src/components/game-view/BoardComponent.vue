@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import LineComponent from './LineComponent.vue';
 import HandComponent from './HandComponent.vue';
-import { mapActions, mapState } from 'pinia';
+import { mapActions, mapState, mapWritableState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
@@ -53,6 +53,7 @@ export default defineComponent({
         this.setIsShowSelected(false);
         setTimeout(() => {
           this.addToLine(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
+          this.finishTurn();
           if (this.selectedCard.ability === 'scorch') {
             this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
           }
@@ -67,6 +68,7 @@ export default defineComponent({
       putLineScorch: 'putLineScorch',
       musterAbility: 'musterAbility',
       setMedic: 'setMedic',
+      finishTurn: 'finishTurn',
     }),
   },
   components: {
@@ -75,10 +77,27 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useGameStore, {
+      board: 'board',
+      client: 'client',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
     }),
+    ...mapWritableState(useGameStore, {
+      isServerUpdate: 'isServerUpdate',
+    })
   },
+  watch: {
+    board: {
+      handler() {
+        if (!this.isServerUpdate) {
+          this.client?.sendBoardChange();
+        }
+
+        this.isServerUpdate = false;
+      },
+      deep: true,
+    }
+  }
 });
 </script>
 

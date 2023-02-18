@@ -24,10 +24,6 @@ export default defineComponent({
       type: String as PropType<PlayerType>,
       default: () => PlayerType.ally,
     },
-    isPass: {
-      type: Boolean,
-      default: false,
-    },
   },
   methods: {
     getFraction() {
@@ -57,6 +53,8 @@ export default defineComponent({
       enemyHand: 'enemyHand',
       fractionAlly: 'fractionAlly',
       fractionEnemy: 'fractionEnemy',
+      enemyPassed: 'enemyPassed',
+      alliesPassed: 'alliesPassed',
     }),
     alliesPower(): number {
       this.setAlliesPower();
@@ -66,6 +64,11 @@ export default defineComponent({
       this.setEnemyPower();
       return this.getEnemyPower;
     },
+    isPass(): boolean {
+      return this.playerType === PlayerType.ally
+        ? this.alliesPassed
+        : this.enemyPassed;
+    }
   },
 });
 </script>

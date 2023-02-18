@@ -126,7 +126,7 @@ export default defineComponent({
   position: fixed;
   height: 100%;
   width: 100%;
-  z-index: 20;
+  z-index: 200;
   background-color: rgba(58, 41, 25, 0.486);
   &__cards {
     margin: 0 auto;
