@@ -85,7 +85,7 @@ export default defineComponent({
     commitPass() {
       // TODO: Should show confirmation
       this.showInfoBar(InfoBarMessage.alliesPassed, () => {
-
+        this.passTurn();
       });
     },
     showEndGame() {
@@ -231,6 +231,7 @@ export default defineComponent({
       connect: 'connect',
       showInfoBar: 'showInfoBar',
       finishTurn: 'finishTurn',
+      passTurn: 'passTurn',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {

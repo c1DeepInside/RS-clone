@@ -281,6 +281,16 @@ export class ClientController {
         this.store.showInfoBar(InfoBarMessage.alliesMove, () => {
           this.store.$state.canMove = true;
         })
+      } else if (message.payload.action === TurnInfoEnum.PASS) {
+        this.store.showInfoBar(InfoBarMessage.enemyPassed, () => {
+          this.store.$state.enemyPassed = true;
+
+          if (!this.store.$state.alliesPassed) {
+            this.store.$state.canMove = true;
+          }
+        })
+
+        // TODO: Add more logic regarding player's pass
       } else {
         throw Error('Unknown TurnInfo type!');
       }

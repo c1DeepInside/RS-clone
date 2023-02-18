@@ -400,6 +400,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     passTurn() {
       this.canMove = false;
+      this.alliesPassed = true;
       this.client?.sendPassTurn();
     },
     finishTurn() {
