@@ -117,6 +117,7 @@ export default defineComponent({
     },
     putWeatherCard() {
       if (this.isShowSelectedCard) {
+        this.setAnimateLeader(false);
         cardAnimation(this.$refs.animationWrap as HTMLElement, topPos.weather, leftPos.weather);
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
@@ -204,8 +205,11 @@ export default defineComponent({
       }
     },
     setLeader(card: Card) {
-      this.setSelectedCard(card);
-      this.setIsShowSelected(true);
+      this.setAnimateLeader(true);
+      setTimeout(() => {
+        this.setSelectedCard(card);
+        this.setIsShowSelected(true);
+      }, 350);
     },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
@@ -229,6 +233,7 @@ export default defineComponent({
       addToHand: 'addToHand',
       setMedic: 'setMedic',
       setFromPageToPage: 'setFromPageToPage',
+      setAnimateLeader: 'setAnimateLeader',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -258,6 +263,7 @@ export default defineComponent({
       isMedic: 'isMedic',
       getWeatherDeck: 'getWeatherDeck',
       fromPageToPage: 'fromPageToPage',
+      animateLeader: 'animateLeader',
     }),
   },
   components: {
@@ -286,6 +292,7 @@ export default defineComponent({
               :card="leader.enemy"
               :layoutType="0"
               class="leader__card card"
+              :class="leader.enemy.quantity < 1 ? 'leader__enemy_off' : ''"
               @click="isShowEnemyLeader = true"
             />
           </div>
@@ -321,13 +328,17 @@ export default defineComponent({
         </div>
 
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card" :class="leader.allies.quantity <= 0 ? 'card-off' : ''">
+          <div
+            class="game__leader-card"
+            :class="[leader.allies.quantity <= 0 ? 'card-off' : '', animateLeader ? 'leader__animate' : '']"
+            @click="setLeader(leader.allies)"
+            ref="leaderWrap"
+          >
             <CardInfoComponent
               v-if="JSON.stringify(leader.allies) !== JSON.stringify({})"
               :card="leader.allies"
               :layoutType="0"
               class="card leader__card"
-              @click="setLeader(leader.allies)"
             />
           </div>
           <div class="game__leader-icon game__leader-active">
@@ -553,8 +564,22 @@ export default defineComponent({
 .leader__card {
   border-radius: 0.35vw;
   overflow: hidden;
+  transition: 0.5s;
 }
 
+.game__leader-card {
+  transition: 0.5s;
+}
+
+.leader__animate {
+  transition: 0.5s;
+  transform: translate(78vw, -20vw) scale(3);
+  opacity: 0;
+}
+
+.leader__enemy_off {
+  opacity: 0.5;
+}
 .game {
   display: flex;
   flex-direction: row;

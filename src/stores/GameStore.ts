@@ -78,6 +78,7 @@ export const useGameStore = defineStore('gameStore', {
     showDiscard: false,
     showHand: false,
     isMedic: false,
+    animateLeader: false,
     whoseDiscard: 'allies',
     enemyNickName: '',
     alliesNickName: '',
@@ -90,8 +91,30 @@ export const useGameStore = defineStore('gameStore', {
       allies: [] as Card[],
     },
     leader: {
-      enemy: {} as Card,
-      allies: {} as Card,
+      enemy: {
+        id: 1,
+        name: 'Фольтест Король Темерии',
+        type: 'leader',
+        fieldType: [],
+        power: null,
+        quantity: 1,
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+        ability: null,
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_silver.jpg',
+      } as Card,
+      allies: {
+        id: 1,
+        name: 'Фольтест Король Темерии',
+        type: 'leader',
+        fieldType: [],
+        power: null,
+        quantity: 1,
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
+        ability: null,
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_silver.jpg',
+      } as Card,
     },
     lives: {
       enemy: 2 as IntRange<0, 3>,
@@ -175,6 +198,9 @@ export const useGameStore = defineStore('gameStore', {
         };
         this.board[`${type}Boost`][line].push(card);
       }
+    },
+    setAnimateLeader(isAnimate: boolean) {
+      this.animateLeader = isAnimate;
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
