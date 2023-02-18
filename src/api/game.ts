@@ -33,6 +33,7 @@ export enum MessageType {
   HANDSHAKE = 'handshake',
   TURN_INFO = 'turn_info',
   BOARD_CHANGE = 'board_change',
+  ROUND_END = 'round_end'
 }
 
 export enum TurnInfoEnum {
@@ -136,6 +137,145 @@ export class HostController {
     if (message.type === MessageType.HANDSHAKE) {
       this.determineTurn();
     }
+  }
+
+  private getUserWithBiggestScore(): string | null {
+    const state = this.store.$state;
+
+    if (state.alliesPower > state.enemyPower) {
+      return state.alliesNickName;
+    }
+
+    if (state.enemyPower > state.alliesPower) {
+      return state.enemyNickName;
+    }
+
+    return null;
+  }
+
+  private isWinner(isEnemy: boolean): boolean {
+    const username = isEnemy 
+      ? this.store.$state.enemyNickName 
+      : this.store.$state.alliesNickName;
+    const winner = this.getUserWithBiggestScore();
+
+    return username === winner;
+  }
+
+  private processNilfgardAbility(isEnemy: boolean): boolean {
+    // TODO: Check if it's the last round
+    const winner = this.getUserWithBiggestScore();
+
+    if (!winner) {
+      return true;
+    }
+
+    return this.isWinner(isEnemy);
+  }
+
+  private processNorthAbility(isEnemy: boolean): boolean {
+    // TODO: Run the code below only if round was a win
+
+    const key = isEnemy
+      ? 'enemy'
+      : 'allies';
+
+    if (this.store.$state.lives[key] > 0) {
+      const index = Math.floor(Math.random() * this.store.$state.deck[key].length);
+      const card = this.store.$state.deck[key][index];
+      
+      // TODO: Remove form deck and add to hand
+    }
+
+    return this.isWinner(isEnemy);
+  }
+
+  private processMonstersAbility(isEnemy: boolean): boolean {
+    const key = isEnemy
+      ? 'enemy'
+      : 'allies';
+
+    type BoardField = 'siege' | 'melee' | 'range';
+
+    // @ts-ignore
+    const fieldKeys: BoardField[] = Object.entries(
+      this.store.$state.stashedBoard[key]
+    ).reduce((acc: BoardField[], [key, value]: [BoardField, Card[]]) => {
+      return [
+        ...acc,
+        ...(value.length > 0 ? [key] : [])
+      ]
+    }, [] as BoardField[]);
+
+    if (fieldKeys.length === 0) {
+      return true;
+    }
+
+    const fieldIndex = Math.floor(Math.random() * fieldKeys.length);
+    const lookupField = this.store.$state.stashedBoard[key][fieldKeys[fieldIndex]]
+
+    if (this.store.$state.lives[key] > 0) {
+      const index = Math.floor(Math.random() * lookupField.length);
+      const card = lookupField[index];
+
+      // TODO: Do not add to discard and leave the card on the board
+    }
+
+    return this.isWinner(isEnemy);
+  }
+
+  public getRoundWinner(): string | null {
+    const processMap = {
+      [Fractions.MONSTERS]: (isEnemy: boolean) => this.processMonstersAbility(isEnemy),
+      [Fractions.NORTHERN]: (isEnemy: boolean) => this.processNorthAbility(isEnemy),
+      [Fractions.NILFGAARD]: (isEnemy: boolean) => this.processNilfgardAbility(isEnemy),
+      [Fractions.SCOIATAEL]: () => {},
+    }
+
+    const allyWin = processMap[this.store.$state.fractionAlly](false);
+    const enemyWin = processMap[this.store.$state.fractionEnemy](true);
+
+    if (allyWin) {
+      return this.store.$state.alliesNickName;
+    }
+    
+    if (enemyWin) {
+      return this.store.$state.enemyNickName;
+    }
+
+    return null;
+  }
+
+  public sendRoundInfo(winner: string | null) {
+    this.socket.sendMessage({
+      type: MessageType.ROUND_END,
+      payload: {
+        winner,
+        lives: {
+          allies: this.store.$state.lives.enemy,
+          enemy: this.store.$state.lives.allies,
+        },
+        discard: {
+          allies: this.store.$state.discard.enemy,
+          enemy: this.store.$state.discard.allies,
+        }
+      }
+    })
+
+    // To reset other player's board
+
+    const board = this.store.$state.board;
+
+    this.socket.sendMessage({
+      type: MessageType.BOARD_CHANGE,
+      payload: {
+        cardsInHand: this.store.$state.hand.length,
+        board: {
+          allies: board.enemy,
+          alliesBoost: board.enemyBoost,
+        }
+      }
+    })
   }
 
   private determineTurn() {
@@ -254,6 +394,7 @@ export class ClientController {
   }
 
   private onMessage(message: SocketMessage) {
+    // TODO: Decompose on separate functions
     if (message.type === MessageType.HANDSHAKE) {
       if (!this.store.$state.handsShaked) {
         this.store.setHandShakeData(message.payload);
@@ -287,10 +428,10 @@ export class ClientController {
 
           if (!this.store.$state.alliesPassed) {
             this.store.$state.canMove = true;
+          } else {
+            this.store.finishRound();
           }
         })
-
-        // TODO: Add more logic regarding player's pass
       } else {
         throw Error('Unknown TurnInfo type!');
       }
@@ -301,6 +442,23 @@ export class ClientController {
       this.store.$state.board = {
         ...this.store.$state.board,
         ...message.payload.board,
+      }
+    }
+
+    if (message.type === MessageType.ROUND_END) {
+      this.store.$state.lives = message.payload.lives;
+      this.store.$state.discard = message.payload.discard;
+
+      const winner = message.payload.winner;
+      const enemy = this.store.$state.enemyNickName;
+      const allies = this.store.$state.alliesNickName;
+
+      if (winner === allies) {
+        this.store.showInfoBar(InfoBarMessage.alliesWinRound);
+      } else if (winner === enemy) {
+        this.store.showInfoBar(InfoBarMessage.enemyWinRound);
+      } else {
+        this.store.showInfoBar(InfoBarMessage.drawRound);
       }
     }
   }

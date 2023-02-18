@@ -22,6 +22,29 @@ export enum InfoBarMessage {
   alliesPassed = 'alliesPassed',
 };
 
+const clearedBoard = {
+    enemy: {
+      siege: [] as Card[],
+      range: [] as Card[],
+      melee: [] as Card[],
+    },
+    allies: {
+      siege: [] as Card[],
+      range: [] as Card[],
+      melee: [] as Card[],
+    },
+    enemyBoost: {
+      siege: [] as Card[],
+      range: [] as Card[],
+      melee: [] as Card[],
+    },
+    alliesBoost: {
+      siege: [] as Card[],
+      range: [] as Card[],
+      melee: [] as Card[],
+    },
+    weather: [] as Card[],
+}
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -57,29 +80,9 @@ export const useGameStore = defineStore('gameStore', {
     isServerUpdate: false,
     alliesPassed: false,
     enemyPassed: false,
-    board: {
-      enemy: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      allies: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      enemyBoost: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      alliesBoost: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      weather: [] as Card[],
-    },
+    board: JSON.parse(JSON.stringify(clearedBoard)) as typeof clearedBoard,
+    // Board from the previos round
+    stashedBoard: JSON.parse(JSON.stringify(clearedBoard)) as typeof clearedBoard,
     affectedBoard: {
       enemy: {
         siege: [] as Card[],
@@ -109,8 +112,8 @@ export const useGameStore = defineStore('gameStore', {
     showHand: false,
     isMedic: false,
     whoseDiscard: 'allies',
-    enemyNickName: 'kekov',
-    alliesNickName: localStorage.getItem('username') || '',
+    enemyNickName: 'Loading...',
+    alliesNickName: localStorage.getItem('username') || 'Loading...',
     discard: {
       enemy: [] as Card[],
       allies: [] as Card[],
@@ -401,9 +404,67 @@ export const useGameStore = defineStore('gameStore', {
     passTurn() {
       this.canMove = false;
       this.alliesPassed = true;
-      this.client?.sendPassTurn();
+
+      if (this.enemyPassed && this.host) {
+        this.finishRound();
+      } else {
+        this.client?.sendPassTurn();
+      }
+    },
+    clearBoard() {
+      if (!this.host) {
+        throw Error('Only host can clear the board!')
+      }
+
+      this.stashedBoard = JSON.parse(JSON.stringify(this.board));
+
+      type BoardType = 'siege' | 'melee' | 'range';
+      const fieldTypes: BoardType[] = ['siege', 'melee', 'range'];
+
+      this.discard.allies = [
+        ...fieldTypes.reduce((acc, fieldType) => (
+          [...acc, ...this.board.allies[fieldType]]
+        ), [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => (
+          [...acc, ...this.board.alliesBoost[fieldType]]
+        ), [] as Card[])
+      ]
+
+      this.discard.enemy = [
+        ...fieldTypes.reduce((acc, fieldType) => (
+          [...acc, ...this.board.enemy[fieldType]]
+        ), [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => (
+          [...acc, ...this.board.enemyBoost[fieldType]]
+        ), [] as Card[])
+      ]
+
+      this.board = JSON.parse(JSON.stringify(clearedBoard));
+    },
+    finishRound() {
+      if (!this.host) {
+        throw Error('Only host can finish round!')
+      }
+
+      this.clearBoard();
+      const winner = this.host.getRoundWinner();
+      this.host.sendRoundInfo(winner);
+      
+      if (winner === this.alliesNickName) {
+        this.showInfoBar(InfoBarMessage.alliesWinRound);
+      } else if (winner === this.enemyNickName) {
+        this.showInfoBar(InfoBarMessage.enemyWinRound);
+      } else {
+        this.showInfoBar(InfoBarMessage.drawRound);
+      }
     },
     finishTurn() {
+      if (this.hand.length === 0) {
+        this.passTurn();
+
+        return;
+      }
+
       if (this.enemyPassed) {
         return;
       }
