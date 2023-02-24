@@ -83,20 +83,40 @@ export default defineComponent({
       isShowSelectedCard: 'isShowSelected',
     }),
     ...mapWritableState(useGameStore, {
-      isServerUpdate: 'isServerUpdate',
+      serverUpdates: 'serverUpdates',
     })
   },
   watch: {
     board: {
       handler() {
-        if (!this.isServerUpdate) {
+        if (!this.serverUpdates.board) {
           this.client?.sendBoardChange();
         }
 
-        this.isServerUpdate = false;
+        this.serverUpdates.board = false;
       },
       deep: true,
-    }
+    },
+    deck: {
+      handler() {
+        if (!this.serverUpdates.deck) {
+          this.client?.sendDeckChange();
+        }
+
+        this.serverUpdates.deck = false;
+      },
+      deep: true,
+    },
+    discard: {
+      handler() {
+        if (!this.serverUpdates.discard) {
+          this.client?.sendDiscardChange();
+        }
+
+        this.serverUpdates.discard = false;
+      },
+      deep: true,
+    },
   }
 });
 </script>

@@ -77,7 +77,11 @@ export const useGameStore = defineStore('gameStore', {
     isShowInfoBar: false,
     isShowExchangePanel: false,
     isShowQuestion: false,
-    isServerUpdate: false,
+    serverUpdates: {
+      deck: false,
+      discard: false,
+      board: false,
+    },
     alliesPassed: false,
     enemyPassed: false,
     board: JSON.parse(JSON.stringify(clearedBoard)) as typeof clearedBoard,
@@ -152,6 +156,7 @@ export const useGameStore = defineStore('gameStore', {
       enemy: 2 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
     },
+    activeInfoBarTimeout: undefined as number | undefined,
   }),
   getters: {
     getEnemyHand(): Card[] {
@@ -396,7 +401,8 @@ export const useGameStore = defineStore('gameStore', {
     showInfoBar(message: InfoBarMessage, callback: () => any = () => {}) {
       this.infoBarMessage = message;
       this.isShowInfoBar = true;
-      setTimeout(() => {
+      clearTimeout(this.activeInfoBarTimeout);
+      this.activeInfoBarTimeout = setTimeout(() => {
         this.isShowInfoBar = false;
         callback();
       }, 1000);
@@ -448,15 +454,47 @@ export const useGameStore = defineStore('gameStore', {
 
       this.clearBoard();
       const winner = this.host.getRoundWinner();
-      this.host.sendRoundInfo(winner);
+
+      let isNextMove = Math.random() < 0.5;
       
+      let infoBarMessage = InfoBarMessage.drawRound;
       if (winner === this.alliesNickName) {
-        this.showInfoBar(InfoBarMessage.alliesWinRound);
+        isNextMove = true;
+        this.lives.enemy -= 1;
+        infoBarMessage = InfoBarMessage.alliesStart;
       } else if (winner === this.enemyNickName) {
-        this.showInfoBar(InfoBarMessage.enemyWinRound);
+        isNextMove = false;
+        this.lives.allies -= 1;
+        infoBarMessage = InfoBarMessage.enemyWinRound;
       } else {
-        this.showInfoBar(InfoBarMessage.drawRound);
+        this.lives.enemy -= 1;
+        this.lives.allies -= 1;
       }
+
+      this.host.sendRoundEnd(winner);
+      this.showInfoBar(infoBarMessage, () => {
+        this.host?.processFractionsAbility(true, winner === this.enemyNickName, () => {
+          this.host?.processFractionsAbility(false, winner === this.alliesNickName, () => {
+            if (this.lives.allies > 0 && this.lives.enemy > 0) {
+              this.enemyPassed = false;
+              this.alliesPassed = false;
+
+              this.host?.sendRoundStart(isNextMove);
+              const action = isNextMove
+                ? InfoBarMessage.alliesMove
+                : InfoBarMessage.enemyMove;
+
+              this.showInfoBar(action, () => {
+                this.canMove = isNextMove;
+              })
+
+            } else {
+              // TODO: Handle the of the Game
+            }
+          });
+        });
+      })
+
     },
     finishTurn() {
       if (this.hand.length === 0) {

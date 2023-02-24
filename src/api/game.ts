@@ -33,7 +33,14 @@ export enum MessageType {
   HANDSHAKE = 'handshake',
   TURN_INFO = 'turn_info',
   BOARD_CHANGE = 'board_change',
-  ROUND_END = 'round_end'
+  RESET_GAME_STATE = 'reset_game_state',
+  ROUND_END = 'round_end',
+  ROUND_START = 'round_start',
+  DISCARD_CHANGE = 'discard_change',
+  DECK_CHANGE = 'deck_change',
+  NORTH_ABILITY_TRIGGERED = 'north_ability',
+  NILFGARD_ABILITY_TRIGGERED = 'nilfgard_ability',
+  MONSTERS_ABILITY_TRIGGERED = 'monsters_ability',
 }
 
 export enum TurnInfoEnum {
@@ -173,8 +180,11 @@ export class HostController {
     return this.isWinner(isEnemy);
   }
 
-  private processNorthAbility(isEnemy: boolean): boolean {
-    // TODO: Run the code below only if round was a win
+  private processNorthAbility(isEnemy: boolean, isWinner: boolean, callback: any) {
+    if (!isWinner) {
+      callback();
+      return;
+    }
 
     const key = isEnemy
       ? 'enemy'
@@ -183,14 +193,30 @@ export class HostController {
     if (this.store.$state.lives[key] > 0) {
       const index = Math.floor(Math.random() * this.store.$state.deck[key].length);
       const card = this.store.$state.deck[key][index];
-      
-      // TODO: Remove form deck and add to hand
-    }
 
-    return this.isWinner(isEnemy);
+      if (isEnemy) {
+        this.store.addToEnemyHand([card]);
+      } else {
+        this.store.addToHand([card]);
+      }
+
+      this.store.showInfoBar(InfoBarMessage.north, () => {
+        callback();
+      });
+
+      this.socket.sendMessage({
+        type: MessageType.NORTH_ABILITY_TRIGGERED,
+        payload: {},
+      })
+
+      // To update our hand on the opponent side
+      this.sendResetGameState();
+    } else {
+      callback();
+    }
   }
 
-  private processMonstersAbility(isEnemy: boolean): boolean {
+  private processMonstersAbility(isEnemy: boolean, callback: any) {
     const key = isEnemy
       ? 'enemy'
       : 'allies';
@@ -208,6 +234,7 @@ export class HostController {
     }, [] as BoardField[]);
 
     if (fieldKeys.length === 0) {
+      callback();
       return true;
     }
 
@@ -218,35 +245,53 @@ export class HostController {
       const index = Math.floor(Math.random() * lookupField.length);
       const card = lookupField[index];
 
-      // TODO: Do not add to discard and leave the card on the board
-    }
+      this.store.showInfoBar(InfoBarMessage.monsters, () => {
+        callback();
+      });
+      this.socket.sendMessage({
+        type: MessageType.MONSTERS_ABILITY_TRIGGERED,
+        payload: {}
+      });
 
-    return this.isWinner(isEnemy);
+      this.store.removeFromDiscard(card, isEnemy ? 'enemy' : 'allies');
+      this.sendResetGameState();
+    } else {
+      callback();
+    }
   }
 
   public getRoundWinner(): string | null {
-    const processMap = {
-      [Fractions.MONSTERS]: (isEnemy: boolean) => this.processMonstersAbility(isEnemy),
-      [Fractions.NORTHERN]: (isEnemy: boolean) => this.processNorthAbility(isEnemy),
-      [Fractions.NILFGAARD]: (isEnemy: boolean) => this.processNilfgardAbility(isEnemy),
-      [Fractions.SCOIATAEL]: () => {},
+    if (!this.getUserWithBiggestScore()) {
+      return null;
     }
 
-    const allyWin = processMap[this.store.$state.fractionAlly](false);
-    const enemyWin = processMap[this.store.$state.fractionEnemy](true);
-
-    if (allyWin) {
-      return this.store.$state.alliesNickName;
-    }
-    
-    if (enemyWin) {
-      return this.store.$state.enemyNickName;
-    }
-
-    return null;
+    return this.isWinner(false)
+      ? this.store.$state.alliesNickName
+      : this.store.$state.enemyNickName;
   }
 
-  public sendRoundInfo(winner: string | null) {
+  // TODO: Fix typing
+  public processFractionsAbility(isEnemy: boolean, isWinner: boolean, callback: any) {
+    const fraction = isEnemy
+      ? this.store.$state.fractionEnemy
+      : this.store.$state.fractionAlly;
+
+    switch(fraction) {
+      case Fractions.NORTHERN:
+        this.processNorthAbility(isEnemy, isWinner, callback);
+        break;
+      case Fractions.MONSTERS:
+        this.processMonstersAbility(isEnemy, callback);
+        break;
+      case Fractions.NILFGAARD:
+        this.processNilfgardAbility(isEnemy);
+        break;
+      default:
+        break;
+    }
+  }
+
+  public sendRoundEnd(winner: string | null) {
     this.socket.sendMessage({
       type: MessageType.ROUND_END,
       payload: {
@@ -262,20 +307,47 @@ export class HostController {
       }
     })
 
-    // To reset other player's board
+    this.sendResetGameState();
+  }
 
+  public sendResetGameState() {
     const board = this.store.$state.board;
+    const discard = this.store.$state.discard;
+    const deck = this.store.$state.deck;
 
     this.socket.sendMessage({
-      type: MessageType.BOARD_CHANGE,
+      type: MessageType.RESET_GAME_STATE,
       payload: {
-        cardsInHand: this.store.$state.hand.length,
+        hand: this.store.$state.enemyHand,
+        enemyHand: this.store.$state.hand,
         board: {
           allies: board.enemy,
           alliesBoost: board.enemyBoost,
-        }
+          enemy: board.allies,
+          enemyBoost: board.alliesBoost,
+          weather: board.weather,
+        },
+        discard: {
+          allies: discard.enemy,
+          enemy: discard.allies,
+        },
+        deck: {
+          allies: deck.enemy,
+          enemy: deck.allies,
+        },
       }
     })
+  }
+
+  public sendRoundStart(canMove: boolean) {
+    this.socket.sendMessage({
+      type: MessageType.ROUND_START,
+      payload: {
+        nextTurnUser: canMove
+          ? this.store.$state.alliesNickName
+          : this.store.$state.enemyNickName
+      }
+    });
   }
 
   private determineTurn() {
@@ -365,12 +437,38 @@ export class ClientController {
     this.socket.sendMessage({
       type: MessageType.BOARD_CHANGE,
       payload: {
-        cardsInHand: this.store.$state.hand.length,
+        enemyHand: this.store.$state.hand,
         board: {
           enemy: board.allies,
           enemyBoost: board.alliesBoost,
           weather: board.weather,
-        }
+        },
+      }
+    })
+  }
+
+  public sendDiscardChange() {
+    const discard = this.store.$state.discard;
+
+    this.socket.sendMessage({
+      type: MessageType.DISCARD_CHANGE,
+      payload: {
+        discard: {
+          enemy: discard.allies,
+        },
+      }
+    })
+  }
+
+  public sendDeckChange() {
+    const deck = this.store.$state.deck;
+
+    this.socket.sendMessage({
+      type: MessageType.DECK_CHANGE,
+      payload: {
+        deck: {
+          enemy: deck.allies,
+        },
       }
     })
   }
@@ -398,7 +496,11 @@ export class ClientController {
     if (message.type === MessageType.HANDSHAKE) {
       if (!this.store.$state.handsShaked) {
         this.store.setHandShakeData(message.payload);
+
         this.respondHandshake();
+
+        this.sendDeckChange();
+        this.sendDiscardChange();
       }
     }
 
@@ -438,11 +540,47 @@ export class ClientController {
     }
 
     if (message.type === MessageType.BOARD_CHANGE) {
-      this.store.$state.isServerUpdate = true;
+      this.store.$state.serverUpdates.board = true;
+
+      this.store.$state.enemyHand = message.payload.enemyHand;
+
       this.store.$state.board = {
         ...this.store.$state.board,
         ...message.payload.board,
       }
+    }
+
+    if (message.type === MessageType.DECK_CHANGE) {
+      this.store.$state.serverUpdates.deck = true;
+
+      this.store.$state.deck = {
+        ...this.store.$state.deck,
+        ...message.payload.deck,
+      };
+    }
+
+    if (message.type === MessageType.DISCARD_CHANGE) {
+      this.store.$state.serverUpdates.discard = true;
+
+      this.store.$state.discard = {
+        ...this.store.$state.discard,
+        ...message.payload.discard,
+      };
+    }
+
+    if (message.type === MessageType.RESET_GAME_STATE) {
+      this.store.$state.serverUpdates = {
+        deck: true,
+        discard: true,
+        board: true,
+      }
+
+      this.store.$state.hand = message.payload.hand;
+      this.store.$state.enemyHand = message.payload.enemyHand;
+
+      this.store.$state.deck = message.payload.deck;
+      this.store.$state.board = message.payload.board;
+      this.store.$state.discard = message.payload.discard;
     }
 
     if (message.type === MessageType.ROUND_END) {
@@ -460,6 +598,32 @@ export class ClientController {
       } else {
         this.store.showInfoBar(InfoBarMessage.drawRound);
       }
+    }
+
+    if (message.type === MessageType.ROUND_START) {
+      this.store.$state.alliesPassed = false;
+      this.store.$state.enemyPassed = false;
+
+      const nexTurnUser = message.payload.nextTurnUser;
+      const allies = this.store.$state.alliesNickName;
+
+      this.store.showInfoBar(InfoBarMessage.roundStart, () => {
+        const action = nexTurnUser === allies
+          ? InfoBarMessage.alliesMove
+          : InfoBarMessage.enemyMove;
+
+        this.store.showInfoBar(action, () => {
+          this.store.$state.canMove = nexTurnUser === allies;
+        });
+      });
+    }
+
+    if (message.type === MessageType.NORTH_ABILITY_TRIGGERED) {
+      this.store.showInfoBar(InfoBarMessage.north);
+    }
+
+    if (message.type === MessageType.MONSTERS_ABILITY_TRIGGERED) {
+      this.store.showInfoBar(InfoBarMessage.monsters);
     }
   }
 }
