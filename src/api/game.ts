@@ -254,6 +254,8 @@ export class HostController {
       });
 
       this.store.removeFromDiscard(card, isEnemy ? 'enemy' : 'allies');
+      this.store.$state.board[key][fieldKeys[fieldIndex]].push(card);
+      
       this.sendResetGameState();
     } else {
       callback();

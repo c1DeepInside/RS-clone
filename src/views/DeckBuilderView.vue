@@ -9,13 +9,14 @@ import { getCards, getUserCards } from '@/api/deckAPI';
 import { mapState, mapActions } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import router from '@/router';
+import type { IntRange } from '@/utilits/types';
 
 export default defineComponent({
   data() {
     return {
       collectionFilter: 'all' as Filters,
       deckFilter: 'all' as Filters,
-      currentFraction: 1,
+      currentFraction: 1 as IntRange<1, 5>,
       collectionCards: [] as Card[],
       deckCards: [] as CardAPI[],
       deckCardsNorth: [] as CardAPI[],
@@ -93,7 +94,7 @@ export default defineComponent({
     changeFilterDeck(data: Filters) {
       this.deckFilter = data;
     },
-    changeFraction(data: number) {
+    changeFraction(data: IntRange<1, 5>) {
       this.currentFraction = data;
       this.currentDeckCards();
     },
@@ -209,6 +210,7 @@ export default defineComponent({
           :leadersCards="collectionCards"
           :selectedCards="fullDeckCards"
           :cardsForAPI="deckCardsForAPI"
+          :currentFraction="currentFraction"
         />
         <CardCollection
           @filterChanged="changeFilterDeck"

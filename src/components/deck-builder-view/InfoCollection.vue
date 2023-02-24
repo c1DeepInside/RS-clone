@@ -206,7 +206,7 @@ export default defineComponent({
   },
   props: {
     currentFraction: {
-      type: Object as PropType<IntRange<1, 5>>,
+      type: Number as PropType<IntRange<1, 5>>,
       required: true,
     },
     leadersCards: {
