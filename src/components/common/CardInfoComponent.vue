@@ -1,6 +1,6 @@
 <script lang="ts">
 import type Card from '@/interfaces/card';
-import { cardAbilitiesImg, cardFractionsImg, cardEquipmendImg } from '@/utilits/cardBuildImgs';
+import { cardAbilitiesImg, cardFractionsImg, cardEquipmendImg, type CardEquipmendType } from '@/utilits/cardBuildImgs';
 import { defineComponent, type PropType } from 'vue';
 
 export enum CardLayoutType {
@@ -52,7 +52,7 @@ export default defineComponent({
       }
 
       if (card.fieldType.length === 1) {
-        const key = card.fieldType[0];
+        const key = card.fieldType[0] as CardEquipmendType;
 
         if (!(key in cardEquipmendImg)) {
           return '';
@@ -329,8 +329,9 @@ export default defineComponent({
   font-size: 3vw;
 }
 .description-text {
-  padding: 1%;
+  padding: 0.3vw;
   font-size: 1vw;
+  justify-content: center;
   text-align: center;
 }
 .game-card__count-img-hero {
