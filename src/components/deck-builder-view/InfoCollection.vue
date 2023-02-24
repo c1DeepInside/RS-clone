@@ -3,12 +3,14 @@ import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
-import { mapActions } from 'pinia';
-import router from '@/router';
+import { mapActions, mapState } from 'pinia';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
 import type { IntRange } from '@/utilits/types';
+import type { UserCard } from '@/interfaces/cardAPI';
+import { updateUserCards } from '@/api/deckAPI';
+import router from '@/router';
 
 export default defineComponent({
   data() {
@@ -19,6 +21,8 @@ export default defineComponent({
       currentLeaderNilfgaard: {} as Card,
       currentLeaderScoiatel: {} as Card,
       currentLeaderMonsters: {} as Card,
+      isShowSearch: false,
+      isGameFind: false,
     };
   },
   methods: {
@@ -58,7 +62,22 @@ export default defineComponent({
           break;
       }
     },
-    startGame() {
+    // TODO: Change
+    listenSocket() {
+      this.webSocket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.status === 'game_found') {
+          this.isGameFind = true;
+          this.sendConnectInfo();
+        }
+        if (data.deck) {
+          this.setConnectInfo(data);
+          this.setFromPageToPage(true);
+          router.push('/game');
+        }
+      };
+    },
+    async startGame() {
       this.changeCurrentLeader();
       if (Object.keys(this.currentLeader).length === 0) {
         this.currentLeader = this.leadersCards.find(
@@ -68,10 +87,13 @@ export default defineComponent({
       }
       const checkCards = this.deckInformation.find((item) => item.error === true);
       if (!checkCards) {
-        this.setFraction(this.currentFraction);
+        this.setFraction(this.currentFraction as IntRange<1, 4>);
         this.setSelectedLeader(this.currentLeader);
         this.parseDeck(this.selectedCards);
-        router.push('/game');
+        await updateUserCards(this.cardsForAPI, localStorage.getItem('token')!);
+        this.setWebSocket(localStorage.getItem('token')!);
+        this.listenSocket();
+        this.isShowSearch = true;
       }
     },
     parseDeck(cards: Card[]): Card[] {
@@ -81,7 +103,6 @@ export default defineComponent({
           const newCard = JSON.parse(JSON.stringify(card));
           newCard.quantity = 1;
           newCard.uuid = uuidv4();
-
           finCards.push(newCard);
         }
       });
@@ -91,6 +112,7 @@ export default defineComponent({
         sortCards.push(finCards[index]);
       });
       if (this.currentLeader.name === 'Францеска Финдабаир Маргаритка из Долин') {
+        this.currentLeader.quantity = 0;
         this.setHand(sortCards.slice(0, 11));
         this.setDeck(sortCards.slice(11));
       } else {
@@ -105,9 +127,16 @@ export default defineComponent({
       setFraction: 'setFraction',
       setHand: 'setHand',
       setDiscard: 'setDiscard',
+      setWebSocket: 'setWebSocket',
+      sendConnectInfo: 'sendConnectInfo',
+      setConnectInfo: 'setConnectInfo',
+      setFromPageToPage: 'setFromPageToPage',
     }),
   },
   computed: {
+    ...mapState(useGameStore, {
+      webSocket: 'webSocket',
+    }),
     deckInformation() {
       return [
         {
@@ -188,6 +217,10 @@ export default defineComponent({
       type: Array as PropType<Card[]>,
       required: true,
     },
+    cardsForAPI: {
+      type: Array as PropType<UserCard[]>,
+      required: true,
+    },
   },
 });
 </script>
@@ -211,9 +244,62 @@ export default defineComponent({
     </div>
     <button class="start__game" @click="startGame">Начать игру</button>
   </div>
+  <div v-if="isShowSearch" class="search__game">
+    <div v-if="!isGameFind" class="spinner__wrap">
+      <div class="spinner"></div>
+      <p class="search__text">Поиск игры...</p>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.search__game {
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+
+  .spinner__wrap {
+    position: absolute;
+    top: 25vw;
+    left: 43.2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vw;
+  }
+  .search__text {
+    color: white;
+    font-size: 2vw;
+    font-weight: 500;
+  }
+  .spinner {
+    height: 5vw;
+    width: 5vw;
+    border: 0.7vw white solid;
+    border-top: 0.7vw black solid;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+  }
+
+  @keyframes spin {
+    from {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+    }
+  }
+}
 .info {
   width: 20%;
   height: 100%;

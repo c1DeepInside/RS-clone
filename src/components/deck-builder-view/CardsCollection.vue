@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import CardInfoComponent, { CardLayoutType } from '@/components/common/CardInfoComponent.vue';
+import SliderComponent from '@/components/common/SliderComponent.vue';
 import type Card from '@/interfaces/card';
 interface Filter {
   id: number;
@@ -59,6 +60,8 @@ export default defineComponent({
       currFilter: 'all',
 
       cardLayoutType: CardLayoutType,
+      selectedSliderCard: [] as Card[],
+      isShowSlider: false,
     };
   },
   methods: {
@@ -68,6 +71,12 @@ export default defineComponent({
     },
     takeCard(item: Card) {
       this.$emit('selectedCard', item);
+    },
+    showSlider(card: Card, event: Event) {
+      event.preventDefault();
+      this.selectedSliderCard = [];
+      this.selectedSliderCard.push(card);
+      this.isShowSlider = true;
     },
   },
   computed: {
@@ -94,6 +103,7 @@ export default defineComponent({
   },
   components: {
     CardInfoComponent,
+    SliderComponent,
   },
   props: {
     currentFraction: {
@@ -121,13 +131,31 @@ export default defineComponent({
     </div>
     <div class="cards">
       <div class="card" v-for="item in filteredCards" :key="item.id">
-        <CardInfoComponent :card="item" :layout-type="cardLayoutType.AVERAGE" @click="takeCard(item)" />
+        <CardInfoComponent
+          :card="item"
+          :layout-type="cardLayoutType.AVERAGE"
+          @click="takeCard(item)"
+          @contextmenu="showSlider(item, $event)"
+        />
       </div>
+    </div>
+    <div v-if="isShowSlider" class="slider__wrap" @click="isShowSlider = false">
+      <SliderComponent :cards="selectedSliderCard" />
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.slider__wrap {
+  position: absolute;
+  z-index: 10;
+  height: 100vh;
+  width: 100vw;
+  padding-top: 7vw;
+  top: -2.9vw;
+  left: -7.5vw;
+  background-color: rgba($color: #000000, $alpha: 0.7);
+}
 .collection {
   width: 40%;
   height: 100%;
@@ -152,12 +180,13 @@ export default defineComponent({
 
 .cards {
   margin-top: 1%;
-  height: 89%;
+  height: 39.5vw;
   display: flex;
   flex-wrap: wrap;
-  gap: 2% 3%;
+  gap: 1vw 1.2vw;
   padding: 3%;
   padding-top: 2%;
+  align-content: flex-start;
   overflow: auto;
 
   &::-webkit-scrollbar {

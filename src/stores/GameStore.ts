@@ -45,6 +45,7 @@ const clearedBoard = {
     },
     weather: [] as Card[],
 }
+import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -52,6 +53,7 @@ export const useGameStore = defineStore('gameStore', {
     handsShaked: false,
     host: null as HostController | null,
     client: null as ClientController | null,
+    webSocket: {} as WebSocket,
     power: {
       enemy: {
         siege: 0,
@@ -115,6 +117,7 @@ export const useGameStore = defineStore('gameStore', {
     showDiscard: false,
     showHand: false,
     isMedic: false,
+    animateLeader: false,
     whoseDiscard: 'allies',
     enemyNickName: 'Loading...',
     alliesNickName: localStorage.getItem('username') || 'Loading...',
@@ -129,27 +132,27 @@ export const useGameStore = defineStore('gameStore', {
     leader: {
       enemy: {
         id: 1,
-        name: 'Фольтест Предводитель Севера',
+        name: 'Фольтест Король Темерии',
         type: 'leader',
         fieldType: [],
         power: null,
         quantity: 1,
-        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
         ability: null,
-        fractionId: 1,
-        image: 'src/assets/images/realms_foltest_gold.jpg',
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_silver.jpg',
       } as Card,
       allies: {
-        id: 28,
-        name: 'Эредин Бреакк Глас Убийца Оберона',
+        id: 1,
+        name: 'Фольтест Король Темерии',
         type: 'leader',
         fieldType: [],
         power: null,
         quantity: 1,
-        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
         ability: null,
-        fractionId: 1,
-        image: 'src/assets/images/realms_foltest_gold.jpg',
+        fractionId: 0,
+        image: 'src/assets/images/realms_foltest_silver.jpg',
       } as Card,
     },
     lives: {
@@ -157,6 +160,7 @@ export const useGameStore = defineStore('gameStore', {
       allies: 2 as IntRange<0, 3>,
     },
     activeInfoBarTimeout: undefined as number | undefined,
+    fromPageToPage: false,
   }),
   getters: {
     getEnemyHand(): Card[] {
@@ -234,6 +238,9 @@ export const useGameStore = defineStore('gameStore', {
         };
         this.board[`${type}Boost`][line].push(card);
       }
+    },
+    setAnimateLeader(isAnimate: boolean) {
+      this.animateLeader = isAnimate;
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
@@ -383,8 +390,34 @@ export const useGameStore = defineStore('gameStore', {
     setSelectedLeader(card: Card) {
       this.leader.allies = card;
     },
-    setFraction(value: IntRange<1, 5>) {
+    setFraction(value: IntRange<1, 4>) {
       this.fractionAlly = value;
+    },
+    setWebSocket(token: string) {
+      this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
+    },
+    sendConnectInfo() {
+      this.webSocket.send(
+        JSON.stringify({
+          deck: this.deck.allies,
+          hand: this.hand,
+          name: this.alliesNickName,
+          leader: this.leader.allies,
+        })
+      );
+    },
+    setConnectInfo(data: ConnectInfo) {
+      this.enemyHand = data.hand;
+      this.deck.enemy = data.deck;
+      this.leader.enemy = data.leader;
+      this.enemyNickName = data.name;
+      this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
+    },
+    setAlliesNickName(value: string) {
+      this.alliesNickName = value;
+    },
+    setFromPageToPage(param: boolean) {
+      this.fromPageToPage = param;
     },
     getHandshakeData(): HandshakeData {
       return {

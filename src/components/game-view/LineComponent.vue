@@ -106,7 +106,9 @@ export default defineComponent({
             card.ability === 'morale' ? card.power! + (1 * this.moraleCount - 1) : card.power! + 1 * this.moraleCount;
         }
         if (this.ifBoost && card.type !== 'hero') {
-          card.power! *= 2;
+          if (card.ability !== 'horn' || this.board[`${this.type}Boost`][this.attackType].length > 0) {
+            card.power! *= 2;
+          }
         }
         return card;
       });

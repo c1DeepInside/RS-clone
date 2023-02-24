@@ -1,11 +1,17 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
 import { defineComponent } from 'vue';
+import { mapActions } from 'pinia';
 
 export default defineComponent({
-  emits: {
-    readRules(isReadRules: boolean): boolean {
-      return isReadRules;
+  methods: {
+    createDeck() {
+      this.setFromPageToPage(true);
+      this.$router.push('/deck');
     },
+    ...mapActions(useGameStore, {
+      setFromPageToPage: 'setFromPageToPage',
+    }),
   },
 });
 </script>
@@ -25,9 +31,9 @@ export default defineComponent({
     </p>
     <p>
       Раунд продолжается до тех пор, пока не будут использованы все карты или до момента, когда один из игроков не будет
-      однозначно доминировать над другим
+      однозначно доминировать над другим.
     </p>
-    <button @click="$emit('readRules', true)" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
+    <button @click="createDeck" class="rules__button">СОЗДАТЬ КОЛОДУ</button>
   </div>
 </template>
 
@@ -36,7 +42,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: center;
-  // align-items: center;
   position: fixed;
   gap: 1vw;
   top: 50%;

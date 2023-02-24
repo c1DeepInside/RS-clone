@@ -321,8 +321,9 @@ export default defineComponent({
 }
 .card-info__count-power-hero {
   position: absolute;
-  top: 18%;
-  left: 34%;
+  top: 3.4vw;
+  left: 3.3vw;
+  transform: translate(-50%, -50%);
   font-weight: 300;
   color: white;
   font-size: 3vw;

@@ -16,7 +16,7 @@ export type CardAbility =
 
 export type CardFieldType = 'melee' | 'range' | 'siege' | 'boost' | 'weather' | 'leader';
 
-type CardType = 'hero' | 'usual' | 'special' | 'leader';
+export type CardType = 'hero' | 'usual' | 'special' | 'leader';
 
 export default interface Card {
   id: number;

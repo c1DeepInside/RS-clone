@@ -12,7 +12,7 @@ import { defineComponent, type PropType } from 'vue';
 export default defineComponent({
   data() {
     return {
-      currentIdx: 0,
+      currentIndex: 0,
       fractions: [
         {
           id: 1,
@@ -55,23 +55,23 @@ export default defineComponent({
   },
   methods: {
     decrementIdx() {
-      this.currentIdx = (this.currentIdx - 1 + this.fractions.length) % this.fractions.length;
-      this.$emit('currentFraction', this.fractions[this.currentIdx].id);
+      this.currentIndex = (this.currentIndex - 1 + this.fractions.length) % this.fractions.length;
+      this.$emit('currentFraction', this.currentIndex + 1);
     },
     incrementIdx() {
-      this.currentIdx = (this.currentIdx + 1) % this.fractions.length;
-      this.$emit('currentFraction', this.fractions[this.currentIdx].id);
+      this.currentIndex = (this.currentIndex + 1) % this.fractions.length;
+      this.$emit('currentFraction', this.currentIndex + 1);
     },
   },
   computed: {
     prevFraction(): Fraction {
-      return this.fractions[(this.currentIdx - 1 + this.fractions.length) % this.fractions.length];
+      return this.fractions[(this.currentIndex - 1 + this.fractions.length) % this.fractions.length];
     },
     nextFraction(): Fraction {
-      return this.fractions[(this.currentIdx + 1) % this.fractions.length];
+      return this.fractions[(this.currentIndex + 1) % this.fractions.length];
     },
     currFraction(): Fraction {
-      return this.fractions[this.currentIdx];
+      return this.fractions[this.currentIndex];
     },
   },
   props: {

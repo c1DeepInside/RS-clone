@@ -15,6 +15,7 @@ import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
+import router from '@/router';
 
 export default defineComponent({
   data() {
@@ -30,7 +31,13 @@ export default defineComponent({
       isShowWeatherDeck: false,
       isShowAlliesDiscard: false,
       isShowEnemyDiscard: false,
+      isShowEnemyLeader: false,
     };
+  },
+  beforeMount() {
+    if (!this.fromPageToPage) {
+      router.push('/');
+    }
   },
   methods: {
     onCardSelected(card: Card) {
@@ -112,6 +119,7 @@ export default defineComponent({
     },
     putWeatherCard() {
       if (this.isShowSelectedCard) {
+        this.setAnimateLeader(false);
         cardAnimation(this.$refs.animationWrap as HTMLElement, topPos.weather, leftPos.weather);
         this.removeFromHand(this.selectedCard);
         this.setIsShowSelected(false);
@@ -203,8 +211,11 @@ export default defineComponent({
       }
     },
     setLeader(card: Card) {
-      this.setSelectedCard(card);
-      this.setIsShowSelected(true);
+      this.setAnimateLeader(true);
+      setTimeout(() => {
+        this.setSelectedCard(card);
+        this.setIsShowSelected(true);
+      }, 350);
     },
     ...mapActions(useGameStore, {
       setIsShowSelected: 'setIsShowSelected',
@@ -232,6 +243,8 @@ export default defineComponent({
       showInfoBar: 'showInfoBar',
       finishTurn: 'finishTurn',
       passTurn: 'passTurn',
+      setFromPageToPage: 'setFromPageToPage',
+      setAnimateLeader: 'setAnimateLeader',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {
@@ -282,6 +295,8 @@ export default defineComponent({
       isShowInfoBar: 'isShowInfoBar',
       client: 'client',
       alliesPassed: 'alliesPassed',
+      fromPageToPage: 'fromPageToPage',
+      animateLeader: 'animateLeader',
     }),
     ...mapWritableState(useGameStore, {
       canMove: 'canMove',
@@ -338,12 +353,14 @@ export default defineComponent({
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
-          <div class="game__leader-card card-off">
+          <div class="game__leader-card">
             <CardInfoComponent
               v-if="JSON.stringify(leader.enemy) !== JSON.stringify({})"
               :card="leader.enemy"
               :layoutType="0"
-              class="card"
+              class="leader__card card"
+              :class="leader.enemy.quantity < 1 ? 'leader__enemy_off' : ''"
+              @click="isShowEnemyLeader = true"
             />
           </div>
           <div class="game__leader-icon">
@@ -378,13 +395,17 @@ export default defineComponent({
         </div>
 
         <div class="game__leader game__leader-2">
-          <div class="game__leader-card" :class="leader.allies.quantity <= 0 ? 'card-off' : ''">
+          <div
+            class="game__leader-card"
+            :class="[leader.allies.quantity <= 0 ? 'card-off' : '', animateLeader ? 'leader__animate' : '']"
+            @click="setLeader(leader.allies)"
+            ref="leaderWrap"
+          >
             <CardInfoComponent
               v-if="JSON.stringify(leader.allies) !== JSON.stringify({})"
               :card="leader.allies"
               :layoutType="0"
-              class="card"
-              @click="setLeader(leader.allies)"
+              class="card leader__card"
             />
           </div>
           <div class="game__leader-icon game__leader-active">
@@ -459,8 +480,11 @@ export default defineComponent({
       </div>
       <div v-if="isShowEnemyDeck" class="show_cards_close">
         <div class="close" @click="isShowEnemyDeck = false">x</div>
-
         <SliderComponent :cards="getEnemyHand" />
+      </div>
+      <div v-if="isShowEnemyLeader" class="show_cards_close">
+        <div class="close" @click="isShowEnemyLeader = false">x</div>
+        <SliderComponent :cards="[leader.enemy]" />
       </div>
     </div>
 
@@ -659,6 +683,25 @@ export default defineComponent({
   position: relative;
 }
 
+.leader__card {
+  border-radius: 0.35vw;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+.game__leader-card {
+  transition: 0.5s;
+}
+
+.leader__animate {
+  transition: 0.5s;
+  transform: translate(78vw, -20vw) scale(3);
+  opacity: 0;
+}
+
+.leader__enemy_off {
+  opacity: 0.5;
+}
 .game {
   display: flex;
   flex-direction: row;
@@ -810,7 +853,6 @@ export default defineComponent({
       }
     }
   }
-
   &__pass {
     position: relative;
     top: 2%;
