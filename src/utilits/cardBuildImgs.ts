@@ -18,33 +18,33 @@ export const cardAbilitiesImg: Record<CardAbility, string> = {
 };
 
 export const cardFractionsImg: Record<number, string> = {
-  1: '/src/assets/images/build/card_faction_banner_nilfgaard.png',
-  3: '/src/assets/images/build/card_faction_banner_no_mans_land.png',
-  0: '/src/assets/images/build/card_faction_banner_northern_realms.png',
-  2: '/src/assets/images/build/card_faction_banner_scoiatael.png',
+  2: '/src/assets/images/build/card_faction_banner_nilfgaard.png',
+  4: '/src/assets/images/build/card_faction_banner_no_mans_land.png',
+  1: '/src/assets/images/build/card_faction_banner_northern_realms.png',
+  3: '/src/assets/images/build/card_faction_banner_scoiatael.png',
 };
 
 export const fractionsDeckImg: Record<number, string> = {
-  1: '/src/assets/images/back-deck/deck_back_nilfgaard.jpg',
-  3: '/src/assets/images/back-deck/deck_back_monsters.jpg',
-  0: '/src/assets/images/back-deck/deck_back_realms.jpg',
-  2: '/src/assets/images/back-deck/deck_back_scoiatael.jpg',
+  2: '/src/assets/images/back-deck/deck_back_nilfgaard.jpg',
+  4: '/src/assets/images/back-deck/deck_back_monsters.jpg',
+  1: '/src/assets/images/back-deck/deck_back_realms.jpg',
+  3: '/src/assets/images/back-deck/deck_back_scoiatael.jpg',
 };
 
 export const fractions = {
-  1: {
+  2: {
     img: '/src/assets/images/faction-emblems/nilfgaard_emblem.png',
     name: 'Нильфгаард',
   },
-  3: {
+  4: {
     img: '/src/assets/images/faction-emblems/monsters_emblem.png',
     name: 'Чудовища',
   },
-  0: {
+  1: {
     img: '/src/assets/images/faction-emblems/northern_emblem.png',
     name: 'Королевство Севера',
   },
-  2: {
+  3: {
     img: '/src/assets/images/faction-emblems/scoiatael_emblem.png',
     name: "Скоя'таэли",
   },

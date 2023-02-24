@@ -12,28 +12,28 @@ import { defineComponent, type PropType } from 'vue';
 export default defineComponent({
   data() {
     return {
-      currentId: 0,
+      currentIndex: 0,
       fractions: [
         {
-          id: 0,
+          id: 1,
           name: 'Королевства Севера',
           description: 'Королевства Севера берут карту из своей колоды после каждого выигранного раунда.',
           emblem: 'src/assets/images/faction-emblems/northern_emblem.png',
         },
         {
-          id: 1,
+          id: 2,
           name: 'Нильфгаард',
           description: 'Нильфгаард побеждает в случае ничьей.',
           emblem: 'src/assets/images/faction-emblems/nilfgaard_emblem.png',
         },
         {
-          id: 2,
+          id: 3,
           name: "Скоя'таэли",
           description: "Скоя'таэли в начале битвы решают, кто ходит первым.",
           emblem: 'src/assets/images/faction-emblems/scoiatael_emblem.png',
         },
         {
-          id: 3,
+          id: 4,
           name: 'Чудовища',
           description: 'Чудовища после каждого раунда сохраняют на столе одну случайную карту.',
           emblem: 'src/assets/images/faction-emblems/monsters_emblem.png',
@@ -55,23 +55,23 @@ export default defineComponent({
   },
   methods: {
     decrementIdx() {
-      this.currentId = (this.currentId - 1 + this.fractions.length) % this.fractions.length;
-      this.$emit('currentFraction', this.currentId);
+      this.currentIndex = (this.currentIndex - 1 + this.fractions.length) % this.fractions.length;
+      this.$emit('currentFraction', this.currentIndex + 1);
     },
     incrementIdx() {
-      this.currentId = (this.currentId + 1) % this.fractions.length;
-      this.$emit('currentFraction', this.currentId);
+      this.currentIndex = (this.currentIndex + 1) % this.fractions.length;
+      this.$emit('currentFraction', this.currentIndex + 1);
     },
   },
   computed: {
     prevFraction(): Fraction {
-      return this.fractions[(this.currentId - 1 + this.fractions.length) % this.fractions.length];
+      return this.fractions[(this.currentIndex - 1 + this.fractions.length) % this.fractions.length];
     },
     nextFraction(): Fraction {
-      return this.fractions[(this.currentId + 1) % this.fractions.length];
+      return this.fractions[(this.currentIndex + 1) % this.fractions.length];
     },
     currFraction(): Fraction {
-      return this.fractions[this.currentId];
+      return this.fractions[this.currentIndex];
     },
   },
   props: {

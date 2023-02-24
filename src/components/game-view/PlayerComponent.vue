@@ -2,7 +2,6 @@
 import { useGameStore } from '@/stores/GameStore';
 import { mapState, mapActions } from 'pinia';
 import { fractions } from '@/utilits/cardBuildImgs';
-import type { IntRange } from '@/utilits/types';
 import { defineComponent, type PropType } from 'vue';
 
 export enum PlayerType {
@@ -32,7 +31,7 @@ export default defineComponent({
   },
   methods: {
     getFraction() {
-      const idx = this.leader[this.playerType].fractionId! as IntRange<0, 4>;
+      const idx = this.playerType === 'enemy' ? this.fractionEnemy : this.fractionAlly;
       return fractions[idx];
     },
     getNickName() {
@@ -56,6 +55,8 @@ export default defineComponent({
       getAlliesPower: 'alliesPower',
       getEnemyPower: 'enemyPower',
       enemyHand: 'enemyHand',
+      fractionEnemy: 'fractionEnemy',
+      fractionAlly: 'fractionAlly',
     }),
     alliesPower(): number {
       this.setAlliesPower();

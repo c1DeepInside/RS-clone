@@ -3,10 +3,12 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
+import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
     hand: [] as Card[],
+    webSocket: {} as WebSocket,
     power: {
       enemy: {
         siege: 0,
@@ -23,51 +25,13 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    fraction: 0,
+    fractionAlly: 1 as IntRange<1, 4>,
+    fractionEnemy: 1 as IntRange<1, 4>,
     board: {
       enemy: {
-        siege: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 4,
-            quantity: 1,
-          },
-        ] as Card[],
-        range: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 8,
-            quantity: 1,
-          },
-        ] as Card[],
-        melee: [
-          {
-            id: 13,
-            name: 'Боец Синих Полосок',
-            type: 'usual',
-            image: 'src/assets/images/nor_blue_stripes.png',
-            description: 'Для Темерии я готов на все. Но обычно я для нее только убиваю.',
-            fractionId: 0,
-            ability: 'bond',
-            fieldType: ['melee'],
-            power: 10,
-            quantity: 1,
-          },
-        ] as Card[],
+        siege: [] as Card[],
+        range: [] as Card[],
+        melee: [] as Card[],
       },
       allies: {
         siege: [] as Card[],
@@ -114,206 +78,13 @@ export const useGameStore = defineStore('gameStore', {
     showDiscard: false,
     showHand: false,
     isMedic: false,
+    animateLeader: false,
     whoseDiscard: 'allies',
-    enemyNickName: 'kekov',
-    alliesNickName: 'lulzov',
+    enemyNickName: '',
+    alliesNickName: '',
     discard: {
-      enemy: [
-        {
-          id: 1,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-      ] as Card[],
-      allies: [
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 1,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 1,
-        },
-        {
-          id: 19,
-          name: 'Поддержка гавенкаров',
-          type: 'usual',
-          image: 'src/assets/images/sco_havekar_support_1.png',
-          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
-          fractionId: 2,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 4,
-          name: 'Ливень',
-          type: 'special',
-          image: 'src/assets/images/spc_rain.png',
-          description: 'В этом карю даже дождь смердит мочой.',
-          fractionId: null,
-          ability: 'rain',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Лекарь Бурой Хоругви',
-          type: 'usual',
-          image: 'src/assets/images/nor_banner_nurse.png',
-          description: 'Шейте красно с красным, желтое с желтым, белое с белым...',
-          fractionId: 3,
-          ability: 'medic',
-          fieldType: ['siege'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: 'Ясное небо',
-          type: 'special',
-          image: 'src/assets/images/spc_clearsky.png',
-          description: 'Дромил, солнце-то светит! Значит, и надежда есть...',
-          fractionId: null,
-          ability: 'clear',
-          fieldType: ['weather'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 12,
-          name: 'Командирский рог',
-          type: 'special',
-          image: 'src/assets/images/spc_horn.png',
-          description: 'Плюс один к морали, минус три к слуху.',
-          fractionId: null,
-          ability: 'horn',
-          fieldType: ['boost'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 2,
-          name: 'Цирилла',
-          type: 'hero',
-          image: 'src/assets/images/neutral_ciri.jpg',
-          description: 'Знаешь, когда сказки перестают быть сказками? Когда в них начинают верить.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 1,
-          name: 'Геральт из Ривии',
-          type: 'hero',
-          image: 'src/assets/images/neu_geralt.png',
-          description: 'Если надо выбирать между ожни злом и другим, я предпочитаю не выбирать.',
-          fractionId: null,
-          ability: null,
-          fieldType: ['melee'],
-          power: 15,
-          quantity: 1,
-        },
-        {
-          id: 78,
-          name: 'Чучело',
-          type: 'special',
-          image: 'src/assets/images/special_decoy.png',
-          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
-          fractionId: null,
-          ability: 'decoy',
-          fieldType: ['melee', 'range', 'siege'],
-          power: null,
-          quantity: 3,
-        },
-        {
-          id: 3,
-          name: 'Осадная башня',
-          type: 'usual',
-          image: 'src/assets/images/nor_siege_tower.png',
-          description: 'Башня на колесах... Чего только люди не удумают!',
-          fractionId: 0,
-          ability: null,
-          fieldType: ['siege'],
-          power: 6,
-          quantity: 1,
-        },
-        {
-          id: 15,
-          name: 'Поддержка гавенкаров',
-          type: 'usual',
-          image: 'src/assets/images/sco_havekar_support_2.png',
-          description: 'Я дерусь за тех, кто больше платит. Или за тех, у кого можно больше утащить.',
-          fractionId: 2,
-          ability: 'muster',
-          fieldType: ['melee'],
-          power: 5,
-          quantity: 1,
-        },
-        {
-          id: 9,
-          name: 'Талер',
-          type: 'usual',
-          image: 'src/assets/images/nor_thaler.png',
-          description: 'Я вам всем галаза на жопу натяну!',
-          fractionId: 0,
-          ability: 'spy',
-          fieldType: ['siege'],
-          power: 1,
-          quantity: 1,
-        },
-      ] as Card[],
+      enemy: [] as Card[],
+      allies: [] as Card[],
     },
     deck: {
       enemy: [] as Card[],
@@ -322,33 +93,34 @@ export const useGameStore = defineStore('gameStore', {
     leader: {
       enemy: {
         id: 1,
-        name: 'Фольтест Предводитель Севера',
+        name: 'Фольтест Король Темерии',
         type: 'leader',
         fieldType: [],
         power: null,
         quantity: 1,
-        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
         ability: null,
         fractionId: 0,
-        image: 'src/assets/images/realms_foltest_gold.jpg',
+        image: 'src/assets/images/realms_foltest_silver.jpg',
       } as Card,
       allies: {
-        id: 28,
-        name: 'Эредин Бреакк Глас Убийца Оберона',
+        id: 1,
+        name: 'Фольтест Король Темерии',
         type: 'leader',
         fieldType: [],
         power: null,
         quantity: 1,
-        description: 'Проклятая политика... Я доверяю только своему оружию.',
+        description: 'Родственная любовь? Что может быть прекраснее, чем сестра на коленях брата?',
         ability: null,
         fractionId: 0,
-        image: 'src/assets/images/realms_foltest_gold.jpg',
+        image: 'src/assets/images/realms_foltest_silver.jpg',
       } as Card,
     },
     lives: {
-      enemy: 1 as IntRange<0, 3>,
+      enemy: 2 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
     },
+    fromPageToPage: false,
   }),
   getters: {
     getEnemyHand(): Card[] {
@@ -426,6 +198,9 @@ export const useGameStore = defineStore('gameStore', {
         };
         this.board[`${type}Boost`][line].push(card);
       }
+    },
+    setAnimateLeader(isAnimate: boolean) {
+      this.animateLeader = isAnimate;
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
@@ -572,11 +347,34 @@ export const useGameStore = defineStore('gameStore', {
     setSelectedLeader(card: Card) {
       this.leader.allies = card;
     },
-    setFraction(value: number) {
-      this.fraction = value;
+    setFraction(value: IntRange<1, 4>) {
+      this.fractionAlly = value;
+    },
+    setWebSocket(token: string) {
+      this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
+    },
+    sendConnectInfo() {
+      this.webSocket.send(
+        JSON.stringify({
+          deck: this.deck.allies,
+          hand: this.hand,
+          name: this.alliesNickName,
+          leader: this.leader.allies,
+        })
+      );
+    },
+    setConnectInfo(data: ConnectInfo) {
+      this.enemyHand = data.hand;
+      this.deck.enemy = data.deck;
+      this.leader.enemy = data.leader;
+      this.enemyNickName = data.name;
+      this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
     },
     setAlliesNickName(value: string) {
       this.alliesNickName = value;
+    },
+    setFromPageToPage(param: boolean) {
+      this.fromPageToPage = param;
     },
   },
 });

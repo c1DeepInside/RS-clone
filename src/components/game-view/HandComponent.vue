@@ -1,7 +1,10 @@
 <template>
   <div
     :class="['click', { noclick: isShowSelectedCard === false }]"
-    @click="setIsShowSelected(false)"
+    @click="
+      setIsShowSelected(false);
+      backLeader();
+    "
     ref="clickField"
   ></div>
   <div class="board__hand">
@@ -31,6 +34,9 @@ export default defineComponent({
         this.setIsShowSelected(true);
       }, 240);
     },
+    backLeader() {
+      this.setAnimateLeader(false);
+    },
     startAnimate(event: Event) {
       const target = event.currentTarget as HTMLElement;
       target.style.transition = '0.5s';
@@ -52,6 +58,7 @@ export default defineComponent({
       removeFromHand: 'removeFromHand',
       addToLine: 'addToLine',
       removeFromLine: 'removeFromLine',
+      setAnimateLeader: 'setAnimateLeader',
     }),
   },
   computed: {
