@@ -294,6 +294,7 @@ export default defineComponent({
       alliesPassed: 'alliesPassed',
       fromPageToPage: 'fromPageToPage',
       animateLeader: 'animateLeader',
+      spyAnimation: 'spyAnimation',
     }),
     ...mapWritableState(useGameStore, {
       canMove: 'canMove',
@@ -339,7 +340,7 @@ export default defineComponent({
       </div>
     </div>
 
-    <div v-if="!canMove" class="block-game"></div>
+    <!-- <div v-if="!canMove" class="block-game"></div>-->
 
     <div class="game">
       <div class="game__players">
@@ -483,6 +484,10 @@ export default defineComponent({
       <CardInfoComponent :card="selectedCard" :layoutType="0" />
     </div>
 
+    <div v-if="spyAnimation.id" class="spy__animation__wrap" :class="spyAnimation.id ? 'spy__animation' : ''">
+      <CardInfoComponent :card="spyAnimation" :layoutType="0" />
+    </div>
+
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />
@@ -576,6 +581,28 @@ export default defineComponent({
 
     &:hover {
       opacity: 0.8;
+    }
+  }
+}
+
+.spy__animation__wrap {
+  position: absolute;
+  top: 44vw;
+  left: 90.7vw;
+  height: 6.5vw;
+  width: 4.5vw;
+  z-index: 2;
+}
+
+.spy__animation {
+  animation: 0.5s spyAnim;
+
+  @keyframes spyAnim {
+    0% {
+      transform: translate(0);
+    }
+    100% {
+      transform: translate(-40vw);
     }
   }
 }

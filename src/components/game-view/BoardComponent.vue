@@ -84,7 +84,7 @@ export default defineComponent({
     }),
     ...mapWritableState(useGameStore, {
       serverUpdates: 'serverUpdates',
-    })
+    }),
   },
   watch: {
     board: {
@@ -117,7 +117,7 @@ export default defineComponent({
       },
       deep: true,
     },
-  }
+  },
 });
 </script>
 

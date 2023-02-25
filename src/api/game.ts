@@ -1,7 +1,7 @@
-import type Card from "@/interfaces/card";
-import { InfoBarMessage, useGameStore } from "@/stores/GameStore";
-import { Fractions } from "@/utilits/cardBuildImgs";
-import type { IntRange } from "@/utilits/types";
+import type Card from '@/interfaces/card';
+import { InfoBarMessage, useGameStore } from '@/stores/GameStore';
+import { Fractions } from '@/utilits/cardBuildImgs';
+import type { IntRange } from '@/utilits/types';
 
 const URL = '45.67.35.28:8080';
 const TOKEN = localStorage.getItem('token');
@@ -10,17 +10,17 @@ const TOKEN = localStorage.getItem('token');
 // const TOKEN_2 = 'fb09ba9c2639adbca971d7526e596d39ad91b20e';
 
 export interface SessionInfo {
-  status: 'game_found' | 'enqueued',
+  status: 'game_found' | 'enqueued';
   session_info: {
-    uuid: string,
-    username: string,
-  }
+    uuid: string;
+    username: string;
+  };
 }
 
 export interface HandshakeData {
-  fractionID: IntRange<1, 5>,
-  leader: Card,
-  username: string,
+  fractionID: IntRange<1, 5>;
+  leader: Card;
+  username: string;
 }
 
 export function connectToServer(): Socket {
@@ -57,8 +57,8 @@ export enum SocketEvent {
 }
 
 export interface SocketMessage {
-  type: MessageType,
-  payload: any,
+  type: MessageType;
+  payload: any;
 }
 
 export class Socket {
@@ -75,29 +75,29 @@ export class Socket {
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = (...args) => {
-      console.log('connected')
+      console.log('connected');
       this.onConnection(...args);
-    }
+    };
 
     this.socket.onmessage = (message) => {
       console.log(message);
       this.onMessage(JSON.parse(message.data));
-    }
+    };
 
     this.socket.onerror = (...args) => {
-      console.log('error!', ...args)
+      console.log('error!', ...args);
       this.onError(...args);
-    }
+    };
 
-    this.socket.onclose = (...args) => {
-      console.log('closed!')
-    }
+    this.socket.onclose = () => {
+      console.log('closed!');
+    };
 
-    console.log('opened')
+    console.log('opened');
   }
 
   public addListener(event: SocketEvent, fn: SubFunction) {
-    console.log('added event')
+    console.log('added event');
     this.subscribers[event].push(fn);
   }
 
@@ -107,19 +107,19 @@ export class Socket {
   }
 
   public sendMessage(message: SocketMessage) {
-    this.socket?.send(JSON.stringify(message))
+    this.socket?.send(JSON.stringify(message));
   }
 
   private onConnection(...args: [Event]) {
-    this.subscribers[SocketEvent.CONNECTION].forEach(fn => fn(...args));
+    this.subscribers[SocketEvent.CONNECTION].forEach((fn) => fn(...args));
   }
 
   private onMessage(message: SocketMessage | SessionInfo) {
-    this.subscribers[SocketEvent.MESSAGE].forEach(fn => fn(message));
+    this.subscribers[SocketEvent.MESSAGE].forEach((fn) => fn(message));
   }
 
   private onError(...args: [Event]) {
-    this.subscribers[SocketEvent.ERROR].forEach(fn => fn(...args));
+    this.subscribers[SocketEvent.ERROR].forEach((fn) => fn(...args));
   }
 }
 
@@ -136,11 +136,11 @@ export class HostController {
     this.socket.sendMessage({
       type: MessageType.HANDSHAKE,
       payload: this.store.getHandshakeData(),
-    })
+    });
   }
 
   private onMessage(message: SocketMessage) {
-    console.log("host message!");
+    console.log('host message!');
     if (message.type === MessageType.HANDSHAKE) {
       this.determineTurn();
     }
@@ -161,9 +161,7 @@ export class HostController {
   }
 
   private isWinner(isEnemy: boolean): boolean {
-    const username = isEnemy 
-      ? this.store.$state.enemyNickName 
-      : this.store.$state.alliesNickName;
+    const username = isEnemy ? this.store.$state.enemyNickName : this.store.$state.alliesNickName;
     const winner = this.getUserWithBiggestScore();
 
     return username === winner;
@@ -186,9 +184,7 @@ export class HostController {
       return;
     }
 
-    const key = isEnemy
-      ? 'enemy'
-      : 'allies';
+    const key = isEnemy ? 'enemy' : 'allies';
 
     if (this.store.$state.lives[key] > 0) {
       const index = Math.floor(Math.random() * this.store.$state.deck[key].length);
@@ -207,7 +203,7 @@ export class HostController {
       this.socket.sendMessage({
         type: MessageType.NORTH_ABILITY_TRIGGERED,
         payload: {},
-      })
+      });
 
       // To update our hand on the opponent side
       this.sendResetGameState();
@@ -217,21 +213,17 @@ export class HostController {
   }
 
   private processMonstersAbility(isEnemy: boolean, callback: any) {
-    const key = isEnemy
-      ? 'enemy'
-      : 'allies';
+    const key = isEnemy ? 'enemy' : 'allies';
 
     type BoardField = 'siege' | 'melee' | 'range';
 
     // @ts-ignore
-    const fieldKeys: BoardField[] = Object.entries(
-      this.store.$state.stashedBoard[key]
-    ).reduce((acc: BoardField[], [key, value]: [BoardField, Card[]]) => {
-      return [
-        ...acc,
-        ...(value.length > 0 ? [key] : [])
-      ]
-    }, [] as BoardField[]);
+    const fieldKeys: BoardField[] = Object.entries(this.store.$state.stashedBoard[key]).reduce(
+      (acc: BoardField[], [key, value]: [BoardField, Card[]]) => {
+        return [...acc, ...(value.length > 0 ? [key] : [])];
+      },
+      [] as BoardField[]
+    );
 
     if (fieldKeys.length === 0) {
       callback();
@@ -239,7 +231,7 @@ export class HostController {
     }
 
     const fieldIndex = Math.floor(Math.random() * fieldKeys.length);
-    const lookupField = this.store.$state.stashedBoard[key][fieldKeys[fieldIndex]]
+    const lookupField = this.store.$state.stashedBoard[key][fieldKeys[fieldIndex]];
 
     if (this.store.$state.lives[key] > 0) {
       const index = Math.floor(Math.random() * lookupField.length);
@@ -250,12 +242,12 @@ export class HostController {
       });
       this.socket.sendMessage({
         type: MessageType.MONSTERS_ABILITY_TRIGGERED,
-        payload: {}
+        payload: {},
       });
 
       this.store.removeFromDiscard(card, isEnemy ? 'enemy' : 'allies');
       this.store.$state.board[key][fieldKeys[fieldIndex]].push(card);
-      
+
       this.sendResetGameState();
     } else {
       callback();
@@ -267,18 +259,14 @@ export class HostController {
       return null;
     }
 
-    return this.isWinner(false)
-      ? this.store.$state.alliesNickName
-      : this.store.$state.enemyNickName;
+    return this.isWinner(false) ? this.store.$state.alliesNickName : this.store.$state.enemyNickName;
   }
 
   // TODO: Fix typing
   public processFractionsAbility(isEnemy: boolean, isWinner: boolean, callback: any) {
-    const fraction = isEnemy
-      ? this.store.$state.fractionEnemy
-      : this.store.$state.fractionAlly;
+    const fraction = isEnemy ? this.store.$state.fractionEnemy : this.store.$state.fractionAlly;
 
-    switch(fraction) {
+    switch (fraction) {
       case Fractions.NORTHERN:
         this.processNorthAbility(isEnemy, isWinner, callback);
         break;
@@ -305,9 +293,9 @@ export class HostController {
         discard: {
           allies: this.store.$state.discard.enemy,
           enemy: this.store.$state.discard.allies,
-        }
-      }
-    })
+        },
+      },
+    });
 
     this.sendResetGameState();
   }
@@ -337,18 +325,16 @@ export class HostController {
           allies: deck.enemy,
           enemy: deck.allies,
         },
-      }
-    })
+      },
+    });
   }
 
   public sendRoundStart(canMove: boolean) {
     this.socket.sendMessage({
       type: MessageType.ROUND_START,
       payload: {
-        nextTurnUser: canMove
-          ? this.store.$state.alliesNickName
-          : this.store.$state.enemyNickName
-      }
+        nextTurnUser: canMove ? this.store.$state.alliesNickName : this.store.$state.enemyNickName,
+      },
     });
   }
 
@@ -357,35 +343,31 @@ export class HostController {
     const ally = this.store.$state.fractionAlly;
 
     const setRandomTurn = () => {
-      const player = Math.floor(Math.random() * 2) === 0 
-        ? this.store.$state.alliesNickName
-        : this.store.$state.enemyNickName;
+      const player =
+        Math.floor(Math.random() * 2) === 0 ? this.store.$state.alliesNickName : this.store.$state.enemyNickName;
 
       this.socket.sendMessage({
         type: MessageType.TURN_INFO,
         payload: {
           action: TurnInfoEnum.USER,
           username: player,
-        }
-      })
+        },
+      });
 
       if (player === this.store.$state.alliesNickName) {
         this.store.$state.canMove = true;
       }
 
       setTimeout(() => {
-        const message = this.store.$state.canMove
-          ? InfoBarMessage.alliesStart
-          : InfoBarMessage.enemyStart;
+        const message = this.store.$state.canMove ? InfoBarMessage.alliesStart : InfoBarMessage.enemyStart;
 
         this.store.showInfoBar(InfoBarMessage.roundStart, () => {
           this.store.showInfoBar(message, () => {
             this.store.$state.isShowExchangePanel = true;
           });
-        })
-      }, 1000)
-
-    }
+        });
+      }, 1000);
+    };
 
     if (enemy === Fractions.SCOIATAEL && ally == Fractions.SCOIATAEL) {
       setRandomTurn();
@@ -394,8 +376,8 @@ export class HostController {
         type: MessageType.TURN_INFO,
         payload: {
           action: TurnInfoEnum.SHOW_SELECTION,
-        }
-      })
+        },
+      });
     } else if (ally === Fractions.SCOIATAEL) {
       this.store.$state.isShowQuestion = true;
     } else {
@@ -418,7 +400,7 @@ export class ClientController {
     this.socket.sendMessage({
       type: MessageType.HANDSHAKE,
       payload: this.store.getHandshakeData(),
-    })
+    });
   }
 
   public sendTurnInfo() {
@@ -426,10 +408,8 @@ export class ClientController {
       type: MessageType.TURN_INFO,
       payload: {
         action: TurnInfoEnum.USER,
-        username: this.store.$state.canMove
-          ? this.store.$state.alliesNickName
-          : this.store.$state.enemyNickName
-      }
+        username: this.store.$state.canMove ? this.store.$state.alliesNickName : this.store.$state.enemyNickName,
+      },
     });
   }
 
@@ -445,8 +425,8 @@ export class ClientController {
           enemyBoost: board.alliesBoost,
           weather: board.weather,
         },
-      }
-    })
+      },
+    });
   }
 
   public sendDiscardChange() {
@@ -458,8 +438,8 @@ export class ClientController {
         discard: {
           enemy: discard.allies,
         },
-      }
-    })
+      },
+    });
   }
 
   public sendDeckChange() {
@@ -471,8 +451,8 @@ export class ClientController {
         deck: {
           enemy: deck.allies,
         },
-      }
-    })
+      },
+    });
   }
 
   public sendPassTurn() {
@@ -480,8 +460,8 @@ export class ClientController {
       type: MessageType.TURN_INFO,
       payload: {
         action: TurnInfoEnum.PASS,
-      }
-    })
+      },
+    });
   }
 
   public sendFinishTurn() {
@@ -489,8 +469,8 @@ export class ClientController {
       type: MessageType.TURN_INFO,
       payload: {
         action: TurnInfoEnum.ENDED,
-      }
-    })
+      },
+    });
   }
 
   private onMessage(message: SocketMessage) {
@@ -508,24 +488,21 @@ export class ClientController {
 
     if (message.type === MessageType.TURN_INFO) {
       if (message.payload.action === TurnInfoEnum.USER) {
-        this.store.$state.canMove = 
-          message.payload.username === this.store.$state.alliesNickName;
-        
-        const barMessage = this.store.$state.canMove
-          ? InfoBarMessage.alliesStart
-          : InfoBarMessage.enemyStart;
+        this.store.$state.canMove = message.payload.username === this.store.$state.alliesNickName;
+
+        const barMessage = this.store.$state.canMove ? InfoBarMessage.alliesStart : InfoBarMessage.enemyStart;
 
         this.store.showInfoBar(InfoBarMessage.roundStart, () => {
           this.store.showInfoBar(barMessage, () => {
             this.store.$state.isShowExchangePanel = true;
           });
-        })
+        });
       } else if (message.payload.action === TurnInfoEnum.SHOW_SELECTION) {
         this.store.$state.isShowQuestion = true;
       } else if (message.payload.action === TurnInfoEnum.ENDED) {
         this.store.showInfoBar(InfoBarMessage.alliesMove, () => {
           this.store.$state.canMove = true;
-        })
+        });
       } else if (message.payload.action === TurnInfoEnum.PASS) {
         this.store.showInfoBar(InfoBarMessage.enemyPassed, () => {
           this.store.$state.enemyPassed = true;
@@ -535,7 +512,7 @@ export class ClientController {
           } else {
             this.store.finishRound();
           }
-        })
+        });
       } else {
         throw Error('Unknown TurnInfo type!');
       }
@@ -549,7 +526,7 @@ export class ClientController {
       this.store.$state.board = {
         ...this.store.$state.board,
         ...message.payload.board,
-      }
+      };
     }
 
     if (message.type === MessageType.DECK_CHANGE) {
@@ -575,7 +552,7 @@ export class ClientController {
         deck: true,
         discard: true,
         board: true,
-      }
+      };
 
       this.store.$state.hand = message.payload.hand;
       this.store.$state.enemyHand = message.payload.enemyHand;
@@ -610,9 +587,7 @@ export class ClientController {
       const allies = this.store.$state.alliesNickName;
 
       this.store.showInfoBar(InfoBarMessage.roundStart, () => {
-        const action = nexTurnUser === allies
-          ? InfoBarMessage.alliesMove
-          : InfoBarMessage.enemyMove;
+        const action = nexTurnUser === allies ? InfoBarMessage.alliesMove : InfoBarMessage.enemyMove;
 
         this.store.showInfoBar(action, () => {
           this.store.$state.canMove = nexTurnUser === allies;

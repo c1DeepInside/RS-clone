@@ -3,9 +3,16 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
-import { ClientController, HostController, type HandshakeData, connectToServer, SocketEvent, type SessionInfo } from '@/api/game';
+import {
+  ClientController,
+  HostController,
+  type HandshakeData,
+  connectToServer,
+  SocketEvent,
+  type SessionInfo,
+} from '@/api/game';
 
-export enum InfoBarMessage { 
+export enum InfoBarMessage {
   roundStart = 'roundStart',
   loseRound = 'loseRound',
   drawRound = 'drawRound',
@@ -20,36 +27,61 @@ export enum InfoBarMessage {
   alliesMove = 'alliesMove',
   alliesWinRound = 'alliesWinRound',
   alliesPassed = 'alliesPassed',
-};
+}
 
 const clearedBoard = {
-    enemy: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    allies: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    enemyBoost: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    alliesBoost: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    weather: [] as Card[],
-}
+  enemy: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  allies: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  enemyBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  alliesBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  weather: [] as Card[],
+};
 import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
-    hand: [] as Card[],
+    hand: [
+      {
+        id: 1,
+        name: 'Таинственный эльф',
+        type: 'hero',
+        image: 'src/assets/images/neu_avallach.png',
+        description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+        fractionId: null,
+        ability: 'spy',
+        fieldType: ['melee'],
+        power: 0,
+        quantity: 1,
+      },
+      {
+        id: 2,
+        name: 'Таинственный',
+        type: 'hero',
+        image: 'src/assets/images/neu_avallach.png',
+        description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+        fractionId: null,
+        ability: 'spy',
+        fieldType: ['melee'],
+        power: 0,
+        quantity: 1,
+      },
+    ] as Card[],
     handsShaked: false,
     host: null as HostController | null,
     client: null as ClientController | null,
@@ -118,6 +150,7 @@ export const useGameStore = defineStore('gameStore', {
     showHand: false,
     isMedic: false,
     animateLeader: false,
+    spyAnimation: {} as Card,
     whoseDiscard: 'allies',
     enemyNickName: 'Loading...',
     alliesNickName: localStorage.getItem('username') || 'Loading...',
@@ -126,8 +159,58 @@ export const useGameStore = defineStore('gameStore', {
       allies: [] as Card[],
     },
     deck: {
-      enemy: [] as Card[],
-      allies: [] as Card[],
+      enemy: [
+        {
+          id: 1,
+          name: 'Таинственный эльф',
+          type: 'hero',
+          image: 'src/assets/images/neu_avallach.png',
+          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+          fractionId: null,
+          ability: 'spy',
+          fieldType: ['melee'],
+          power: 0,
+          quantity: 1,
+        },
+      ] as Card[],
+      allies: [
+        {
+          id: 1,
+          name: 'Таинственный эльф',
+          type: 'hero',
+          image: 'src/assets/images/neu_avallach.png',
+          description: 'Предсказывать не сложно. Искусство в том, чтобы предсказывать точно.',
+          fractionId: null,
+          ability: 'spy',
+          fieldType: ['melee'],
+          power: 0,
+          quantity: 1,
+        },
+        {
+          id: 2,
+          name: 'Чучело',
+          type: 'special',
+          image: 'src/assets/images/spc_dummy.png',
+          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
+          fractionId: null,
+          ability: 'decoy',
+          fieldType: ['melee', 'range', 'siege'],
+          power: null,
+          quantity: 3,
+        },
+        {
+          id: 2,
+          name: 'Чучело',
+          type: 'special',
+          image: 'src/assets/images/spc_dummy.png',
+          description: 'Пусть стреляют по крестьянам. А нет крестьян - поставьте чучела.',
+          fractionId: null,
+          ability: 'decoy',
+          fieldType: ['melee', 'range', 'siege'],
+          power: null,
+          quantity: 3,
+        },
+      ] as Card[],
     },
     leader: {
       enemy: {
@@ -323,7 +406,11 @@ export const useGameStore = defineStore('gameStore', {
       if (card.ability === 'spy') {
         const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
         const newCardsHand = deck.splice(-2, 2);
-        type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
+        this.spyAnimation = newCardsHand[0];
+        setTimeout(() => {
+          type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
+          this.spyAnimation = {} as Card;
+        }, 500);
       }
     },
     musterAbility(card: Card, line: cardLineType, isAllies: boolean, isCards: boolean) {
@@ -424,7 +511,7 @@ export const useGameStore = defineStore('gameStore', {
         fractionID: this.fractionAlly,
         leader: this.leader.allies,
         username: this.alliesNickName,
-      }
+      };
     },
     setHandShakeData(data: HandshakeData) {
       this.fractionEnemy = data.fractionID;
@@ -452,7 +539,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     clearBoard() {
       if (!this.host) {
-        throw Error('Only host can clear the board!')
+        throw Error('Only host can clear the board!');
       }
 
       this.stashedBoard = JSON.parse(JSON.stringify(this.board));
@@ -461,35 +548,27 @@ export const useGameStore = defineStore('gameStore', {
       const fieldTypes: BoardType[] = ['siege', 'melee', 'range'];
 
       this.discard.allies = [
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.allies[fieldType]]
-        ), [] as Card[]),
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.alliesBoost[fieldType]]
-        ), [] as Card[])
-      ]
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.allies[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.alliesBoost[fieldType]], [] as Card[]),
+      ];
 
       this.discard.enemy = [
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.enemy[fieldType]]
-        ), [] as Card[]),
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.enemyBoost[fieldType]]
-        ), [] as Card[])
-      ]
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemy[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemyBoost[fieldType]], [] as Card[]),
+      ];
 
       this.board = JSON.parse(JSON.stringify(clearedBoard));
     },
     finishRound() {
       if (!this.host) {
-        throw Error('Only host can finish round!')
+        throw Error('Only host can finish round!');
       }
 
       this.clearBoard();
       const winner = this.host.getRoundWinner();
 
       let isNextMove = Math.random() < 0.5;
-      
+
       let infoBarMessage = InfoBarMessage.drawRound;
       if (winner === this.alliesNickName) {
         isNextMove = true;
@@ -513,21 +592,17 @@ export const useGameStore = defineStore('gameStore', {
               this.alliesPassed = false;
 
               this.host?.sendRoundStart(isNextMove);
-              const action = isNextMove
-                ? InfoBarMessage.alliesMove
-                : InfoBarMessage.enemyMove;
+              const action = isNextMove ? InfoBarMessage.alliesMove : InfoBarMessage.enemyMove;
 
               this.showInfoBar(action, () => {
                 this.canMove = isNextMove;
-              })
-
+              });
             } else {
               // TODO: Handle the of the Game
             }
           });
         });
-      })
-
+      });
     },
     finishTurn() {
       if (this.hand.length === 0) {
@@ -561,13 +636,13 @@ export const useGameStore = defineStore('gameStore', {
 
           // socket.removeListener(SocketEvent.MESSAGE, onmessage);
         }
-      }
+      };
 
       socket.addListener(SocketEvent.MESSAGE, (message) => {
         onmessage(message);
-      })
+      });
 
       socket.open();
-    }
+    },
   },
 });
