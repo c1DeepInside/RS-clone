@@ -443,6 +443,7 @@ export class ClientController {
         board: {
           enemy: board.allies,
           enemyBoost: board.alliesBoost,
+          allies: board.enemy,
           weather: board.weather,
         },
       }
@@ -457,6 +458,7 @@ export class ClientController {
       payload: {
         discard: {
           enemy: discard.allies,
+          allies: discard.enemy,
         },
       }
     })

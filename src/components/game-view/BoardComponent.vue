@@ -7,6 +7,8 @@ import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
+import { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
+
 export default defineComponent({
   data() {
     return {
@@ -53,11 +55,18 @@ export default defineComponent({
         this.setIsShowSelected(false);
         setTimeout(() => {
           this.addToLine(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
-          this.finishTurn();
           if (this.selectedCard.ability === 'scorch') {
             this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
           }
           this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
+
+          const canFinishOnMedic = 
+            this.selectedCard.ability === 'medic'
+            && this.discard.allies.length === 0;
+
+          if (this.selectedCard.ability !== 'medic' || canFinishOnMedic) {
+            this.finishTurn();
+          }
         }, 400);
       }
     },
@@ -78,12 +87,15 @@ export default defineComponent({
   computed: {
     ...mapState(useGameStore, {
       board: 'board',
+      discard: 'discard',
       client: 'client',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
+      canMove: 'canMove',
     }),
     ...mapWritableState(useGameStore, {
       serverUpdates: 'serverUpdates',
+      isMedic: 'isMedic',
     })
   },
   watch: {

@@ -52,6 +52,7 @@ export default defineComponent({
         const isSpy = card.ability !== 'spy';
         const fieldType = card.fieldType.join() as cardLineType;
         this.addToLine(card, fieldType, isSpy, true);
+        this.finishTurn();
         this.setMedic(true);
       } else {
         this.setMedic(false);
