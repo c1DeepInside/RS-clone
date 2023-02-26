@@ -1,4 +1,6 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
+import { mapWritableState } from 'pinia';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -19,12 +21,28 @@ export default defineComponent({
       this.$emit('update:showEnd', this.showEnd);
     },
   },
+  computed: {
+    endGameClass(): string {
+      if (this.lives.allies > this.lives.enemy) {
+        return 'end-win';
+      }
+
+      if (this.lives.allies < this.lives.enemy) {
+        return 'end-lose';
+      }
+
+      return 'end-draw';
+    },
+    ...mapWritableState(useGameStore, {
+      lives: 'lives',
+    }),
+  },
 });
 </script>
 
 <template>
   <div :class="['end', { 'end-true': isEnd }]">
-    <div class="end__img end-lose"></div>
+    <div class="end__img" :class="endGameClass"></div>
     <table class="end__table table">
       <thead>
         <tr>

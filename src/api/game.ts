@@ -41,6 +41,7 @@ export enum MessageType {
   NORTH_ABILITY_TRIGGERED = 'north_ability',
   NILFGARD_ABILITY_TRIGGERED = 'nilfgard_ability',
   MONSTERS_ABILITY_TRIGGERED = 'monsters_ability',
+  GAME_END = 'game_end',
 }
 
 export enum TurnInfoEnum {
@@ -137,6 +138,20 @@ export class HostController {
       type: MessageType.HANDSHAKE,
       payload: this.store.getHandshakeData(),
     })
+  }
+
+  public sendGameEnd() {
+    const lives = this.store.$state.lives
+
+    this.socket.sendMessage({
+      type: MessageType.GAME_END,
+      payload: {
+        lives: {
+          allies: lives.enemy,
+          enemy: lives.allies,
+        },
+      },
+    });
   }
 
   private onMessage(message: SocketMessage) {
@@ -620,6 +635,13 @@ export class ClientController {
           this.store.$state.canMove = nexTurnUser === allies;
         });
       });
+    }
+
+    if (message.type === MessageType.GAME_END) {
+      this.store.$state.lives = message.payload.lives;
+
+      this.store.$state.isEnd = true;
+      this.store.$state.canMove = false;
     }
 
     if (message.type === MessageType.NORTH_ABILITY_TRIGGERED) {

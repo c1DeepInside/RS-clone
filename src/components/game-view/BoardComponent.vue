@@ -7,8 +7,6 @@ import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 
-import { diff, addedDiff, deletedDiff, updatedDiff, detailedDiff } from 'deep-object-diff';
-
 export default defineComponent({
   data() {
     return {

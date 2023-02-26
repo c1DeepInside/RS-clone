@@ -49,6 +49,7 @@ import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
+    isEnd: false,
     hand: [] as Card[],
     handsShaked: false,
     host: null as HostController | null,
@@ -522,7 +523,9 @@ export const useGameStore = defineStore('gameStore', {
               })
 
             } else {
-              // TODO: Handle the of the Game
+              this.canMove = false;
+              this.isEnd = true;
+              this.host?.sendGameEnd();
             }
           });
         });

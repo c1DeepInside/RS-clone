@@ -21,7 +21,6 @@ export default defineComponent({
   data() {
     return {
       isGiveUpAnimation: false,
-      isEnd: false,
       timer: 0,
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
@@ -97,6 +96,7 @@ export default defineComponent({
       });
     },
     showEndGame() {
+      // TODO: Work on give up feature
       this.isGiveUpAnimation = true;
       this.timer = setTimeout(() => {
         this.isEnd = !this.isEnd;
@@ -301,6 +301,7 @@ export default defineComponent({
     }),
     ...mapWritableState(useGameStore, {
       canMove: 'canMove',
+      isEnd: 'isEnd',
       isShowExchangePanel: 'isShowExchangePanel',
       isShowQuestion: 'isShowQuestion',
     }),
