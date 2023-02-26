@@ -86,6 +86,7 @@ export default defineComponent({
     ...mapState(useGameStore, {
       board: 'board',
       discard: 'discard',
+      deck: 'deck',
       client: 'client',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
