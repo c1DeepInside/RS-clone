@@ -184,15 +184,37 @@ export class HostController {
     return username === winner;
   }
 
-  private processNilfgardAbility(isEnemy: boolean): boolean {
-    // TODO: Check if it's the last round
-    const winner = this.getUserWithBiggestScore();
-
-    if (!winner) {
-      return true;
+  private processNilfgardAbility(isEnemy: boolean, isWinner: boolean, callback: any) {
+    if (isWinner) {
+      callback();
+      return;
     }
 
-    return this.isWinner(isEnemy);
+    const lives = this.store.$state.lives;
+
+    if (lives.enemy === 0 && lives.allies === 0) {
+      if (isEnemy) {
+        lives.enemy += 1;
+      } else {
+        lives.allies += 1;
+      }
+
+      this.socket.sendMessage({
+        type: MessageType.NILFGARD_ABILITY_TRIGGERED,
+        payload: {
+          lives: {
+            allies: lives.enemy,
+            enemy: lives.allies,
+          },
+        },
+      });
+
+      this.store.showInfoBar(InfoBarMessage.nilfgard, () => {
+        callback();
+      });
+    } else {
+      callback();
+    }
   }
 
   private processNorthAbility(isEnemy: boolean, isWinner: boolean, callback: any) {
@@ -301,7 +323,7 @@ export class HostController {
         this.processMonstersAbility(isEnemy, callback);
         break;
       case Fractions.NILFGAARD:
-        this.processNilfgardAbility(isEnemy);
+        this.processNilfgardAbility(isEnemy, isWinner, callback);
         break;
       default:
         break;
@@ -650,6 +672,11 @@ export class ClientController {
 
     if (message.type === MessageType.MONSTERS_ABILITY_TRIGGERED) {
       this.store.showInfoBar(InfoBarMessage.monsters);
+    }
+
+    if (message.type === MessageType.NILFGARD_ABILITY_TRIGGERED) {
+      this.store.$state.lives = message.payload.lives;
+      this.store.showInfoBar(InfoBarMessage.nilfgard);
     }
   }
 }

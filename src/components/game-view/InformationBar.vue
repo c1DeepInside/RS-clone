@@ -1,21 +1,13 @@
 <script lang="ts">
 import { useGameStore } from '@/stores/GameStore';
 import { mapState } from 'pinia';
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   data() {
     return {}
   },
-  // props: {
-  //   // barType: {
-  //   //   type: Object as PropType<BarType>,
-  //   //   default: BarType.alliesStart,
-  //   // },
-  // },
   computed: {
-    //хранить ходы
-    //если 0 и canMove то BarType
     ...mapState(useGameStore, {
       infoBarMessage: 'infoBarMessage'
     }),
@@ -170,6 +162,14 @@ export default defineComponent({
 
       &::after {
         content: 'Вы выиграли раунд!';
+      }
+    }
+
+    &-nilfgard {
+      background-image: url('@/assets/images/board_win_round.png');
+
+      &::after {
+        content: 'Из-за умений фракции, Нильфгаард выходит из ничьей победителем';
       }
     }
 

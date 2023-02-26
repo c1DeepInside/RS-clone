@@ -11,6 +11,7 @@ export enum InfoBarMessage {
   drawRound = 'drawRound',
   north = 'north',
   monsters = 'monsters',
+  nilfgard = 'nilfgard',
   scoiatael = 'scoiatael',
   enemyMove = 'enemyMove',
   enemyStart = 'enemyStart',
