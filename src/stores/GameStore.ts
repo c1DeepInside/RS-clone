@@ -3,6 +3,7 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
+import router from '@/router';
 import { ClientController, HostController, type HandshakeData, connectToServer, SocketEvent, type SessionInfo } from '@/api/game';
 
 export enum InfoBarMessage { 
@@ -398,23 +399,6 @@ export const useGameStore = defineStore('gameStore', {
     setWebSocket(token: string) {
       this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
     },
-    sendConnectInfo() {
-      this.webSocket.send(
-        JSON.stringify({
-          deck: this.deck.allies,
-          hand: this.hand,
-          name: this.alliesNickName,
-          leader: this.leader.allies,
-        })
-      );
-    },
-    setConnectInfo(data: ConnectInfo) {
-      this.enemyHand = data.hand;
-      this.deck.enemy = data.deck;
-      this.leader.enemy = data.leader;
-      this.enemyNickName = data.name;
-      this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
-    },
     setAlliesNickName(value: string) {
       this.alliesNickName = value;
     },
@@ -484,7 +468,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     finishRound() {
       if (!this.host) {
-        throw Error('Only host can finish round!')
+        throw Error('Only host can finish the round!')
       }
 
       this.clearBoard();
@@ -549,19 +533,27 @@ export const useGameStore = defineStore('gameStore', {
       this.showInfoBar(InfoBarMessage.enemyMove);
     },
     connect() {
-      const socket = connectToServer();
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw Error('No token found!');
+      }
+
+      const socket = connectToServer(token);
       this.client = new ClientController(socket);
 
       const onmessage = (message: SessionInfo) => {
         if (message?.status === 'enqueued') {
-          console.log('host created');
           this.host = new HostController(socket);
         }
 
         if (message?.status === 'game_found') {
+          this.fromPageToPage = true;
+
           if (this.host) {
             this.host.initiateHandshake();
           }
+          router.push('/game');
 
           // socket.removeListener(SocketEvent.MESSAGE, onmessage);
         }

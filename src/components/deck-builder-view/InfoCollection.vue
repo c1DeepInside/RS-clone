@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import type { IntRange } from '@/utilits/types';
 import type { UserCard } from '@/interfaces/cardAPI';
 import { updateUserCards } from '@/api/deckAPI';
-import router from '@/router';
 
 export default defineComponent({
   data() {
@@ -62,21 +61,6 @@ export default defineComponent({
           break;
       }
     },
-    // TODO: Change
-    listenSocket() {
-      this.webSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.status === 'game_found') {
-          this.isGameFind = true;
-          this.sendConnectInfo();
-        }
-        if (data.deck) {
-          this.setConnectInfo(data);
-          this.setFromPageToPage(true);
-          router.push('/game');
-        }
-      };
-    },
     async startGame() {
       this.changeCurrentLeader();
       if (Object.keys(this.currentLeader).length === 0) {
@@ -85,15 +69,20 @@ export default defineComponent({
         ) as Card;
         this.changeFractionLeader(this.currentLeader);
       }
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw Error('No token found!');
+      }
+
       const checkCards = this.deckInformation.find((item) => item.error === true);
       if (!checkCards) {
         this.setFraction(this.currentFraction as IntRange<1, 4>);
         this.setSelectedLeader(this.currentLeader);
         this.parseDeck(this.selectedCards);
-        await updateUserCards(this.cardsForAPI, localStorage.getItem('token')!);
-        this.setWebSocket(localStorage.getItem('token')!);
-        this.listenSocket();
+        await updateUserCards(this.cardsForAPI, token);
         this.isShowSearch = true;
+        this.connect();
       }
     },
     parseDeck(cards: Card[]): Card[] {
@@ -128,9 +117,8 @@ export default defineComponent({
       setHand: 'setHand',
       setDiscard: 'setDiscard',
       setWebSocket: 'setWebSocket',
-      sendConnectInfo: 'sendConnectInfo',
-      setConnectInfo: 'setConnectInfo',
       setFromPageToPage: 'setFromPageToPage',
+      connect: 'connect',
     }),
   },
   computed: {

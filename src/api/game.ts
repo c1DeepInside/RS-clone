@@ -4,10 +4,6 @@ import { Fractions } from "@/utilits/cardBuildImgs";
 import type { IntRange } from "@/utilits/types";
 
 const URL = '45.67.35.28:8080';
-const TOKEN = localStorage.getItem('token');
-
-// const TOKEN = '0016f14892064fae90c95b2157e8e64e6b8a953a';
-// const TOKEN_2 = 'fb09ba9c2639adbca971d7526e596d39ad91b20e';
 
 export interface SessionInfo {
   status: 'game_found' | 'enqueued',
@@ -23,8 +19,8 @@ export interface HandshakeData {
   username: string,
 }
 
-export function connectToServer(): Socket {
-  return new Socket(`ws://${URL}/ws/game/?token=${TOKEN}`);
+export function connectToServer(token: string): Socket {
+  return new Socket(`ws://${URL}/ws/game/?token=${token}`);
 }
 
 type SubFunction = (...args: any) => any;
