@@ -47,7 +47,6 @@ const clearedBoard = {
     },
     weather: [] as Card[],
 }
-import type { ConnectInfo } from '@/interfaces/cardAPI';
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -82,6 +81,7 @@ export const useGameStore = defineStore('gameStore', {
     isShowInfoBar: false,
     isShowExchangePanel: false,
     isShowQuestion: false,
+    isShowSearch: false,
     serverUpdates: {
       deck: false,
       discard: false,
@@ -531,6 +531,24 @@ export const useGameStore = defineStore('gameStore', {
       this.canMove = false;
       this.client?.sendFinishTurn();
       this.showInfoBar(InfoBarMessage.enemyMove);
+    },
+    disconnect() {
+      this.host?.disconnect();
+      this.client?.disconnect();
+
+      this.host = null;
+      this.client = null;
+
+      this.alliesPassed = false;
+      this.enemyPassed = false;
+
+      this.lives.allies = 2;
+      this.lives.enemy = 2;
+
+      this.fromPageToPage = true;
+      router.push('/deck');
+
+      this.isEnd = false;
     },
     connect() {
       const token = localStorage.getItem('token');

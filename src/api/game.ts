@@ -93,6 +93,10 @@ export class Socket {
     console.log('opened')
   }
 
+  public close() {
+    this.socket?.close();
+  }
+
   public addListener(event: SocketEvent, fn: SubFunction) {
     console.log('added event')
     this.subscribers[event].push(fn);
@@ -120,10 +124,19 @@ export class Socket {
   }
 }
 
-export class HostController {
+class SocketWrapper {
+  constructor(protected socket: Socket) {}
+
+  public disconnect() {
+    this.socket.close();
+  }
+}
+
+export class HostController extends SocketWrapper {
   private store = useGameStore();
 
-  constructor(private socket: Socket) {
+  constructor(socket: Socket) {
+    super(socket);
     this.socket.addListener(SocketEvent.MESSAGE, (message) => {
       this.onMessage(message);
     });
@@ -437,10 +450,11 @@ export class HostController {
   }
 }
 
-export class ClientController {
+export class ClientController extends SocketWrapper {
   private store = useGameStore();
 
-  constructor(private socket: Socket) {
+  constructor(socket: Socket) {
+    super(socket);
     this.socket.addListener(SocketEvent.MESSAGE, (message) => {
       this.onMessage(message);
     });
@@ -538,6 +552,7 @@ export class ClientController {
 
         this.sendDeckChange();
         this.sendDiscardChange();
+        this.sendBoardChange();
       }
     }
 

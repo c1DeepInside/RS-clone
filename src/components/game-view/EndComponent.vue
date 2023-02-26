@@ -1,6 +1,6 @@
 <script lang="ts">
 import { useGameStore } from '@/stores/GameStore';
-import { mapWritableState } from 'pinia';
+import { mapWritableState, mapState, mapActions } from 'pinia';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -16,10 +16,13 @@ export default defineComponent({
     };
   },
   methods: {
-    showEndGame() {
-      this.showEnd = false;
-      this.$emit('update:showEnd', this.showEnd);
+    changeDeck() {
+      this.isShowSearch = false;
+      this.disconnect();
     },
+    ...mapActions(useGameStore, {
+      disconnect: 'disconnect',
+    }),
   },
   computed: {
     endGameClass(): string {
@@ -33,8 +36,11 @@ export default defineComponent({
 
       return 'end-draw';
     },
-    ...mapWritableState(useGameStore, {
+    ...mapState(useGameStore, {
       lives: 'lives',
+    }),
+    ...mapWritableState(useGameStore, {
+      isShowSearch: 'isShowSearch',
     }),
   },
 });
@@ -68,8 +74,8 @@ export default defineComponent({
       </tbody>
     </table>
     <div class="end__btns">
-      <button class="btn-game end__btn">Изменить</button>
-      <button class="btn-game end__btn" @click="showEndGame">Повторить</button>
+      <button class="btn-game end__btn" @click="changeDeck">Изменить</button>
+      <button class="btn-game end__btn" @click="changeDeck">Повторить</button>
     </div>
   </div>
 </template>

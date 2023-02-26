@@ -3,7 +3,7 @@ import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
-import { mapActions, mapState } from 'pinia';
+import { mapActions, mapState, mapWritableState } from 'pinia';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -20,7 +20,6 @@ export default defineComponent({
       currentLeaderNilfgaard: {} as Card,
       currentLeaderScoiatel: {} as Card,
       currentLeaderMonsters: {} as Card,
-      isShowSearch: false,
       isGameFind: false,
     };
   },
@@ -124,6 +123,9 @@ export default defineComponent({
   computed: {
     ...mapState(useGameStore, {
       webSocket: 'webSocket',
+    }),
+    ...mapWritableState(useGameStore, {
+      isShowSearch: 'isShowSearch',
     }),
     deckInformation() {
       return [
