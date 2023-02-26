@@ -151,27 +151,35 @@ export default defineComponent({
           break;
         case 'Фольтест Железный Владыка':
           this.putLineScorch('siege', 'enemy');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Королева Дол Блатанны':
           this.putLineScorch('range', 'enemy');
+          this.finishTurn();
           break;
         case 'Фольтест Завоеватель':
           this.putLineBoost('siege', 'allies');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Прекраснейшая':
           this.putLineBoost('range', 'allies');
+          this.finishTurn();
           break;
         case 'Эредин Бреакк Глас Командир Дикой Охоты':
           this.putLineBoost('melee', 'allies');
+          this.finishTurn();
           break;
         case 'Фольтест Король Темерии':
           this.getWeatherFromDeck('fog');
+          this.finishTurn();
           break;
         case 'Эмгыр вар Эмрейс Йож из Эрленвальда':
           this.getWeatherFromDeck('rain');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Истинная эльфка':
           this.getWeatherFromDeck('frost');
+          this.finishTurn();
           break;
         case 'Эредин Бреакк Глас Владыка Тир на Лиа':
           this.exchangeLeaderAbility();
@@ -191,7 +199,6 @@ export default defineComponent({
         default:
       }
       this.leader.allies.quantity = 0;
-      this.finishTurn();
     },
     exchangeLeaderAbility() {
       this.setShowHand(true);
