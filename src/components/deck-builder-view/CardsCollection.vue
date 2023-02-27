@@ -202,8 +202,8 @@ export default defineComponent({
 .card {
   box-sizing: border-box;
   position: relative;
-  width: 9.65vw;
-  height: 18vw;
+  width: 9.6vw;
+  height: 17.95vw;
   border-radius: 1vw;
 
   &:hover {
