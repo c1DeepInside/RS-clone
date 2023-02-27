@@ -38,6 +38,8 @@ export default defineComponent({
     },
     ...mapState(useGameStore, {
       lives: 'lives',
+      enemyNickName: 'enemyNickName',
+      alliesNickName: 'alliesNickName',
     }),
     ...mapWritableState(useGameStore, {
       isShowSearch: 'isShowSearch',
@@ -60,13 +62,13 @@ export default defineComponent({
       </thead>
       <tbody class="table__body">
         <tr>
-          <th class="table__header">Player 1</th>
+          <th class="table__header">{{ enemyNickName }}</th>
           <td class="table__td">0</td>
           <td class="table__td">0</td>
           <td class="table__td">0</td>
         </tr>
         <tr>
-          <th class="table__header">Player 2</th>
+          <th class="table__header">{{ alliesNickName }}</th>
           <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
           <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
           <td class="table__td">0</td>

@@ -166,7 +166,7 @@ export default defineComponent({
     }
 
     &-nilfgard {
-      background-image: url('@/assets/images/board_win_round.png');
+      background-image: url('@/assets/images/notif_skellige.png');
 
       &::after {
         content: 'Из-за умений фракции, Нильфгаард выходит из ничьей победителем';
