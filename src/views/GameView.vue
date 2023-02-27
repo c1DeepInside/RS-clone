@@ -525,7 +525,7 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 50;
+  z-index: 101;
 
   &__popup {
     position: absolute;
