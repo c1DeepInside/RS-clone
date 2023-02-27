@@ -82,7 +82,6 @@ export class Socket {
     this.socket.onerror = (...args) => {
       this.onError(...args);
     };
-
   }
 
   public close() {
