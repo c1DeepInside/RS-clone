@@ -78,6 +78,7 @@ export default defineComponent({
         this.removeFromDiscard(card, 'enemy');
       }
       this.addToHand([card]);
+      this.finishTurn();
     },
     onWeatherDeck(card: Card) {
       this.addToWeather(card);

@@ -420,6 +420,11 @@ export const useGameStore = defineStore('gameStore', {
       this.fractionEnemy = data.fractionID;
       this.leader.enemy = data.leader;
       this.enemyNickName = data.username;
+
+      if (data.leader.name === 'Эмгыр вар Эмрейс Белое Пламя') {
+        this.leader.allies.quantity = 0;
+        this.leader.enemy.quantity = 0;
+      }
     },
     showInfoBar(message: InfoBarMessage, callback: () => any = () => {}) {
       this.infoBarMessage = message;
