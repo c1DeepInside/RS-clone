@@ -400,7 +400,7 @@ export default defineComponent({
         <button @click="commitPass" class="btn-game game__pass">Спасовать</button>
 
         <div class="game__player game__player-2 player" :class="{ 'game__player-active' : canMove}">
-          <PlayerComponent :player-type="playerType.ally" :isPass="true" />
+          <PlayerComponent :player-type="playerType.ally" />
         </div>
 
         <div class="game__leader game__leader-2">
