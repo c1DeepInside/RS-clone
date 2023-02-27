@@ -323,12 +323,12 @@ export default defineComponent({
 .second_fog {
   background: url('src/assets/images/fog.png');
   opacity: 0.25;
-  animation: fogAnimation 80s linear 0s infinite;
+  animation: fogAnimation 80s linear infinite;
 }
 
 .first_fog {
   background: url('src/assets/images/fog.png');
-  animation: fogAnimation2 80s linear 0s infinite;
+  animation: fogAnimation2 80s linear infinite;
   opacity: 0.25;
 }
 

@@ -84,6 +84,7 @@ export default defineComponent({
       this.addToWeather(card);
       this.removeFromDeck('allies', card);
       this.isShowWeatherDeck = false;
+      this.finishTurn();
     },
     onDeckToHand(card: Card) {
       this.removeFromDeck('allies', card);
