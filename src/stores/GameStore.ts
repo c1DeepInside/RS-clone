@@ -4,9 +4,16 @@ import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
 import router from '@/router';
-import { ClientController, HostController, type HandshakeData, connectToServer, SocketEvent, type SessionInfo } from '@/api/game';
+import {
+  ClientController,
+  HostController,
+  type HandshakeData,
+  connectToServer,
+  SocketEvent,
+  type SessionInfo,
+} from '@/api/game';
 
-export enum InfoBarMessage { 
+export enum InfoBarMessage {
   roundStart = 'roundStart',
   loseRound = 'loseRound',
   drawRound = 'drawRound',
@@ -22,31 +29,31 @@ export enum InfoBarMessage {
   alliesMove = 'alliesMove',
   alliesWinRound = 'alliesWinRound',
   alliesPassed = 'alliesPassed',
-};
+}
 
 const clearedBoard = {
-    enemy: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    allies: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    enemyBoost: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    alliesBoost: {
-      siege: [] as Card[],
-      range: [] as Card[],
-      melee: [] as Card[],
-    },
-    weather: [] as Card[],
-}
+  enemy: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  allies: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  enemyBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  alliesBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  weather: [] as Card[],
+};
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
@@ -410,7 +417,7 @@ export const useGameStore = defineStore('gameStore', {
         fractionID: this.fractionAlly,
         leader: this.leader.allies,
         username: this.alliesNickName,
-      }
+      };
     },
     setHandShakeData(data: HandshakeData) {
       this.fractionEnemy = data.fractionID;
@@ -438,7 +445,7 @@ export const useGameStore = defineStore('gameStore', {
     },
     clearBoard() {
       if (!this.host) {
-        throw Error('Only host can clear the board!')
+        throw Error('Only host can clear the board!');
       }
 
       this.stashedBoard = JSON.parse(JSON.stringify(this.board));
@@ -447,35 +454,27 @@ export const useGameStore = defineStore('gameStore', {
       const fieldTypes: BoardType[] = ['siege', 'melee', 'range'];
 
       this.discard.allies = [
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.allies[fieldType]]
-        ), [] as Card[]),
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.alliesBoost[fieldType]]
-        ), [] as Card[])
-      ]
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.allies[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.alliesBoost[fieldType]], [] as Card[]),
+      ];
 
       this.discard.enemy = [
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.enemy[fieldType]]
-        ), [] as Card[]),
-        ...fieldTypes.reduce((acc, fieldType) => (
-          [...acc, ...this.board.enemyBoost[fieldType]]
-        ), [] as Card[])
-      ]
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemy[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemyBoost[fieldType]], [] as Card[]),
+      ];
 
       this.board = JSON.parse(JSON.stringify(clearedBoard));
     },
     finishRound() {
       if (!this.host) {
-        throw Error('Only host can finish the round!')
+        throw Error('Only host can finish the round!');
       }
 
       this.clearBoard();
       const winner = this.host.getRoundWinner();
 
       let isNextMove = Math.random() < 0.5;
-      
+
       let infoBarMessage = InfoBarMessage.drawRound;
       if (winner === this.alliesNickName) {
         isNextMove = true;
@@ -499,14 +498,11 @@ export const useGameStore = defineStore('gameStore', {
               this.alliesPassed = false;
 
               this.host?.sendRoundStart(isNextMove);
-              const action = isNextMove
-                ? InfoBarMessage.alliesMove
-                : InfoBarMessage.enemyMove;
+              const action = isNextMove ? InfoBarMessage.alliesMove : InfoBarMessage.enemyMove;
 
               this.showInfoBar(action, () => {
                 this.canMove = isNextMove;
-              })
-
+              });
             } else {
               this.canMove = false;
               this.isEnd = true;
@@ -514,8 +510,7 @@ export const useGameStore = defineStore('gameStore', {
             }
           });
         });
-      })
-
+      });
     },
     finishTurn() {
       if (this.hand.length === 0) {
@@ -575,13 +570,13 @@ export const useGameStore = defineStore('gameStore', {
 
           // socket.removeListener(SocketEvent.MESSAGE, onmessage);
         }
-      }
+      };
 
       socket.addListener(SocketEvent.MESSAGE, (message) => {
         onmessage(message);
-      })
+      });
 
       socket.open();
-    }
+    },
   },
 });

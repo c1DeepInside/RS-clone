@@ -58,7 +58,7 @@ export default defineComponent({
           return '';
         }
 
-        return cardEquipmendImg[key];
+        return cardEquipmendImg[key as keyof typeof cardEquipmendImg];
       }
 
       if (card.fieldType.length == 2) {
