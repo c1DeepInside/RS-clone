@@ -243,6 +243,7 @@ export class HostController extends SocketWrapper {
     if (this.store.$state.lives[key] > 0) {
       const index = Math.floor(Math.random() * this.store.$state.deck[key].length);
       const card = this.store.$state.deck[key][index];
+      this.store.$state.deck[key].splice(index, 1);
 
       if (isEnemy) {
         this.store.addToEnemyHand([card]);
