@@ -56,6 +56,10 @@ export const useGameStore = defineStore('gameStore', {
     host: null as HostController | null,
     client: null as ClientController | null,
     webSocket: {} as WebSocket,
+    stats: {
+      allies: [0, 0, 0],
+      enemy: [0, 0, 0],
+    },
     power: {
       enemy: {
         siege: 0,
@@ -470,6 +474,13 @@ export const useGameStore = defineStore('gameStore', {
       if (!this.host) {
         throw Error('Only host can finish the round!')
       }
+
+      // @ts-ignore
+      this.stats.enemy[this.rounds] = Object.values(this.power.enemy).reduce((sum, i) => sum + i, 0),
+      // @ts-ignore
+      this.stats.allies[this.rounds] = Object.values(this.power.allies).reduce((sum, i) => sum + i, 0)
+
+      this.rounds += 1;
 
       this.clearBoard();
       const winner = this.host.getRoundWinner();

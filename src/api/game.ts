@@ -155,6 +155,10 @@ export class HostController extends SocketWrapper {
     this.socket.sendMessage({
       type: MessageType.GAME_END,
       payload: {
+        stats: {
+          allies: this.store.$state.stats.enemy,
+          enemy: this.store.$state.stats.allies,
+        },
         lives: {
           allies: lives.enemy,
           enemy: lives.allies,
@@ -672,6 +676,7 @@ export class ClientController extends SocketWrapper {
 
     if (message.type === MessageType.GAME_END) {
       this.store.$state.lives = message.payload.lives;
+      this.store.$state.stats = message.payload.stats;
 
       this.store.$state.isEnd = true;
       this.store.$state.canMove = false;

@@ -38,6 +38,7 @@ export default defineComponent({
     },
     ...mapState(useGameStore, {
       lives: 'lives',
+      stats: 'stats',
       enemyNickName: 'enemyNickName',
       alliesNickName: 'alliesNickName',
     }),
@@ -63,15 +64,15 @@ export default defineComponent({
       <tbody class="table__body">
         <tr>
           <th class="table__header">{{ enemyNickName }}</th>
-          <td class="table__td">0</td>
-          <td class="table__td">0</td>
-          <td class="table__td">0</td>
+          <td class="table__td" :style="{
+            color: stats.enemy[idx] > stats.allies[idx] ? 'goldenrod' : ''
+          }" v-for="(i, idx) in stats.enemy">{{ i }}</td>
         </tr>
         <tr>
           <th class="table__header">{{ alliesNickName }}</th>
-          <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
-          <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
-          <td class="table__td">0</td>
+          <td class="table__td" :style="{
+            color: stats.allies[idx] > stats.enemy[idx] ? 'goldenrod' : ''
+          }" v-for="(i, idx) in stats.allies">{{ i }}</td>
         </tr>
       </tbody>
     </table>
