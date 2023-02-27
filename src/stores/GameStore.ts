@@ -533,6 +533,13 @@ export const useGameStore = defineStore('gameStore', {
       })
 
     },
+    giveUp(isEnemy: boolean) {
+      if (this.host) {
+        this.host.processGiveUp(isEnemy);
+      } else {
+        this.client?.sendGiveUp();
+      }
+    },
     finishTurn() {
       if (this.hand.length === 0) {
         this.passTurn();

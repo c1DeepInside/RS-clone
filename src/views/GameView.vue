@@ -100,8 +100,8 @@ export default defineComponent({
       // TODO: Work on give up feature
       this.isGiveUpAnimation = true;
       this.timer = setTimeout(() => {
-        this.isEnd = !this.isEnd;
         this.isGiveUpAnimation = false;
+        this.giveUp(false);
       }, 4000);
     },
     dontShowEndGame() {
@@ -254,6 +254,7 @@ export default defineComponent({
       passTurn: 'passTurn',
       setFromPageToPage: 'setFromPageToPage',
       setAnimateLeader: 'setAnimateLeader',
+      giveUp: 'giveUp',
     }),
     getLastDiscardCard(fieldType: string): Card {
       if (fieldType === 'enemy') {

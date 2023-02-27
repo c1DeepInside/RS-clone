@@ -38,6 +38,7 @@ export enum MessageType {
   NILFGARD_ABILITY_TRIGGERED = 'nilfgard_ability',
   MONSTERS_ABILITY_TRIGGERED = 'monsters_ability',
   GAME_END = 'game_end',
+  GIVE_UP = 'give_up',
 }
 
 export enum TurnInfoEnum {
@@ -168,10 +169,25 @@ export class HostController extends SocketWrapper {
   }
 
   private onMessage(message: SocketMessage) {
-    console.log("host message!");
     if (message.type === MessageType.HANDSHAKE) {
       this.determineTurn();
     }
+
+    if (message.type === MessageType.GIVE_UP) {
+      this.store.giveUp(true);
+    }
+  }
+
+  public processGiveUp(isEnemy: boolean) {
+    if (isEnemy) {
+      this.store.$state.lives.enemy = 0;
+    } else {
+      this.store.$state.lives.allies = 0;
+    }
+
+    this.store.$state.isEnd = true;
+    this.store.$state.canMove = false;
+    this.sendGameEnd();
   }
 
   private getUserWithBiggestScore(): string | null {
@@ -545,6 +561,13 @@ export class ClientController extends SocketWrapper {
         action: TurnInfoEnum.ENDED,
       }
     })
+  }
+
+  public sendGiveUp() {
+    this.socket.sendMessage({
+      type: MessageType.GIVE_UP,
+      payload: {},
+    });
   }
 
   private onMessage(message: SocketMessage) {
