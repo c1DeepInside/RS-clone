@@ -513,7 +513,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .block-game {
-  background-color: #be0a0a2a;
+  background-color: #be0a0a00;
   position: absolute;
   top: 0;
   left: 0;
