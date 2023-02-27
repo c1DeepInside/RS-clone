@@ -315,6 +315,10 @@ export default defineComponent({
   height: 4vw;
   display: flex;
   align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding: 0 0.5vw 0.3vw 0.5vw;
+  font-size: 1vw;
 }
 .card-info__count-img-hero {
   width: 190%;
@@ -328,11 +332,7 @@ export default defineComponent({
   color: white;
   font-size: 3vw;
 }
-.description-text {
-  padding: 1%;
-  font-size: 1vw;
-  text-align: center;
-}
+
 .game-card__count-img-hero {
   width: 200%;
 }
