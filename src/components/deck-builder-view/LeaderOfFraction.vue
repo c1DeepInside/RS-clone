@@ -73,8 +73,8 @@ export default defineComponent({
   }
 }
 .leader__img__wrap {
-  width: 7.67vw;
-  height: 14.63vw;
+  width: 7.6vw;
+  height: 14.6vw;
   border-radius: 1vw;
 
   &:hover {

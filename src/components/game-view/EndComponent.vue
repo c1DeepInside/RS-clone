@@ -1,4 +1,6 @@
 <script lang="ts">
+import { useGameStore } from '@/stores/GameStore';
+import { mapWritableState, mapState, mapActions } from 'pinia';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -14,17 +16,41 @@ export default defineComponent({
     };
   },
   methods: {
-    showEndGame() {
-      this.showEnd = false;
-      this.$emit('update:showEnd', this.showEnd);
+    changeDeck() {
+      this.isShowSearch = false;
+      this.disconnect();
     },
+    ...mapActions(useGameStore, {
+      disconnect: 'disconnect',
+    }),
+  },
+  computed: {
+    endGameClass(): string {
+      if (this.lives.allies > this.lives.enemy) {
+        return 'end-win';
+      }
+
+      if (this.lives.allies < this.lives.enemy) {
+        return 'end-lose';
+      }
+
+      return 'end-draw';
+    },
+    ...mapState(useGameStore, {
+      lives: 'lives',
+      enemyNickName: 'enemyNickName',
+      alliesNickName: 'alliesNickName',
+    }),
+    ...mapWritableState(useGameStore, {
+      isShowSearch: 'isShowSearch',
+    }),
   },
 });
 </script>
 
 <template>
   <div :class="['end', { 'end-true': isEnd }]">
-    <div class="end__img end-lose"></div>
+    <div class="end__img" :class="endGameClass"></div>
     <table class="end__table table">
       <thead>
         <tr>
@@ -36,13 +62,13 @@ export default defineComponent({
       </thead>
       <tbody class="table__body">
         <tr>
-          <th class="table__header">Player 1</th>
+          <th class="table__header">{{ enemyNickName }}</th>
           <td class="table__td">0</td>
           <td class="table__td">0</td>
           <td class="table__td">0</td>
         </tr>
         <tr>
-          <th class="table__header">Player 2</th>
+          <th class="table__header">{{ alliesNickName }}</th>
           <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
           <td class="table__td" :style="{ color: 'goldenrod' }">12</td>
           <td class="table__td">0</td>
@@ -50,8 +76,8 @@ export default defineComponent({
       </tbody>
     </table>
     <div class="end__btns">
-      <button class="btn-game end__btn">Изменить</button>
-      <button class="btn-game end__btn" @click="showEndGame">Повторить</button>
+      <button class="btn-game end__btn" @click="changeDeck">Изменить</button>
+      <button class="btn-game end__btn" @click="changeDeck">Повторить</button>
     </div>
   </div>
 </template>

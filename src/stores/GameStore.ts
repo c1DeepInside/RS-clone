@@ -3,11 +3,65 @@ import type Card from '@/interfaces/card';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
 import type { IntRange } from '@/utilits/types';
 import { getRandom } from '@/utilits/getRandom';
-import type { ConnectInfo } from '@/interfaces/cardAPI';
+import router from '@/router';
+import {
+  ClientController,
+  HostController,
+  type HandshakeData,
+  connectToServer,
+  SocketEvent,
+  type SessionInfo,
+} from '@/api/game';
+
+export enum InfoBarMessage {
+  roundStart = 'roundStart',
+  loseRound = 'loseRound',
+  drawRound = 'drawRound',
+  north = 'north',
+  monsters = 'monsters',
+  nilfgard = 'nilfgard',
+  scoiatael = 'scoiatael',
+  enemyMove = 'enemyMove',
+  enemyStart = 'enemyStart',
+  enemyWinRound = 'enemyWinRound',
+  enemyPassed = 'enemyPassed',
+  alliesStart = 'alliesStart',
+  alliesMove = 'alliesMove',
+  alliesWinRound = 'alliesWinRound',
+  alliesPassed = 'alliesPassed',
+}
+
+const clearedBoard = {
+  enemy: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  allies: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  enemyBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  alliesBoost: {
+    siege: [] as Card[],
+    range: [] as Card[],
+    melee: [] as Card[],
+  },
+  weather: [] as Card[],
+};
 
 export const useGameStore = defineStore('gameStore', {
   state: () => ({
+    isEnd: false,
     hand: [] as Card[],
+    handsShaked: false,
+    host: null as HostController | null,
+    client: null as ClientController | null,
     webSocket: {} as WebSocket,
     power: {
       enemy: {
@@ -25,31 +79,26 @@ export const useGameStore = defineStore('gameStore', {
     enemyPower: 0,
     enemyHand: [] as Card[],
     selectLeader: {} as Card,
-    fractionAlly: 1 as IntRange<1, 4>,
-    fractionEnemy: 1 as IntRange<1, 4>,
-    board: {
-      enemy: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      allies: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      enemyBoost: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      alliesBoost: {
-        siege: [] as Card[],
-        range: [] as Card[],
-        melee: [] as Card[],
-      },
-      weather: [] as Card[],
+    canMove: false,
+    moves: 0,
+    rounds: 0,
+    fractionAlly: 3 as IntRange<1, 5>,
+    fractionEnemy: 2 as IntRange<1, 5>,
+    infoBarMessage: InfoBarMessage.alliesStart,
+    isShowInfoBar: false,
+    isShowExchangePanel: false,
+    isShowQuestion: false,
+    isShowSearch: false,
+    serverUpdates: {
+      deck: false,
+      discard: false,
+      board: false,
     },
+    alliesPassed: false,
+    enemyPassed: false,
+    board: JSON.parse(JSON.stringify(clearedBoard)) as typeof clearedBoard,
+    // Board from the previos round
+    stashedBoard: JSON.parse(JSON.stringify(clearedBoard)) as typeof clearedBoard,
     affectedBoard: {
       enemy: {
         siege: [] as Card[],
@@ -80,8 +129,8 @@ export const useGameStore = defineStore('gameStore', {
     isMedic: false,
     animateLeader: false,
     whoseDiscard: 'allies',
-    enemyNickName: '',
-    alliesNickName: '',
+    enemyNickName: 'Loading...',
+    alliesNickName: localStorage.getItem('username') || 'Loading...',
     discard: {
       enemy: [] as Card[],
       allies: [] as Card[],
@@ -120,6 +169,7 @@ export const useGameStore = defineStore('gameStore', {
       enemy: 2 as IntRange<0, 3>,
       allies: 2 as IntRange<0, 3>,
     },
+    activeInfoBarTimeout: undefined as number | undefined,
     fromPageToPage: false,
   }),
   getters: {
@@ -204,6 +254,9 @@ export const useGameStore = defineStore('gameStore', {
     },
     setAffectedBoard(cards: Card[], line: cardLineType, type: enemyAlliesType) {
       this.affectedBoard[type][line] = cards;
+    },
+    setMove(move: boolean) {
+      this.canMove = move;
     },
     setPower(power: number, line: cardLineType, type: enemyAlliesType) {
       this.power[type][line] = power;
@@ -353,28 +406,177 @@ export const useGameStore = defineStore('gameStore', {
     setWebSocket(token: string) {
       this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
     },
-    sendConnectInfo() {
-      this.webSocket.send(
-        JSON.stringify({
-          deck: this.deck.allies,
-          hand: this.hand,
-          name: this.alliesNickName,
-          leader: this.leader.allies,
-        })
-      );
-    },
-    setConnectInfo(data: ConnectInfo) {
-      this.enemyHand = data.hand;
-      this.deck.enemy = data.deck;
-      this.leader.enemy = data.leader;
-      this.enemyNickName = data.name;
-      this.fractionEnemy = data.leader.fractionId as IntRange<1, 4>;
-    },
     setAlliesNickName(value: string) {
       this.alliesNickName = value;
     },
     setFromPageToPage(param: boolean) {
       this.fromPageToPage = param;
+    },
+    getHandshakeData(): HandshakeData {
+      return {
+        fractionID: this.fractionAlly,
+        leader: this.leader.allies,
+        username: this.alliesNickName,
+      };
+    },
+    setHandShakeData(data: HandshakeData) {
+      this.fractionEnemy = data.fractionID;
+      this.leader.enemy = data.leader;
+      this.enemyNickName = data.username;
+    },
+    showInfoBar(message: InfoBarMessage, callback: () => any = () => {}) {
+      this.infoBarMessage = message;
+      this.isShowInfoBar = true;
+      clearTimeout(this.activeInfoBarTimeout);
+      this.activeInfoBarTimeout = setTimeout(() => {
+        this.isShowInfoBar = false;
+        callback();
+      }, 1000);
+    },
+    passTurn() {
+      this.canMove = false;
+      this.alliesPassed = true;
+
+      if (this.enemyPassed && this.host) {
+        this.finishRound();
+      } else {
+        this.client?.sendPassTurn();
+      }
+    },
+    clearBoard() {
+      if (!this.host) {
+        throw Error('Only host can clear the board!');
+      }
+
+      this.stashedBoard = JSON.parse(JSON.stringify(this.board));
+
+      type BoardType = 'siege' | 'melee' | 'range';
+      const fieldTypes: BoardType[] = ['siege', 'melee', 'range'];
+
+      this.discard.allies = [
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.allies[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.alliesBoost[fieldType]], [] as Card[]),
+      ];
+
+      this.discard.enemy = [
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemy[fieldType]], [] as Card[]),
+        ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemyBoost[fieldType]], [] as Card[]),
+      ];
+
+      this.board = JSON.parse(JSON.stringify(clearedBoard));
+    },
+    finishRound() {
+      if (!this.host) {
+        throw Error('Only host can finish the round!');
+      }
+
+      this.clearBoard();
+      const winner = this.host.getRoundWinner();
+
+      let isNextMove = Math.random() < 0.5;
+
+      let infoBarMessage = InfoBarMessage.drawRound;
+      if (winner === this.alliesNickName) {
+        isNextMove = true;
+        this.lives.enemy -= 1;
+        infoBarMessage = InfoBarMessage.alliesStart;
+      } else if (winner === this.enemyNickName) {
+        isNextMove = false;
+        this.lives.allies -= 1;
+        infoBarMessage = InfoBarMessage.enemyWinRound;
+      } else {
+        this.lives.enemy -= 1;
+        this.lives.allies -= 1;
+      }
+
+      this.host.sendRoundEnd(winner);
+      this.showInfoBar(infoBarMessage, () => {
+        this.host?.processFractionsAbility(true, winner === this.enemyNickName, () => {
+          this.host?.processFractionsAbility(false, winner === this.alliesNickName, () => {
+            if (this.lives.allies > 0 && this.lives.enemy > 0) {
+              this.enemyPassed = false;
+              this.alliesPassed = false;
+
+              this.host?.sendRoundStart(isNextMove);
+              const action = isNextMove ? InfoBarMessage.alliesMove : InfoBarMessage.enemyMove;
+
+              this.showInfoBar(action, () => {
+                this.canMove = isNextMove;
+              });
+            } else {
+              this.canMove = false;
+              this.isEnd = true;
+              this.host?.sendGameEnd();
+            }
+          });
+        });
+      });
+    },
+    finishTurn() {
+      if (this.hand.length === 0) {
+        this.passTurn();
+
+        return;
+      }
+
+      if (this.enemyPassed) {
+        return;
+      }
+
+      this.canMove = false;
+      this.client?.sendFinishTurn();
+      this.showInfoBar(InfoBarMessage.enemyMove);
+    },
+    disconnect() {
+      this.host?.disconnect();
+      this.client?.disconnect();
+
+      this.host = null;
+      this.client = null;
+
+      this.alliesPassed = false;
+      this.enemyPassed = false;
+
+      this.lives.allies = 2;
+      this.lives.enemy = 2;
+
+      this.fromPageToPage = true;
+      router.push('/deck');
+
+      this.isEnd = false;
+    },
+    connect() {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw Error('No token found!');
+      }
+
+      const socket = connectToServer(token);
+      this.client = new ClientController(socket);
+
+      const onmessage = (message: SessionInfo) => {
+        if (message?.status === 'enqueued') {
+          this.host = new HostController(socket);
+        }
+
+        if (message?.status === 'game_found') {
+          this.fromPageToPage = true;
+
+          if (this.host) {
+            this.host.initiateHandshake();
+          }
+          router.push('/game');
+
+          // socket.removeListener(SocketEvent.MESSAGE, onmessage);
+        }
+      };
+
+      socket.addListener(SocketEvent.MESSAGE, (message) => {
+        onmessage(message);
+      });
+
+      socket.open();
     },
   },
 });

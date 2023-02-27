@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import LineComponent from './LineComponent.vue';
 import HandComponent from './HandComponent.vue';
-import { mapActions, mapState } from 'pinia';
+import { mapActions, mapState, mapWritableState } from 'pinia';
 import { useGameStore } from '@/stores/GameStore';
 import { cardAnimation, leftPos, topPos, type topPosType } from '@/utilits/cardAnimation';
 import type { cardLineType, enemyAlliesType } from '@/utilits/lineTypes';
@@ -57,6 +57,12 @@ export default defineComponent({
             this.putLineScorch(targetProp[2] as cardLineType, 'enemy');
           }
           this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
+
+          const canFinishOnMedic = this.selectedCard.ability === 'medic' && this.discard.allies.length === 0;
+
+          if (this.selectedCard.ability !== 'medic' || canFinishOnMedic) {
+            this.finishTurn();
+          }
         }, 400);
       }
     },
@@ -67,6 +73,7 @@ export default defineComponent({
       putLineScorch: 'putLineScorch',
       musterAbility: 'musterAbility',
       setMedic: 'setMedic',
+      finishTurn: 'finishTurn',
     }),
   },
   components: {
@@ -75,9 +82,50 @@ export default defineComponent({
   },
   computed: {
     ...mapState(useGameStore, {
+      board: 'board',
+      discard: 'discard',
+      deck: 'deck',
+      client: 'client',
       selectedCard: 'selectedCard',
       isShowSelectedCard: 'isShowSelected',
+      canMove: 'canMove',
     }),
+    ...mapWritableState(useGameStore, {
+      serverUpdates: 'serverUpdates',
+      isMedic: 'isMedic',
+    }),
+  },
+  watch: {
+    board: {
+      handler() {
+        if (!this.serverUpdates.board) {
+          this.client?.sendBoardChange();
+        }
+
+        this.serverUpdates.board = false;
+      },
+      deep: true,
+    },
+    deck: {
+      handler() {
+        if (!this.serverUpdates.deck) {
+          this.client?.sendDeckChange();
+        }
+
+        this.serverUpdates.deck = false;
+      },
+      deep: true,
+    },
+    discard: {
+      handler() {
+        if (!this.serverUpdates.discard) {
+          this.client?.sendDiscardChange();
+        }
+
+        this.serverUpdates.discard = false;
+      },
+      deep: true,
+    },
   },
 });
 </script>

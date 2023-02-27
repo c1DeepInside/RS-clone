@@ -202,7 +202,7 @@ export default defineComponent({
 .card {
   box-sizing: border-box;
   position: relative;
-  width: 9.71vw;
+  width: 9.65vw;
   height: 18vw;
   border-radius: 1vw;
 

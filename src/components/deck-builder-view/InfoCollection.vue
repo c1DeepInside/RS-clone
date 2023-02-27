@@ -3,8 +3,7 @@ import { defineComponent, type PropType } from 'vue';
 import LeaderOfFraction from '@/components/deck-builder-view/LeaderOfFraction.vue';
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
-import { mapActions, mapState } from 'pinia';
-import router from '@/router';
+import { mapActions, mapState, mapWritableState } from 'pinia';
 import { getRandom } from '@/utilits/getRandom';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -21,7 +20,6 @@ export default defineComponent({
       currentLeaderNilfgaard: {} as Card,
       currentLeaderScoiatel: {} as Card,
       currentLeaderMonsters: {} as Card,
-      isShowSearch: false,
       isGameFind: false,
     };
   },
@@ -62,20 +60,6 @@ export default defineComponent({
           break;
       }
     },
-    listenSocket() {
-      this.webSocket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.status === 'game_found') {
-          this.isGameFind = true;
-          this.sendConnectInfo();
-        }
-        if (data.deck) {
-          this.setConnectInfo(data);
-          this.setFromPageToPage(true);
-          router.push('/game');
-        }
-      };
-    },
     async startGame() {
       this.changeCurrentLeader();
       if (Object.keys(this.currentLeader).length === 0) {
@@ -84,15 +68,20 @@ export default defineComponent({
         ) as Card;
         this.changeFractionLeader(this.currentLeader);
       }
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw Error('No token found!');
+      }
+
       const checkCards = this.deckInformation.find((item) => item.error === true);
       if (!checkCards) {
         this.setFraction(this.currentFraction as IntRange<1, 4>);
         this.setSelectedLeader(this.currentLeader);
         this.parseDeck(this.selectedCards);
-        await updateUserCards(this.cardsForAPI, localStorage.getItem('token')!);
-        this.setWebSocket(localStorage.getItem('token')!);
-        this.listenSocket();
+        await updateUserCards(this.cardsForAPI, token);
         this.isShowSearch = true;
+        this.connect();
       }
     },
     parseDeck(cards: Card[]): Card[] {
@@ -127,14 +116,16 @@ export default defineComponent({
       setHand: 'setHand',
       setDiscard: 'setDiscard',
       setWebSocket: 'setWebSocket',
-      sendConnectInfo: 'sendConnectInfo',
-      setConnectInfo: 'setConnectInfo',
       setFromPageToPage: 'setFromPageToPage',
+      connect: 'connect',
     }),
   },
   computed: {
     ...mapState(useGameStore, {
       webSocket: 'webSocket',
+    }),
+    ...mapWritableState(useGameStore, {
+      isShowSearch: 'isShowSearch',
     }),
     deckInformation() {
       return [
@@ -205,7 +196,7 @@ export default defineComponent({
   },
   props: {
     currentFraction: {
-      type: Number,
+      type: Number as PropType<IntRange<1, 5>>,
       required: true,
     },
     leadersCards: {

@@ -50,14 +50,18 @@ export const fractions = {
   },
 };
 
-export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range' | 'boost' | 'weather' | 'leader';
+export type CardEquipmendType = 'melee' | 'range' | 'siege' | 'melee_range';
 
 export const cardEquipmendImg: Record<CardEquipmendType, string> = {
   melee: '/src/assets/images/build/card_row_close.png',
   range: '/src/assets/images/build/card_row_ranged.png',
   siege: '/src/assets/images/build/card_row_siege.png',
   melee_range: '/src/assets/images/build/card_row_agile.png',
-  boost: '',
-  weather: '',
-  leader: '',
 };
+
+export enum Fractions {
+  NORTHERN = 1,
+  NILFGAARD = 2,
+  SCOIATAEL = 3,
+  MONSTERS = 4,
+}

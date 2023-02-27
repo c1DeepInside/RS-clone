@@ -24,10 +24,6 @@ export default defineComponent({
       type: String as PropType<PlayerType>,
       default: () => PlayerType.ally,
     },
-    isPass: {
-      type: Boolean,
-      default: false,
-    },
   },
   methods: {
     getFraction() {
@@ -55,8 +51,10 @@ export default defineComponent({
       getAlliesPower: 'alliesPower',
       getEnemyPower: 'enemyPower',
       enemyHand: 'enemyHand',
-      fractionEnemy: 'fractionEnemy',
       fractionAlly: 'fractionAlly',
+      fractionEnemy: 'fractionEnemy',
+      enemyPassed: 'enemyPassed',
+      alliesPassed: 'alliesPassed',
     }),
     alliesPower(): number {
       this.setAlliesPower();
@@ -66,8 +64,8 @@ export default defineComponent({
       this.setEnemyPower();
       return this.getEnemyPower;
     },
-    isLeader(): boolean {
-      return JSON.stringify(this.leader[this.playerType]) !== JSON.stringify({});
+    isPass(): boolean {
+      return this.playerType === PlayerType.ally ? this.alliesPassed : this.enemyPassed;
     },
   },
 });
@@ -83,13 +81,13 @@ export default defineComponent({
     <div>
       <div
         :style="{
-          backgroundImage: isLeader ? `url(${getFraction().img})` : '',
+          backgroundImage: `url(${getFraction().img})`,
         }"
       ></div>
     </div>
   </div>
   <div class="player__name">{{ getNickName() }}</div>
-  <div class="player__deck-name">{{ isLeader ? getFraction().name : '' }}</div>
+  <div class="player__deck-name">{{ getFraction().name }}</div>
   <div class="player__hand-count">{{ getNumbersCards() }}</div>
   <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
   <div v-else class="player__gem player__gem-1"></div>

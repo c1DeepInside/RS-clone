@@ -9,8 +9,8 @@ import MusicComponent from '@/components/game-view/MusicComponent.vue';
 import GameExchangePanelComponent from '@/components/game-view/GameExchangePanelComponent.vue';
 import CardInfoComponent from '@/components/common/CardInfoComponent.vue';
 import SliderComponent from '@/components/common/SliderComponent.vue';
-import { useGameStore } from '@/stores/GameStore';
-import { mapState, mapActions } from 'pinia';
+import { InfoBarMessage, useGameStore } from '@/stores/GameStore';
+import { mapState, mapActions, mapWritableState } from 'pinia';
 import { cardAnimation, leftPos, topPos } from '@/utilits/cardAnimation';
 import type Card from '@/interfaces/card';
 import { fractionsDeckImg } from '@/utilits/cardBuildImgs';
@@ -21,7 +21,6 @@ export default defineComponent({
   data() {
     return {
       isGiveUpAnimation: false,
-      isEnd: false,
       timer: 0,
       deckBack: fractionsDeckImg,
       playerType: PlayerType,
@@ -52,6 +51,7 @@ export default defineComponent({
         const isSpy = card.ability !== 'spy';
         const fieldType = card.fieldType.join() as cardLineType;
         this.addToLine(card, fieldType, isSpy, true);
+        this.finishTurn();
         this.setMedic(true);
       } else {
         this.setMedic(false);
@@ -89,12 +89,14 @@ export default defineComponent({
       this.addToHand([card]);
       this.isShowDeck = false;
     },
-    showPass() {
-      if (this.lives.allies > 0) {
-        this.lives.allies -= 1;
-      }
+    commitPass() {
+      // TODO: Should show confirmation
+      this.showInfoBar(InfoBarMessage.alliesPassed, () => {
+        this.passTurn();
+      });
     },
     showEndGame() {
+      // TODO: Work on give up feature
       this.isGiveUpAnimation = true;
       this.timer = setTimeout(() => {
         this.isEnd = !this.isEnd;
@@ -113,6 +115,7 @@ export default defineComponent({
       target.style.display = 'block';
       setTimeout(() => {
         target.style.display = 'none';
+        this.finishTurn();
       }, 2000);
     },
     putWeatherCard() {
@@ -127,11 +130,14 @@ export default defineComponent({
           } else if (this.selectedCard.ability === 'specScorch') {
             this.putSpecScorch();
             this.addToDiscard(this.selectedCard, 'allies');
+            this.finishTurn();
           } else {
             this.addToWeather(this.selectedCard);
             if (this.selectedCard.ability === 'clear') {
               this.showSunAnimation();
               this.clearWeathers();
+            } else {
+              this.finishTurn();
             }
           }
         }, 400);
@@ -145,27 +151,35 @@ export default defineComponent({
           break;
         case 'Фольтест Железный Владыка':
           this.putLineScorch('siege', 'enemy');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Королева Дол Блатанны':
           this.putLineScorch('range', 'enemy');
+          this.finishTurn();
           break;
         case 'Фольтест Завоеватель':
           this.putLineBoost('siege', 'allies');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Прекраснейшая':
           this.putLineBoost('range', 'allies');
+          this.finishTurn();
           break;
         case 'Эредин Бреакк Глас Командир Дикой Охоты':
           this.putLineBoost('melee', 'allies');
+          this.finishTurn();
           break;
         case 'Фольтест Король Темерии':
           this.getWeatherFromDeck('fog');
+          this.finishTurn();
           break;
         case 'Эмгыр вар Эмрейс Йож из Эрленвальда':
           this.getWeatherFromDeck('rain');
+          this.finishTurn();
           break;
         case 'Францеска Финдабаир Истинная эльфка':
           this.getWeatherFromDeck('frost');
+          this.finishTurn();
           break;
         case 'Эредин Бреакк Глас Владыка Тир на Лиа':
           this.exchangeLeaderAbility();
@@ -232,6 +246,11 @@ export default defineComponent({
       addToDiscard: 'addToDiscard',
       addToHand: 'addToHand',
       setMedic: 'setMedic',
+      setMove: 'setMove',
+      connect: 'connect',
+      showInfoBar: 'showInfoBar',
+      finishTurn: 'finishTurn',
+      passTurn: 'passTurn',
       setFromPageToPage: 'setFromPageToPage',
       setAnimateLeader: 'setAnimateLeader',
     }),
@@ -242,6 +261,20 @@ export default defineComponent({
       }
       const idx = this.discard.allies.length - 1;
       return this.discard.allies[idx];
+    },
+    chooseMove(side: PlayerType) {
+      this.isShowQuestion = false;
+
+      this.canMove = side === PlayerType.ally;
+      this.client?.sendTurnInfo();
+
+      const barMessage = this.canMove ? InfoBarMessage.alliesStart : InfoBarMessage.enemyStart;
+
+      this.showInfoBar(InfoBarMessage.roundStart, () => {
+        this.showInfoBar(barMessage, () => {
+          this.isShowExchangePanel = true;
+        });
+      });
     },
   },
   computed: {
@@ -262,9 +295,25 @@ export default defineComponent({
       getEnemyHand: 'getEnemyHand',
       isMedic: 'isMedic',
       getWeatherDeck: 'getWeatherDeck',
+      fractionAlly: 'fractionAlly',
+      fractionEnemy: 'fractionEnemy',
+      isShowInfoBar: 'isShowInfoBar',
+      client: 'client',
+      alliesPassed: 'alliesPassed',
       fromPageToPage: 'fromPageToPage',
       animateLeader: 'animateLeader',
     }),
+    ...mapWritableState(useGameStore, {
+      canMove: 'canMove',
+      isEnd: 'isEnd',
+      isShowExchangePanel: 'isShowExchangePanel',
+      isShowQuestion: 'isShowQuestion',
+    }),
+  },
+  mounted() {
+    setTimeout(() => {
+      this.connect();
+    }, 1000);
   },
   components: {
     GameExchangePanelComponent,
@@ -281,8 +330,26 @@ export default defineComponent({
 </script>
 
 <template>
-  <GameExchangePanelComponent />
+  <InformationBar v-if="isShowInfoBar" />
+  <GameExchangePanelComponent v-if="isShowExchangePanel" />
   <main class="page-game">
+    <div v-if="isShowQuestion" class="whose-turn">
+      <div class="whose-turn__popup">
+        <div class="whose-turn__question">Хотите сделать первый ход?</div>
+        <div class="whose-turn__description">
+          Свойство фракции скоя'таэлей позволяет вам решить, кто делает первый ход.
+        </div>
+
+        <div class="whose-turn__buttons">
+          <div @click="chooseMove(playerType.ally)" class="whose-turn__ally">Сделать ход первым</div>
+
+          <div @click="chooseMove(playerType.enemy)" class="whose-turn__enemy">Пусть начнёт противник</div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="!canMove" class="block-game"></div>
+
     <div class="game">
       <div class="game__players">
         <div class="game__leader game__leader-1">
@@ -301,7 +368,7 @@ export default defineComponent({
           </div>
         </div>
 
-        <div class="game__player game__player-1 player">
+        <div class="game__player game__player-1 player" :class="{ 'game__player-active': !canMove }">
           <PlayerComponent :player-type="playerType.enemy" />
         </div>
         <div
@@ -321,9 +388,9 @@ export default defineComponent({
             <CardInfoComponent :card="card" :layoutType="0" class="card" />
           </div>
         </div>
-        <button @click="showPass" class="btn-game game__pass">Спасовать</button>
+        <button @click="commitPass" class="btn-game game__pass">Спасовать</button>
 
-        <div class="game__player game__player-2 player game__player-active">
+        <div class="game__player game__player-2 player" :class="{ 'game__player-active': canMove }">
           <PlayerComponent :player-type="playerType.ally" :isPass="true" />
         </div>
 
@@ -365,7 +432,7 @@ export default defineComponent({
           </div>
 
           <div class="deck__player deck__player-1">
-            <img class="deck__background" :src="deckBack[leader.enemy.fractionId!]" draggable="false" />
+            <img class="deck__background" :src="deckBack[fractionEnemy]" draggable="false" />
             <div class="deck__counter">{{ deck.enemy.length }}</div>
           </div>
         </div>
@@ -382,7 +449,7 @@ export default defineComponent({
           </div>
 
           <div class="deck__player deck__player-2">
-            <img class="deck__background" :src="deckBack[leader.allies.fractionId!]" draggable="false" />
+            <img class="deck__background" :src="deckBack[fractionAlly]" draggable="false" />
             <div class="deck__counter">{{ deck.allies.length }}</div>
           </div>
         </div>
@@ -426,7 +493,6 @@ export default defineComponent({
     </div>
 
     <CardViewComponent :selectedItem="selectedCard" :isShow="isShowSelectedCard" />
-    <InformationBar />
     <EndComponent :isEnd="isEnd" @update:showEnd="updateShowEnd" />
     <MusicComponent class="music" />
     <button
@@ -444,6 +510,62 @@ export default defineComponent({
 </template>
 
 <style lang="scss" scoped>
+.block-game {
+  background-color: #be0a0a2a;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 80%;
+  height: 77%;
+}
+.whose-turn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 101;
+
+  &__popup {
+    position: absolute;
+    top: 20vw;
+    left: 36vw;
+    width: 34vw;
+    z-index: 60;
+    padding: 2vw;
+    color: white;
+    text-align: center;
+    background-color: rgba(16, 16, 16, 0.952);
+  }
+
+  &__question {
+    text-transform: uppercase;
+    font-size: 2vw;
+    letter-spacing: -2px;
+    margin-bottom: 2vw;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 3vw;
+    font-weight: 500;
+  }
+
+  &__description {
+    line-height: 1.4vw;
+    margin-bottom: 2vw;
+  }
+
+  &__ally {
+    color: green;
+  }
+
+  &__enemy {
+    color: rgb(192, 4, 4);
+  }
+}
 .show_cards_close {
   position: absolute;
   top: 0;

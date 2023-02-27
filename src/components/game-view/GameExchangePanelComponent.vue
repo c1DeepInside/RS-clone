@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import SliderComponent from '@/components/common/SliderComponent.vue';
 import type Card from '@/interfaces/card';
 import { useGameStore } from '@/stores/GameStore';
-import { mapState, mapActions } from 'pinia';
+import { mapState, mapActions, mapWritableState } from 'pinia';
 
 export default defineComponent({
   data() {
@@ -25,6 +25,7 @@ export default defineComponent({
       this.changeCount += 1;
       if (this.changeCount === 2) {
         this.show = false;
+        this.isShowExchangePanel = false;
       }
     },
   },
@@ -33,13 +34,17 @@ export default defineComponent({
       hand: 'hand',
       board: 'board',
     }),
+    ...mapWritableState(useGameStore, {
+      isShowExchangePanel: 'isShowExchangePanel',
+      isShowQuestion: 'isShowQuestion',
+    }),
   },
 });
 </script>
 
 <template>
   <div v-if="show" class="choice-panel">
-    <div class="close" @click="show = false">x</div>
+    <div class="close" @click="(show = false), (isShowExchangePanel = false)">x</div>
     <div class="choice-panel__title">
       Выберите, какую карту обменять.
       <span class="choice-panel__count-carts">{{ changeCount }}/2</span>
@@ -53,7 +58,7 @@ export default defineComponent({
   position: absolute;
   height: 117vh;
   width: 100%;
-  z-index: 40;
+  z-index: 120;
   background-color: rgba(58, 41, 25, 0.486);
 
   &__title {
