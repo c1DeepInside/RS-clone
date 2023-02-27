@@ -3,7 +3,7 @@ import { InfoBarMessage, useGameStore } from '@/stores/GameStore';
 import { Fractions } from '@/utilits/cardBuildImgs';
 import type { IntRange } from '@/utilits/types';
 
-const URL = '45.67.35.28:8080';
+const URL = 'gwent-ws.tapo4eg3d.ru';
 
 export interface SessionInfo {
   status: 'game_found' | 'enqueued';
@@ -20,7 +20,7 @@ export interface HandshakeData {
 }
 
 export function connectToServer(token: string): Socket {
-  return new Socket(`ws://${URL}/ws/game/?token=${token}`);
+  return new Socket(`wss://${URL}/ws/game/?token=${token}`);
 }
 
 type SubFunction = (...args: any) => any;

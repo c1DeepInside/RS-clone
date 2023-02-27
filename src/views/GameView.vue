@@ -392,7 +392,7 @@ export default defineComponent({
         </div>
         <button @click="commitPass" class="btn-game game__pass">Спасовать</button>
 
-        <div class="game__player game__player-2 player" :class="{ 'game__player-active' : canMove}">
+        <div class="game__player game__player-2 player" :class="{ 'game__player-active': canMove }">
           <PlayerComponent :player-type="playerType.ally" />
         </div>
 

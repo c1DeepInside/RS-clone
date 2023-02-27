@@ -1,4 +1,4 @@
-const baseURL = 'http://45.67.35.28:8080';
+const baseURL = 'https://gwent.tapo4eg3d.ru';
 
 export const registration = async (username: string, password: string) => {
   const response: Response = await fetch(`${baseURL}/users/register/`, {

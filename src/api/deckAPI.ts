@@ -1,6 +1,6 @@
 import type { CardFromAPI, AllCardsFromAPI, UserCard } from '@/interfaces/cardAPI';
 
-const baseURL = 'http://45.67.35.28:8080';
+const baseURL = 'https://gwent.tapo4eg3d.ru';
 
 export async function getCards(token: string): Promise<AllCardsFromAPI[]> {
   const response = await fetch(`${baseURL}/cards`, {

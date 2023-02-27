@@ -386,7 +386,7 @@ export const useGameStore = defineStore('gameStore', {
       this.fractionAlly = value;
     },
     setWebSocket(token: string) {
-      this.webSocket = new WebSocket(`ws://45.67.35.28:8080/ws/game/?token=${token}`);
+      this.webSocket = new WebSocket(`wss://gwent-ws.tapo4eg3d.ru/ws/game/?token=${token}`);
     },
     setAlliesNickName(value: string) {
       this.alliesNickName = value;
@@ -458,9 +458,9 @@ export const useGameStore = defineStore('gameStore', {
       }
 
       // @ts-ignore
-      this.stats.enemy[this.rounds] = Object.values(this.power.enemy).reduce((sum, i) => sum + i, 0),
-      // @ts-ignore
-      this.stats.allies[this.rounds] = Object.values(this.power.allies).reduce((sum, i) => sum + i, 0)
+      (this.stats.enemy[this.rounds] = Object.values(this.power.enemy).reduce((sum, i) => sum + i, 0)),
+        // @ts-ignore
+        (this.stats.allies[this.rounds] = Object.values(this.power.allies).reduce((sum, i) => sum + i, 0));
 
       this.rounds += 1;
 
