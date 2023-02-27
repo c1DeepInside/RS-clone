@@ -377,7 +377,7 @@ export default defineComponent({
           </div>
         </div>
 
-        <div class="game__player game__player-1 player">
+        <div class="game__player game__player-1 player" :class="{ 'game__player-active' : !canMove}">
           <PlayerComponent :player-type="playerType.enemy"/>
         </div>
         <div
@@ -399,7 +399,7 @@ export default defineComponent({
         </div>
         <button @click="commitPass" class="btn-game game__pass">Спасовать</button>
 
-        <div class="game__player game__player-2 player game__player-active">
+        <div class="game__player game__player-2 player" :class="{ 'game__player-active' : canMove}">
           <PlayerComponent :player-type="playerType.ally" :isPass="true" />
         </div>
 
