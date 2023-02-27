@@ -72,25 +72,17 @@ export class Socket {
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = (...args) => {
-      console.log('connected');
       this.onConnection(...args);
     };
 
     this.socket.onmessage = (message) => {
-      console.log(message);
       this.onMessage(JSON.parse(message.data));
     };
 
     this.socket.onerror = (...args) => {
-      console.log('error!', ...args);
       this.onError(...args);
     };
 
-    this.socket.onclose = () => {
-      console.log('closed!');
-    };
-
-    console.log('opened');
   }
 
   public close() {
@@ -98,7 +90,6 @@ export class Socket {
   }
 
   public addListener(event: SocketEvent, fn: SubFunction) {
-    console.log('added event');
     this.subscribers[event].push(fn);
   }
 
@@ -164,7 +155,6 @@ export class HostController extends SocketWrapper {
   }
 
   private onMessage(message: SocketMessage) {
-    console.log('host message!');
     if (message.type === MessageType.HANDSHAKE) {
       this.determineTurn();
     }

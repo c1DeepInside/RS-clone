@@ -203,7 +203,7 @@ export default defineComponent({
   box-sizing: border-box;
   position: relative;
   width: 9.6vw;
-  height: 17.95vw;
+  height: 17.9vw;
   border-radius: 1vw;
 
   &:hover {
