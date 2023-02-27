@@ -65,10 +65,8 @@ export default defineComponent({
       return this.getEnemyPower;
     },
     isPass(): boolean {
-      return this.playerType === PlayerType.ally
-        ? this.alliesPassed
-        : this.enemyPassed;
-    }
+      return this.playerType === PlayerType.ally ? this.alliesPassed : this.enemyPassed;
+    },
   },
 });
 </script>
@@ -85,11 +83,11 @@ export default defineComponent({
         :style="{
           backgroundImage: `url(${getFraction().img})`,
         }"
-        ></div>
+      ></div>
     </div>
   </div>
   <div class="player__name">{{ getNickName() }}</div>
-  <div class="player__deck-name">{{ getFraction().name}}</div>
+  <div class="player__deck-name">{{ getFraction().name }}</div>
   <div class="player__hand-count">{{ getNumbersCards() }}</div>
   <div v-if="lives[playerType] >= 1" class="player__gem player__gem-1 player__gem-true"></div>
   <div v-else class="player__gem player__gem-1"></div>

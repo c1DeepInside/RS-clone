@@ -58,9 +58,7 @@ export default defineComponent({
           }
           this.musterAbility(this.selectedCard, targetProp[2] as cardLineType, !isSpy, !isBoost);
 
-          const canFinishOnMedic = 
-            this.selectedCard.ability === 'medic'
-            && this.discard.allies.length === 0;
+          const canFinishOnMedic = this.selectedCard.ability === 'medic' && this.discard.allies.length === 0;
 
           if (this.selectedCard.ability !== 'medic' || canFinishOnMedic) {
             this.finishTurn();
@@ -95,7 +93,7 @@ export default defineComponent({
     ...mapWritableState(useGameStore, {
       serverUpdates: 'serverUpdates',
       isMedic: 'isMedic',
-    })
+    }),
   },
   watch: {
     board: {
@@ -128,7 +126,7 @@ export default defineComponent({
       },
       deep: true,
     },
-  }
+  },
 });
 </script>
 

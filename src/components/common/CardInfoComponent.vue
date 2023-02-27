@@ -58,7 +58,7 @@ export default defineComponent({
           return '';
         }
 
-        return cardEquipmendImg[key];
+        return cardEquipmendImg[key as keyof typeof cardEquipmendImg];
       }
 
       if (card.fieldType.length == 2) {
@@ -349,8 +349,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: 3vw;
-  transform-origin: 0 0;
 
   &__back {
     object-fit: contain;
@@ -359,18 +357,21 @@ export default defineComponent({
 
   &__count {
     position: absolute;
-    top: 2%;
-    left: 2%;
-    width: 30%;
+    top: 0.1vw;
+    left: 0.1vw;
+    width: 1.45vw;
+    height: 1.45vw;
 
     &-img {
-      width: 100%;
+      position: absolute;
+      width: 1.45vw;
+      height: 1.45vw;
     }
 
     &-power {
       position: absolute;
-      top: 47%;
-      left: 47%;
+      top: 0.7vw;
+      left: 0.7vw;
       font-weight: 400;
       transform: translate(-49%, -49%);
       font-size: 1vw;
@@ -389,21 +390,21 @@ export default defineComponent({
     top: -3%;
     left: -4%;
     width: 30%;
-    font-size: 1rem;
+    font-size: 0.5vw;
   }
 
   &__equipment {
     position: absolute;
     bottom: 2%;
     right: 2%;
-    width: 29%;
+    width: 1.45vw;
   }
 
   &__ability {
     position: absolute;
     bottom: 2%;
     right: 40%;
-    width: 29%;
+    width: 1.45vw;
   }
 }
 </style>

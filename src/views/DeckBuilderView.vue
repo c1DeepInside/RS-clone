@@ -99,7 +99,6 @@ export default defineComponent({
       this.currentDeckCards();
     },
     currentDeckCards() {
-      console.log(this.currentFraction);
       switch (this.currentFraction) {
         case 1:
           this.deckCards = this.deckCardsNorth;

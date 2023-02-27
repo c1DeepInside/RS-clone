@@ -44,7 +44,7 @@ export default defineComponent({
 
 <template>
   <div v-if="show" class="choice-panel">
-    <div class="close" @click="show = false, isShowExchangePanel = false;">x</div>
+    <div class="close" @click="(show = false), (isShowExchangePanel = false)">x</div>
     <div class="choice-panel__title">
       Выберите, какую карту обменять.
       <span class="choice-panel__count-carts">{{ changeCount }}/2</span>

@@ -266,20 +266,17 @@ export default defineComponent({
     },
     chooseMove(side: PlayerType) {
       this.isShowQuestion = false;
-      
+
       this.canMove = side === PlayerType.ally;
       this.client?.sendTurnInfo();
 
-      const barMessage = this.canMove
-        ? InfoBarMessage.alliesStart
-        : InfoBarMessage.enemyStart;
+      const barMessage = this.canMove ? InfoBarMessage.alliesStart : InfoBarMessage.enemyStart;
 
       this.showInfoBar(InfoBarMessage.roundStart, () => {
         this.showInfoBar(barMessage, () => {
           this.isShowExchangePanel = true;
         });
-      })
-
+      });
     },
   },
   computed: {
@@ -318,7 +315,7 @@ export default defineComponent({
   mounted() {
     setTimeout(() => {
       this.connect();
-    }, 1000)
+    }, 1000);
   },
   components: {
     GameExchangePanelComponent,
@@ -340,25 +337,19 @@ export default defineComponent({
   <main class="page-game">
     <div v-if="isShowQuestion" class="whose-turn">
       <div class="whose-turn__popup">
-      <div class="whose-turn__question">
-        Хотите сделать первый ход?
-      </div>
-      <div class="whose-turn__description">
-        Свойство фракции скоя'таэлей позволяет вам решить, кто делает первый ход.
-      </div>
-
-      <div class="whose-turn__buttons">
-        <div @click="chooseMove(playerType.ally)" class="whose-turn__ally">
-          Сделать ход первым
+        <div class="whose-turn__question">Хотите сделать первый ход?</div>
+        <div class="whose-turn__description">
+          Свойство фракции скоя'таэлей позволяет вам решить, кто делает первый ход.
         </div>
 
-        <div @click="chooseMove(playerType.enemy)" class="whose-turn__enemy">
-          Пусть начнёт противник
+        <div class="whose-turn__buttons">
+          <div @click="chooseMove(playerType.ally)" class="whose-turn__ally">Сделать ход первым</div>
+
+          <div @click="chooseMove(playerType.enemy)" class="whose-turn__enemy">Пусть начнёт противник</div>
         </div>
       </div>
     </div>
-    </div>
-    
+
     <div v-if="!canMove" class="block-game"></div>
 
     <div class="game">
@@ -379,8 +370,8 @@ export default defineComponent({
           </div>
         </div>
 
-        <div class="game__player game__player-1 player" :class="{ 'game__player-active' : !canMove}">
-          <PlayerComponent :player-type="playerType.enemy"/>
+        <div class="game__player game__player-1 player" :class="{ 'game__player-active': !canMove }">
+          <PlayerComponent :player-type="playerType.enemy" />
         </div>
         <div
           class="game__weather"
@@ -536,7 +527,7 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 50;
+  z-index: 101;
 
   &__popup {
     position: absolute;

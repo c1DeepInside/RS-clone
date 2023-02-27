@@ -5,11 +5,11 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   data() {
-    return {}
+    return {};
   },
   computed: {
     ...mapState(useGameStore, {
-      infoBarMessage: 'infoBarMessage'
+      infoBarMessage: 'infoBarMessage',
     }),
   },
 });
