@@ -418,7 +418,7 @@ export const useGameStore = defineStore('gameStore', {
       this.activeInfoBarTimeout = setTimeout(() => {
         this.isShowInfoBar = false;
         callback();
-      }, 3000);
+      }, 2000);
     },
     passTurn() {
       this.canMove = false;

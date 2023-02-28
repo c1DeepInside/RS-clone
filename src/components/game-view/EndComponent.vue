@@ -74,6 +74,12 @@ export default defineComponent({
             color: stats.allies[idx] > stats.enemy[idx] ? 'goldenrod' : ''
           }" v-for="(i, idx) in stats.allies">{{ i }}</td>
         </tr>
+        <tr>
+          <th class="table__header">{{ alliesNickName }}</th>
+          <td class="table__td" :style="{
+            color: stats.allies[idx] > stats.enemy[idx] ? 'goldenrod' : ''
+          }" v-for="(i, idx) in stats.allies">{{ i }}</td>
+        </tr>
       </tbody>
     </table>
     <div class="end__btns">
