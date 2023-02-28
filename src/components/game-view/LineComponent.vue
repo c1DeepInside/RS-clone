@@ -205,8 +205,8 @@ export default defineComponent({
       <img class="weather_rain second_rain" src="@/assets/images/rain1.gif" alt="rain" />
     </div>
     <div v-if="attackType === 'range' && ifFogRainFrost" class="weather__wrap">
-      <div class="weather_fog first_fog"></div>
-      <div class="weather_fog second_fog"></div>
+      <div class="weather_fog first_fog" style="background: url('src/assets/images/fog.png')"></div>
+      <div class="weather_fog second_fog" style="background: url('src/assets/images/fog.png')"></div>
     </div>
     <div v-if="attackType === 'melee' && ifFogRainFrost" class="weather__wrap">
       <img class="weather_frost" src="@/assets/images/frost.png" alt="frost" />
@@ -321,13 +321,11 @@ export default defineComponent({
 }
 
 .second_fog {
-  background: url('src/assets/images/fog.png');
   opacity: 0.25;
   animation: fogAnimation 80s linear infinite;
 }
 
 .first_fog {
-  background: url('src/assets/images/fog.png');
   animation: fogAnimation2 80s linear infinite;
   opacity: 0.25;
 }
