@@ -164,6 +164,9 @@ export const useGameStore = defineStore('gameStore', {
         (card) => card.ability === 'fog' || card.ability === 'frost' || card.ability === 'rain'
       );
     },
+    checkHerosDiscard(): boolean {
+      return this.discard.allies.every((card: Card) => card.type === 'hero' || card.type === 'special');
+    },
   },
   actions: {
     putSpecScorch() {
@@ -333,10 +336,13 @@ export const useGameStore = defineStore('gameStore', {
     getDiscard(whoseDiscard: string) {
       const discard = whoseDiscard === 'enemy' ? this.discard.enemy : (this.discard.allies as Card[]);
       const discardMedic = discard.filter((card) => card.type === 'usual') as Card[];
-      if (this.selectedCard.ability === 'medic' && discard.length !== 0 && this.isMedic) {
+      if (this.selectedCard.ability === 'medic' && !this.checkHerosDiscard && this.isMedic) {
         this.showDiscard = true;
         this.setMedic(true);
         return discardMedic;
+      }
+      if (this.selectedCard.ability === 'medic' && this.checkHerosDiscard && this.isMedic) {
+        this.finishTurn();
       }
       this.setMedic(false);
       return discard;
@@ -441,11 +447,13 @@ export const useGameStore = defineStore('gameStore', {
       const fieldTypes: BoardType[] = ['siege', 'melee', 'range'];
 
       this.discard.allies = [
+        ...this.discard.allies,
         ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.allies[fieldType]], [] as Card[]),
         ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.alliesBoost[fieldType]], [] as Card[]),
       ];
 
       this.discard.enemy = [
+        ...this.discard.enemy,
         ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemy[fieldType]], [] as Card[]),
         ...fieldTypes.reduce((acc, fieldType) => [...acc, ...this.board.enemyBoost[fieldType]], [] as Card[]),
       ];
