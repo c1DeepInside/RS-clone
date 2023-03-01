@@ -317,7 +317,7 @@ export const useGameStore = defineStore('gameStore', {
     spyAbility(card: Card, type: enemyAlliesType) {
       if (card.ability === 'spy') {
         const deck = type === 'enemy' ? this.deck['allies'] : this.deck['enemy'];
-        const newCardsHand = deck.splice(-2, 2);
+        const newCardsHand = deck.splice(0, 2);
         type === 'enemy' ? this.addToHand(newCardsHand) : this.addToEnemyHand(newCardsHand);
       }
     },
